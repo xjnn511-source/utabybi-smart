@@ -47,7 +47,7 @@ const SubscriptionRow = () => {
       </div>
 
       <p className="text-[10px] text-primary font-thin text-center px-6 pb-4 leading-relaxed">
-        بإتمام اشتراكك، أنت تساهم معنا في بند البركة (صدقة جارية لوالديك ودعم تقني عقاري).
+        تنبيه: 5% من قيمة اشتراكك تُستقطع كصدقة جارية لوالدينا ووالديكم في بند البركة.
       </p>
     </>
   );
