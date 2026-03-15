@@ -42,7 +42,7 @@ const BlessingCalculator = () => {
           <p className="text-[10px] text-text-dim/60 mt-1">ريال</p>
         </div>
         <div className="p-4 rounded-lg bg-secondary/50 border border-primary/10 text-center">
-          <p className="text-xs text-text-dim font-thin mb-1">٠.٥٪ تسويق</p>
+          <p className="text-xs text-text-dim font-thin mb-1">0.5% أتعاب تسويق</p>
           <p className="text-lg font-light text-foreground">
             {numPrice > 0 ? marketingFee.toLocaleString("ar-SA") : "—"}
           </p>
