@@ -25,7 +25,7 @@ const Index = () => {
 
       <footer className="text-center pb-8 px-4">
         <p className="text-[10px] text-text-dim/40 font-thin">
-          عقاراتك، تُدار بذكاء العتبان
+          منصتك الذكية للحلول العقارية المبتكرة
         </p>
       </footer>
 
