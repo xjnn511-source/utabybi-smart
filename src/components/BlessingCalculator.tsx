@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Calculator } from "lucide-react";
 
 const BlessingCalculator = () => {
@@ -10,18 +9,14 @@ const BlessingCalculator = () => {
   const marketingFee = numPrice * 0.005;
 
   return (
-    <motion.div
-      className="glass-card p-6"
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-    >
+    <div className="card-clean p-6">
       <div className="flex items-center gap-3 mb-4">
-        <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }}>
-          <Calculator className="w-6 h-6 text-primary" strokeWidth={1.5} />
-        </motion.div>
+        <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
+          <Calculator className="w-5 h-5 text-accent-foreground" strokeWidth={2} />
+        </div>
         <div>
-          <h2 className="text-lg font-light text-foreground">بند البركة</h2>
-          <p className="text-xs text-text-dim font-thin">حاسبة البر والتسويق</p>
+          <h2 className="text-base font-bold text-foreground">بند البركة</h2>
+          <p className="text-xs text-text-dim">حاسبة رسوم التسويق والبر</p>
         </div>
       </div>
 
@@ -30,30 +25,30 @@ const BlessingCalculator = () => {
         placeholder="أدخل سعر العقار (ريال)"
         value={price}
         onChange={(e) => setPrice(e.target.value)}
-        className="w-full p-3 rounded-lg bg-secondary/50 border border-primary/20 text-foreground text-sm font-light placeholder:text-text-dim/50 focus:outline-none focus:border-primary/60 transition-colors mb-4"
+        className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary transition-colors mb-4"
       />
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="p-4 rounded-lg bg-primary/10 border border-primary/20 text-center">
-          <p className="text-xs text-text-dim font-thin mb-1">٥٪ لوالديك</p>
-          <p className="text-lg font-light glow-text">
+        <div className="p-4 rounded-lg bg-accent border border-border text-center">
+          <p className="text-xs text-text-dim mb-1">٥٪ لوالديك</p>
+          <p className="text-xl font-bold text-primary">
             {numPrice > 0 ? parentsShare.toLocaleString("ar-SA") : "—"}
           </p>
-          <p className="text-[10px] text-text-dim/60 mt-1">ريال</p>
+          <p className="text-[10px] text-text-dim mt-1">ريال</p>
         </div>
-        <div className="p-4 rounded-lg bg-secondary/50 border border-primary/10 text-center">
-          <p className="text-xs text-text-dim font-thin mb-1">0.5% أتعاب تسويق</p>
-          <p className="text-lg font-light text-foreground">
+        <div className="p-4 rounded-lg bg-secondary border border-border text-center">
+          <p className="text-xs text-text-dim mb-1">0.5% رسوم التسويق</p>
+          <p className="text-xl font-bold text-foreground">
             {numPrice > 0 ? marketingFee.toLocaleString("ar-SA") : "—"}
           </p>
-          <p className="text-[10px] text-text-dim/60 mt-1">ريال</p>
+          <p className="text-[10px] text-text-dim mt-1">ريال</p>
         </div>
       </div>
 
-      <p className="text-[10px] text-text-dim/40 text-center mt-3 font-thin uppercase tracking-wider">
+      <p className="text-[10px] text-text-dim text-center mt-3">
         البركة تجلب الرزق
       </p>
-    </motion.div>
+    </div>
   );
 };
 

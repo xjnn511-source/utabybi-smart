@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        readex: ['"Readex Pro"', 'sans-serif'],
+        tajawal: ['"Tajawal"', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -50,8 +50,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        surface: "hsl(var(--surface))",
-        glow: "hsl(var(--glow))",
         "text-dim": "hsl(var(--text-dim))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

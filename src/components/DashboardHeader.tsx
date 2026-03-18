@@ -1,30 +1,25 @@
-import { motion } from "framer-motion";
-import { Bot } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 
 const DashboardHeader = () => {
   return (
-    <header className="flex justify-between items-center px-6 py-8">
+    <header className="flex justify-between items-center px-6 py-6 border-b border-border bg-card">
       <div className="flex items-center gap-3">
-        <motion.div
-          animate={{ rotate: [0, 12, -12, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Bot className="w-8 h-8 text-primary" strokeWidth={1.5} />
-        </motion.div>
+        <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+          <LayoutDashboard className="w-5 h-5 text-primary-foreground" strokeWidth={2} />
+        </div>
         <div>
-          <h1 className="text-2xl font-extralight tracking-tight glow-text">
-            عُتيبي ذكي 🤖 Ai
+          <h1 className="text-xl font-bold text-foreground">
+            عُتيبي ذكي Ai
           </h1>
-          <p className="text-xs font-thin text-text-dim mt-0.5">
-            النظام يعمل بالذكاء الكامل
+          <p className="text-xs text-text-dim mt-0.5">
+            منصة الحلول العقارية الذكية
           </p>
         </div>
       </div>
-      <motion.div
-        className="w-2.5 h-2.5 rounded-full bg-primary pulse-ring"
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      />
+      <div className="flex items-center gap-2">
+        <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
+        <span className="text-xs text-text-dim">متصل</span>
+      </div>
     </header>
   );
 };
