@@ -20,65 +20,65 @@ const SmartRadar = () => {
   };
 
   return (
-    <div className="card-clean p-6">
+    <div className="card-neon p-5">
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-          <Radar className="w-5 h-5 text-primary-foreground" strokeWidth={2} />
+        <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center neon-border border">
+          <Radar className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-base font-bold text-foreground">رادار الإعلانات الذكي</h2>
-          <p className="text-xs text-text-dim">ابحث عن أفضل الفرص العقارية بالذكاء الاصطناعي</p>
+          <h2 className="text-sm font-bold text-foreground">رادار الإعلانات الذكي</h2>
+          <p className="text-[10px] text-text-dim">ابحث عن أفضل الفرص العقارية بالذكاء الاصطناعي</p>
         </div>
       </div>
 
-      <div className="space-y-3 mb-5">
+      <div className="space-y-3 mb-4">
         <div>
-          <label className="text-xs font-medium text-foreground mb-1.5 block">الميزانية (ريال)</label>
+          <label className="text-[10px] font-medium text-text-dim mb-1 block">الميزانية (ريال)</label>
           <input
             type="text"
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
             placeholder="مثال: 500,000"
-            className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary transition-colors"
+            className="w-full h-9 px-3 rounded-lg border border-border bg-secondary text-xs text-foreground placeholder:text-text-dim focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-foreground mb-1.5 block">المدن المستهدفة</label>
+          <label className="text-[10px] font-medium text-text-dim mb-1 block">المدن المستهدفة</label>
           <input
             type="text"
             value={cities}
             onChange={(e) => setCities(e.target.value)}
             placeholder="مثال: الرياض، جدة، الدمام"
-            className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary transition-colors"
+            className="w-full h-9 px-3 rounded-lg border border-border bg-secondary text-xs text-foreground placeholder:text-text-dim focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex gap-2">
         <button
           onClick={handleVoice}
-          className={`w-12 h-12 rounded-lg border flex items-center justify-center transition-colors ${
+          className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all ${
             isListening
-              ? "bg-destructive border-destructive text-destructive-foreground"
+              ? "bg-destructive/20 border-destructive text-destructive animate-pulse"
               : "bg-secondary border-border text-text-dim hover:border-primary hover:text-primary"
           }`}
         >
-          <Mic className="w-5 h-5" strokeWidth={2} />
+          <Mic className="w-4 h-4" strokeWidth={2} />
         </button>
 
         <button
           onClick={handleLaunch}
           disabled={isSearching}
-          className="flex-1 h-12 rounded-lg bg-primary text-primary-foreground font-medium text-sm flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-70"
+          className="flex-1 h-10 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-50"
         >
-          <Search className="w-4 h-4" strokeWidth={2} />
+          <Search className="w-3.5 h-3.5" strokeWidth={2} />
           {isSearching ? "جاري البحث..." : "أطلق الرادار"}
         </button>
       </div>
 
       {isSearching && (
-        <div className="mt-4 p-4 rounded-lg bg-accent border border-border text-center">
-          <p className="text-sm text-accent-foreground">جاري البحث في الإعلانات العقارية...</p>
+        <div className="mt-3 p-3 rounded-lg bg-primary/5 border border-primary/20 text-center">
+          <p className="text-xs text-primary">جاري البحث في الإعلانات العقارية...</p>
         </div>
       )}
     </div>
