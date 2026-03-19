@@ -11,7 +11,7 @@ const quickReplies = [
 const AiChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
-    { text: "مرحباً! كيف يمكنني مساعدتك؟", isUser: false },
+    { text: "أهلاً! أنا المستشار الذكي، كيف أقدر أساعدك؟ 🏠", isUser: false },
   ]);
   const [input, setInput] = useState("");
 
@@ -34,9 +34,9 @@ const AiChatbot = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 left-6 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center z-50 shadow-lg hover:bg-primary/90 transition-colors"
+        className="fixed bottom-5 left-5 w-12 h-12 rounded-full btn-neon flex items-center justify-center z-50"
       >
-        <MessageCircle className="w-6 h-6" strokeWidth={2} />
+        <MessageCircle className="w-5 h-5" strokeWidth={2} />
       </button>
 
       <AnimatePresence>
@@ -45,20 +45,20 @@ const AiChatbot = () => {
             initial={{ opacity: 0, y: 100, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.95 }}
-            className="fixed inset-x-4 bottom-4 top-20 z-50 bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden"
+            className="fixed inset-x-3 bottom-3 top-16 z-50 bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden"
           >
-            <div className="flex items-center justify-between p-4 border-b border-border bg-secondary">
-              <h3 className="text-sm font-bold text-foreground">المساعد الذكي</h3>
+            <div className="flex items-center justify-between p-3 border-b border-border bg-secondary">
+              <h3 className="text-xs font-bold text-foreground">المستشار الذكي 🤖</h3>
               <button onClick={() => setIsOpen(false)} className="text-text-dim hover:text-foreground transition-colors">
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            <div className="flex-1 overflow-y-auto p-3 space-y-2">
               {messages.map((msg, i) => (
                 <div
                   key={i}
-                  className={`max-w-[85%] p-3 rounded-lg text-sm ${
+                  className={`max-w-[85%] p-2.5 rounded-lg text-xs ${
                     msg.isUser
                       ? "bg-primary text-primary-foreground mr-auto"
                       : "bg-secondary text-foreground ml-auto"
@@ -69,31 +69,31 @@ const AiChatbot = () => {
               ))}
             </div>
 
-            <div className="p-3 border-t border-border">
-              <div className="flex gap-2 overflow-x-auto pb-2 mb-2">
+            <div className="p-2.5 border-t border-border">
+              <div className="flex gap-1.5 overflow-x-auto pb-1.5 mb-1.5">
                 {quickReplies.map((q) => (
                   <button
                     key={q.text}
                     onClick={() => handleSend(q.text)}
-                    className="whitespace-nowrap text-xs px-3 py-1.5 rounded-full bg-accent border border-border text-accent-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                    className="whitespace-nowrap text-[10px] px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
                     {q.text}
                   </button>
                 ))}
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-1.5">
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend("")}
                   placeholder="اكتب سؤالك..."
-                  className="flex-1 h-10 px-3 rounded-lg border border-border bg-background text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="flex-1 h-9 px-3 rounded-lg border border-border bg-secondary text-xs text-foreground placeholder:text-text-dim focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 <button
                   onClick={() => handleSend("")}
-                  className="w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
+                  className="w-9 h-9 rounded-lg btn-neon flex items-center justify-center"
                 >
-                  <Send className="w-4 h-4" strokeWidth={2} />
+                  <Send className="w-3.5 h-3.5" strokeWidth={2} />
                 </button>
               </div>
             </div>

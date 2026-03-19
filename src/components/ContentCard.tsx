@@ -1,4 +1,4 @@
-import { Palette, Sparkles } from "lucide-react";
+import { FileText, Sparkles } from "lucide-react";
 import { useState } from "react";
 
 const ContentCard = () => {
@@ -15,43 +15,44 @@ const ContentCard = () => {
   };
 
   return (
-    <div className="card-clean p-6">
+    <div className="card-neon p-5 relative">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
-          <Palette className="w-5 h-5 text-accent-foreground" strokeWidth={2} />
+        <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center neon-border border">
+          <FileText className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-base font-bold text-foreground">صانع المحتوى العقاري</h2>
-          <p className="text-xs text-text-dim">تصميم تلقائي لبوسترات سناب وتيكتوك</p>
+          <h2 className="text-sm font-bold text-foreground">صانع العروض العقارية</h2>
+          <p className="text-[10px] text-text-dim">عرض فخم بختم 'موثق' وتنسيق احترافي</p>
         </div>
       </div>
 
-      <div className="aspect-[9/16] max-h-48 rounded-lg overflow-hidden mb-4 relative bg-secondary border border-border">
+      <div className="aspect-[4/3] max-h-40 rounded-lg overflow-hidden mb-3 relative bg-secondary border border-border">
         {isCreating ? (
-          <div className="absolute inset-0 flex flex-col gap-3 p-4 items-center justify-center">
-            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs text-text-dim">جاري إنشاء التصميم...</p>
+          <div className="absolute inset-0 flex flex-col gap-2 items-center justify-center">
+            <div className="w-7 h-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <p className="text-[10px] text-text-dim">جاري إنشاء العرض...</p>
           </div>
         ) : posterReady ? (
-          <div className="absolute inset-0 bg-accent flex flex-col items-center justify-center p-4">
-            <Sparkles className="w-8 h-8 text-primary mb-2" />
-            <p className="text-sm text-primary font-medium text-center">بوستر عقاري جاهز</p>
-            <p className="text-xs text-text-dim mt-1">٩:١٦ — جاهز للنشر</p>
+          <div className="absolute inset-0 bg-primary/5 flex flex-col items-center justify-center p-3">
+            <Sparkles className="w-7 h-7 text-primary mb-2" />
+            <p className="text-xs text-primary font-bold text-center">عرض عقاري موثق</p>
+            <p className="text-[10px] text-text-dim mt-1">جاهز للتحميل والمشاركة</p>
           </div>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-xs text-text-dim">معاينة التصميم</p>
+            <p className="text-[10px] text-text-dim">معاينة العرض</p>
           </div>
         )}
       </div>
 
       <button
         onClick={handleCreate}
-        className="w-full h-11 rounded-lg bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors"
+        className="w-full h-10 btn-neon text-xs flex items-center justify-center gap-2"
       >
-        <Sparkles className="w-4 h-4" strokeWidth={2} />
-        {isCreating ? "جاري التصميم التلقائي..." : "إنشاء بوستر تلقائي"}
+        <Sparkles className="w-3.5 h-3.5" strokeWidth={2} />
+        {isCreating ? "جاري التصميم..." : "إنشاء عرض عقاري فخم"}
       </button>
+      <span className="watermark">عُتيبي ذكي Ai</span>
     </div>
   );
 };

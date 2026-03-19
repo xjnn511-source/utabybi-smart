@@ -10,28 +10,27 @@ const VoiceCard = () => {
   };
 
   return (
-    <div className="card-clean p-6">
+    <div className="card-neon p-5">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
-          <Mic className="w-5 h-5 text-accent-foreground" strokeWidth={2} />
+        <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center neon-border border">
+          <Mic className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-base font-bold text-foreground">الدعم العقاري الصوتي</h2>
-          <p className="text-xs text-text-dim">توليد صوتي تلقائي باللهجة النجدية</p>
+          <h2 className="text-sm font-bold text-foreground">كاتب المحتوى والصوت</h2>
+          <p className="text-[10px] text-text-dim">توليد صوتي باللهجة السعودية - ElevenLabs</p>
         </div>
       </div>
 
-      <div className="flex items-end justify-center gap-1 h-12 mb-4">
-        {Array.from({ length: 20 }).map((_, i) => (
+      <div className="flex items-end justify-center gap-[3px] h-10 mb-4">
+        {Array.from({ length: 24 }).map((_, i) => (
           <div
             key={i}
-            className={`w-1 rounded-full transition-all duration-300 ${
-              isGenerating ? "bg-primary" : "bg-border"
-            }`}
+            className="w-[3px] rounded-full transition-all duration-300"
             style={{
-              height: isGenerating
-                ? `${Math.random() * 32 + 8}px`
-                : "8px",
+              height: isGenerating ? `${Math.random() * 28 + 6}px` : "6px",
+              backgroundColor: isGenerating
+                ? `hsl(185 100% ${50 + Math.random() * 20}%)`
+                : "hsl(220 15% 25%)",
             }}
           />
         ))}
@@ -39,10 +38,10 @@ const VoiceCard = () => {
 
       <button
         onClick={handleGenerate}
-        className="w-full h-11 rounded-lg bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors"
+        className="w-full h-10 btn-neon text-xs flex items-center justify-center gap-2"
       >
-        <Volume2 className="w-4 h-4" strokeWidth={2} />
-        {isGenerating ? "جاري التوليد الصوتي..." : "تحويل تلقائي للنجدية"}
+        <Volume2 className="w-3.5 h-3.5" strokeWidth={2} />
+        {isGenerating ? "جاري التوليد الصوتي..." : "تحويل النص لصوت احترافي"}
       </button>
     </div>
   );
