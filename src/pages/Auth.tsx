@@ -83,7 +83,7 @@ const Auth = () => {
                 isLogin ? "btn-neon" : "text-muted-foreground"
               }`}
             >
-              تسجيل الدخول
+              دخول
             </button>
             <button
               onClick={() => { setIsLogin(false); setError(""); setSuccess(""); }}
@@ -91,7 +91,7 @@ const Auth = () => {
                 !isLogin ? "btn-neon" : "text-muted-foreground"
               }`}
             >
-              حساب جديد
+              تسجيل جديد
             </button>
           </div>
 
