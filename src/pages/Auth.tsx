@@ -91,7 +91,7 @@ const Auth = () => {
                 !isLogin ? "btn-neon" : "text-muted-foreground"
               }`}
             >
-              حساب جديد
+              تسجيل جديد
             </button>
           </div>
 
