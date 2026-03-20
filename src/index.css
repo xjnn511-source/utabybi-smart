@@ -63,9 +63,14 @@
     direction: rtl;
   }
 
-  input, textarea, label, select {
+  input, textarea, label, select, button, a, p, h1, h2, h3, h4, h5, h6, span, div {
     text-align: right;
   }
+}
+
+.notranslate {
+  -webkit-translate: none;
+  translate: none;
 }
 
 @layer utilities {
