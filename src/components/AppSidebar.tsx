@@ -19,7 +19,7 @@ const menuItems = [
   { title: "الرئيسية", icon: Home, id: "home" },
   { title: "محلل الصكوك", icon: FileSearch, id: "analyzer" },
   { title: "صانع العروض", icon: Megaphone, id: "offers" },
-  { title: "الرادار العقاري", icon: Radio, id: "radar" },
+  { title: "مُحلل السوق الذكي", icon: Radio, id: "radar" },
   { title: "حاسبة البركة", icon: Calculator, id: "calculator" },
   { title: "الاشتراكات", icon: CreditCard, id: "subscriptions" },
 ];
