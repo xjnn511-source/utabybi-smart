@@ -24,7 +24,7 @@ const Index = () => {
             <Menu className="w-4 h-4" />
           </SidebarTrigger>
 
-          <main className="space-y-3 p-3">
+          <main className="space-y-8 p-3">
             <SmartRadar />
             <BrainCard />
             <ContentCard />
@@ -32,14 +32,14 @@ const Index = () => {
             <BlessingCalculator />
           </main>
 
-          <section className="mt-3 pb-2">
-            <h2 className="text-xs font-bold text-foreground px-4 mb-2">الباقات والاشتراكات</h2>
+          <section className="mt-8 pb-2">
+            <h2 className="text-xs font-bold text-foreground px-4 mb-3">الباقات والاشتراكات</h2>
             <SubscriptionRow />
           </section>
 
-          <footer className="text-center pb-6 px-4">
+          <footer className="text-center pb-6 px-4 mt-8">
             <p className="text-[9px] text-muted-foreground">
-              عُتيبي ذكي Ai — منصتك الذكية للحلول العقارية
+              عُتيبي ذكي Ai – منصتك الذكية للحلول العقارية
             </p>
           </footer>
 

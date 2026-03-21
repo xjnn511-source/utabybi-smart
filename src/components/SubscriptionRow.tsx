@@ -2,8 +2,8 @@ import { Crown, Building2, Rocket } from "lucide-react";
 
 const plans = [
   { name: "باقة النخبة", price: "99", icon: Crown, features: ["تحليل ٥ صكوك", "بوستر واحد"], highlight: false },
-  { name: "المكتب", price: "299", icon: Building2, features: ["تحليل ٢٠ صك", "١٠ بوسترات", "دعم صوتي"], highlight: true },
-  { name: "الريادة", price: "499", icon: Rocket, features: ["تحليل غير محدود", "بوسترات غير محدودة", "دعم + فيديو"], highlight: false },
+  { name: "باقة الأعمال", price: "299", icon: Building2, features: ["تحليل ٢٠ صك", "١٠ بوسترات", "دعم صوتي"], highlight: true },
+  { name: "باقة المكتب", price: "499", icon: Rocket, features: ["تحليل غير محدود", "بوسترات غير محدودة", "دعم + فيديو"], highlight: false },
 ];
 
 const SubscriptionRow = () => {
