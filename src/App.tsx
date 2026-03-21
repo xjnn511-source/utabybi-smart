@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import Auth from "./pages/Auth.tsx";
+import UserDashboard from "./pages/UserDashboard.tsx";
+import AdminDashboard from "./pages/AdminDashboard.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
@@ -19,6 +21,8 @@ const App = () => (
         <Routes>
           <Route path="/auth" element={<Auth />} />
           <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
