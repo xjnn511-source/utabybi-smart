@@ -4,14 +4,14 @@ import { useState } from "react";
 
 const quickReplies = [
   { text: "كيف أرفع صك؟", answer: "فقط أسقط ملف الصك في منطقة تحليل الصكوك — النظام يحلله تلقائياً خلال ثوانٍ." },
-  { text: "ما هي باقة النخبة؟", answer: "باقة النخبة بـ ٩٩ ريال/شهر تتيح تحليل ٥ صكوك وبوستر واحد شهرياً." },
-  { text: "كيف يعمل الدعم العقاري؟", answer: "الذكاء يحول أي نص عقاري للهجة النجدية تلقائياً بضبط النبرة والإيقاع." },
+  { text: "ما هي باقة النخبة؟", answer: "باقة النخبة بـ ٩٩ ريال/شهر تتيح صناعة عروض عقارية و10 إعلانات عقارية مصممة شهرياً." },
+  { text: "كيف يعمل المونتاج؟", answer: "ارفع صور العقار وسيقوم الذكاء الاصطناعي بإنشاء فيديو مونتاج احترافي تلقائياً." },
 ];
 
 const AiChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
-    { text: "أهلاً! أنا المستشار الذكي، كيف أقدر أساعدك؟ 🏠", isUser: false },
+    { text: "أهلاً! أنا المستشار الذكي 🤖 كيف أقدر أساعدك؟", isUser: false },
   ]);
   const [input, setInput] = useState("");
 
@@ -47,9 +47,9 @@ const AiChatbot = () => {
             exit={{ opacity: 0, y: 100, scale: 0.95 }}
             className="fixed inset-x-3 bottom-3 top-16 z-50 bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden"
           >
-            <div className="flex items-center justify-between p-3 border-b border-border bg-secondary">
-              <h3 className="text-xs font-bold text-foreground">المستشار الذكي 🤖</h3>
-              <button onClick={() => setIsOpen(false)} className="text-text-dim hover:text-foreground transition-colors">
+            <div className="flex items-center justify-between p-3 border-b border-border bg-primary text-primary-foreground">
+              <h3 className="text-xs font-bold">المستشار الذكي 🤖</h3>
+              <button onClick={() => setIsOpen(false)} className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -87,7 +87,7 @@ const AiChatbot = () => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend("")}
                   placeholder="اكتب سؤالك..."
-                  className="flex-1 h-9 px-3 rounded-lg border border-border bg-secondary text-xs text-foreground placeholder:text-text-dim focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="flex-1 h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 <button
                   onClick={() => handleSend("")}

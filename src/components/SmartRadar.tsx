@@ -22,34 +22,34 @@ const SmartRadar = () => {
   return (
     <div className="card-neon p-5">
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center neon-border border">
+        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
           <BarChart3 className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
           <h2 className="text-sm font-bold text-foreground">مُحلل السوق الذكي Ai</h2>
-          <p className="text-[10px] text-text-dim">حلّل السوق العقاري بالذكاء الاصطناعي</p>
+          <p className="text-[10px] text-muted-foreground">حلّل السوق العقاري بالذكاء الاصطناعي</p>
         </div>
       </div>
 
       <div className="space-y-3 mb-4">
         <div>
-          <label className="text-[10px] font-medium text-text-dim mb-1 block">الميزانية (ريال)</label>
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">الميزانية (ريال)</label>
           <input
             type="text"
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
             placeholder="مثال: 500,000"
-            className="w-full h-9 px-3 rounded-lg border border-border bg-secondary text-xs text-foreground placeholder:text-text-dim focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
+            className="w-full h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
         <div>
-          <label className="text-[10px] font-medium text-text-dim mb-1 block">المدن المستهدفة</label>
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">المدن المستهدفة</label>
           <input
             type="text"
             value={cities}
             onChange={(e) => setCities(e.target.value)}
             placeholder="مثال: الرياض، جدة، الدمام"
-            className="w-full h-9 px-3 rounded-lg border border-border bg-secondary text-xs text-foreground placeholder:text-text-dim focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
+            className="w-full h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
       </div>
@@ -59,8 +59,8 @@ const SmartRadar = () => {
           onClick={handleVoice}
           className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all ${
             isListening
-              ? "bg-destructive/20 border-destructive text-destructive animate-pulse"
-              : "bg-secondary border-border text-text-dim hover:border-primary hover:text-primary"
+              ? "bg-destructive/10 border-destructive text-destructive animate-pulse"
+              : "bg-secondary border-border text-muted-foreground hover:border-primary hover:text-primary"
           }`}
         >
           <Mic className="w-4 h-4" strokeWidth={2} />

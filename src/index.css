@@ -6,50 +6,47 @@
 
 @layer base {
   :root {
-    --background: 220 20% 12%;
-    --foreground: 180 100% 95%;
+    --background: 210 20% 98%;
+    --foreground: 220 30% 15%;
 
-    --card: 220 18% 16%;
-    --card-foreground: 180 100% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 30% 15%;
 
-    --popover: 220 18% 16%;
-    --popover-foreground: 180 100% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 30% 15%;
 
-    --primary: 185 100% 50%;
-    --primary-foreground: 220 20% 8%;
+    --primary: 220 60% 30%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 180 60% 80%;
+    --secondary: 210 15% 95%;
+    --secondary-foreground: 220 30% 25%;
 
-    --muted: 220 15% 22%;
-    --muted-foreground: 220 10% 55%;
+    --muted: 210 15% 93%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 185 80% 15%;
-    --accent-foreground: 185 100% 65%;
+    --accent: 220 50% 95%;
+    --accent-foreground: 220 60% 30%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 25%;
-    --input: 220 15% 22%;
-    --ring: 185 100% 50%;
+    --border: 210 15% 88%;
+    --input: 210 15% 95%;
+    --ring: 220 60% 30%;
 
-    --radius: 0.75rem;
+    --radius: 0.625rem;
 
-    --surface: 220 18% 14%;
-    --text-dim: 220 10% 50%;
+    --surface: 210 15% 96%;
+    --text-dim: 220 10% 55%;
 
-    --neon-glow: 185 100% 50%;
-    --neon-soft: 185 80% 70%;
-
-    --sidebar-background: 220 20% 10%;
-    --sidebar-foreground: 180 100% 95%;
-    --sidebar-primary: 185 100% 50%;
-    --sidebar-primary-foreground: 220 20% 8%;
-    --sidebar-accent: 220 15% 20%;
-    --sidebar-accent-foreground: 185 100% 65%;
-    --sidebar-border: 220 15% 25%;
-    --sidebar-ring: 185 100% 50%;
+    --sidebar-background: 220 30% 15%;
+    --sidebar-foreground: 210 20% 95%;
+    --sidebar-primary: 210 20% 95%;
+    --sidebar-primary-foreground: 220 30% 15%;
+    --sidebar-accent: 220 25% 22%;
+    --sidebar-accent-foreground: 210 20% 90%;
+    --sidebar-border: 220 20% 25%;
+    --sidebar-ring: 220 60% 50%;
   }
 }
 
@@ -74,41 +71,51 @@
 }
 
 @layer utilities {
+  .card-professional {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+    transition: all 0.2s ease;
+  }
+
+  .card-professional:hover {
+    box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.08), 0 2px 6px -2px rgb(0 0 0 / 0.04);
+  }
+
+  /* Keep old class names as aliases for compatibility */
   .card-neon {
     background: hsl(var(--card));
     border: 1px solid hsl(var(--border));
     border-radius: var(--radius);
-    box-shadow: 0 0 0 1px hsl(185 100% 50% / 0.05);
-    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+    transition: all 0.2s ease;
   }
 
   .card-neon:hover {
-    border-color: hsl(185 100% 50% / 0.3);
-    box-shadow: 0 0 20px -5px hsl(185 100% 50% / 0.15), 0 0 0 1px hsl(185 100% 50% / 0.1);
+    box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.08);
   }
 
   .neon-text {
     color: hsl(var(--primary));
-    text-shadow: 0 0 10px hsl(185 100% 50% / 0.5), 0 0 30px hsl(185 100% 50% / 0.2);
   }
 
   .neon-border {
-    border-color: hsl(185 100% 50% / 0.4);
-    box-shadow: 0 0 15px -3px hsl(185 100% 50% / 0.2);
+    border-color: hsl(var(--primary) / 0.3);
   }
 
   .btn-neon {
-    background: linear-gradient(135deg, hsl(185 100% 50%), hsl(190 100% 40%));
-    color: hsl(220 20% 8%);
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
     font-weight: 700;
     border-radius: var(--radius);
-    box-shadow: 0 0 20px -5px hsl(185 100% 50% / 0.4);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
 
   .btn-neon:hover {
-    box-shadow: 0 0 30px -3px hsl(185 100% 50% / 0.6);
+    background: hsl(220 60% 25%);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px -2px hsl(var(--primary) / 0.3);
   }
 
   .watermark {
@@ -117,7 +124,7 @@
     left: 50%;
     transform: translateX(-50%);
     font-size: 9px;
-    color: hsl(185 100% 50% / 0.25);
+    color: hsl(var(--muted-foreground) / 0.4);
     letter-spacing: 0.5px;
     pointer-events: none;
     user-select: none;

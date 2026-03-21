@@ -27,12 +27,12 @@ const BrainCard = () => {
   return (
     <div className="card-neon p-5 relative">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center neon-border border">
+        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
           <Brain className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
           <h2 className="text-sm font-bold text-foreground">محلل الصكوك الذكي</h2>
-          <p className="text-[10px] text-text-dim">تحليل تلقائي بالذكاء الاصطناعي GPT-4o</p>
+          <p className="text-[10px] text-muted-foreground">تحليل تلقائي بالذكاء الاصطناعي GPT-4o</p>
         </div>
       </div>
 
@@ -45,17 +45,17 @@ const BrainCard = () => {
         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
           <Upload className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
-        <p className="text-[11px] text-text-dim">
+        <p className="text-[11px] text-muted-foreground">
           {isProcessing ? "جاري التحليل الذكي..." : "أسقط الصك هنا أو انقر للرفع"}
         </p>
       </div>
 
       {result && (
-        <div className="mt-3 p-2.5 rounded-lg bg-primary/10 border border-primary/20">
-          <p className="text-xs text-primary font-medium">{result}</p>
+        <div className="mt-3 p-2.5 rounded-lg bg-green-50 border border-green-200">
+          <p className="text-xs text-green-700 font-medium">{result}</p>
         </div>
       )}
-      <span className="watermark">عُتيبي ذكي Ai</span>
+      <span className="watermark">عُتيبي ذكي Ai 🤖</span>
     </div>
   );
 };
