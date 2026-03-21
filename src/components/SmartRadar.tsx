@@ -1,4 +1,4 @@
-import { Mic, Radar, Search } from "lucide-react";
+import { Mic, BarChart3, Search } from "lucide-react";
 import { useState } from "react";
 
 const SmartRadar = () => {
@@ -23,11 +23,11 @@ const SmartRadar = () => {
     <div className="card-neon p-5">
       <div className="flex items-center gap-3 mb-5">
         <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center neon-border border">
-          <Radar className="w-5 h-5 text-primary" strokeWidth={2} />
+          <BarChart3 className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">رادار الإعلانات الذكي</h2>
-          <p className="text-[10px] text-text-dim">ابحث عن أفضل الفرص العقارية بالذكاء الاصطناعي</p>
+          <h2 className="text-sm font-bold text-foreground">مُحلل السوق الذكي Ai</h2>
+          <p className="text-[10px] text-text-dim">حلّل السوق العقاري بالذكاء الاصطناعي</p>
         </div>
       </div>
 
@@ -72,13 +72,13 @@ const SmartRadar = () => {
           className="flex-1 h-10 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-50"
         >
           <Search className="w-3.5 h-3.5" strokeWidth={2} />
-          {isSearching ? "جاري البحث..." : "أطلق الرادار"}
+          {isSearching ? "جاري التحليل..." : "أطلق المحلل الذكي"}
         </button>
       </div>
 
       {isSearching && (
         <div className="mt-3 p-3 rounded-lg bg-primary/5 border border-primary/20 text-center">
-          <p className="text-xs text-primary">جاري البحث في الإعلانات العقارية...</p>
+          <p className="text-xs text-primary">جاري تحليل السوق العقاري...</p>
         </div>
       )}
     </div>
