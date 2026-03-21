@@ -12,12 +12,12 @@ const VoiceCard = () => {
   return (
     <div className="card-neon p-5">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center neon-border border">
+        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
           <Mic className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
           <h2 className="text-sm font-bold text-foreground">كاتب المحتوى والصوت</h2>
-          <p className="text-[10px] text-text-dim">توليد صوتي باللهجة السعودية - ElevenLabs</p>
+          <p className="text-[10px] text-muted-foreground">توليد صوتي باللهجة السعودية - ElevenLabs</p>
         </div>
       </div>
 
@@ -29,8 +29,8 @@ const VoiceCard = () => {
             style={{
               height: isGenerating ? `${Math.random() * 28 + 6}px` : "6px",
               backgroundColor: isGenerating
-                ? `hsl(185 100% ${50 + Math.random() * 20}%)`
-                : "hsl(220 15% 25%)",
+                ? `hsl(220 60% ${30 + Math.random() * 20}%)`
+                : "hsl(210 15% 88%)",
             }}
           />
         ))}

@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, Home, FileSearch, Megaphone, Radio, Calculator, CreditCard } from "lucide-react";
+import { LogOut, Home, FileSearch, Megaphone, Radio, Calculator, CreditCard, Video, LayoutDashboard, Shield } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,16 +17,35 @@ import {
 } from "@/components/ui/sidebar";
 
 const menuItems = [
-  { title: "الرئيسية", icon: Home, id: "home" },
-  { title: "محلل الصكوك", icon: FileSearch, id: "analyzer" },
-  { title: "صانع العروض", icon: Megaphone, id: "offers" },
-  { title: "مُحلل السوق الذكي", icon: Radio, id: "radar" },
-  { title: "حاسبة البركة", icon: Calculator, id: "calculator" },
-  { title: "الاشتراكات", icon: CreditCard, id: "subscriptions" },
+  { title: "الرئيسية", icon: Home, path: "/" },
+  { title: "لوحة التحكم", icon: LayoutDashboard, path: "/dashboard" },
+  { title: "محلل الصكوك", icon: FileSearch, path: "/" },
+  { title: "صانع الإعلانات العقارية", icon: Megaphone, path: "/" },
+  { title: "مُحلل السوق الذكي Ai", icon: Radio, path: "/" },
+  { title: "صانع فيديوهات المونتاج", icon: Video, path: "/" },
+  { title: "حاسبة البركة", icon: Calculator, path: "/" },
+  { title: "الاشتراكات", icon: CreditCard, path: "/" },
 ];
 
 const AppSidebar = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", user.id)
+          .eq("role", "admin")
+          .maybeSingle();
+        setIsAdmin(!!data);
+      }
+    };
+    checkAdmin();
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -34,40 +54,54 @@ const AppSidebar = () => {
 
   return (
     <Sidebar side="right" collapsible="offcanvas">
-      <SidebarHeader className="p-4 border-b border-border">
+      <SidebarHeader className="p-4 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-background p-0.5 border border-border">
+          <div className="w-10 h-10 rounded-xl bg-sidebar-accent p-0.5">
             <img src={logo} alt="عتيبي ذكي" className="w-full h-full rounded-lg object-cover" />
           </div>
           <div>
-            <h2 className="text-sm font-bold neon-text">عُتيبي ذكي Ai</h2>
-            <p className="text-[10px] text-muted-foreground">القائمة الرئيسية</p>
+            <h2 className="text-sm font-bold text-sidebar-foreground">عُتيبي ذكي Ai 🤖</h2>
+            <p className="text-[10px] text-sidebar-foreground/60">القائمة الرئيسية</p>
           </div>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-muted-foreground">التنقل</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-sidebar-foreground/50">التنقل</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton className="text-foreground hover:text-primary">
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    onClick={() => navigate(item.path)}
+                    className="text-sidebar-foreground hover:text-sidebar-primary hover:bg-sidebar-accent"
+                  >
                     <item.icon className="w-4 h-4" />
                     <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    onClick={() => navigate("/admin")}
+                    className="text-sidebar-foreground hover:text-sidebar-primary hover:bg-sidebar-accent"
+                  >
+                    <Shield className="w-4 h-4" />
+                    <span>لوحة تحكم المدير</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-3 border-t border-border">
+      <SidebarFooter className="p-3 border-t border-sidebar-border">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-destructive hover:bg-destructive/10 transition-colors text-sm font-medium"
+          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors text-sm font-medium"
         >
           <LogOut className="w-4 h-4" />
           <span>تسجيل الخروج</span>

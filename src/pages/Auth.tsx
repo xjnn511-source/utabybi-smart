@@ -72,29 +72,24 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 notranslate" translate="no">
-      {/* Glowing background effect */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-primary/5 blur-[100px]" />
-      </div>
-
       <div className="w-full max-w-sm relative z-10">
         {/* Logo */}
         <div className="flex flex-col items-center mb-10">
-          <div className="w-24 h-24 rounded-2xl bg-card border border-border p-1 mb-5 neon-border">
+          <div className="w-24 h-24 rounded-2xl bg-card border border-border p-1 mb-5 shadow-sm">
             <img src={logo} alt="عتيبي ذكي" className="w-full h-full rounded-xl object-cover" />
           </div>
-          <h1 className="text-2xl font-bold neon-text">عُتيبي ذكي Ai</h1>
+          <h1 className="text-2xl font-bold text-primary">عُتيبي ذكي Ai 🤖</h1>
           <p className="text-xs text-muted-foreground mt-2">منصة الحلول العقارية الذكية</p>
         </div>
 
         {/* Form Card */}
         <div className="card-neon p-7">
           {/* Toggle */}
-          <div className="flex rounded-lg bg-secondary/50 p-1 mb-7">
+          <div className="flex rounded-lg bg-secondary p-1 mb-7">
             <button
               onClick={() => { setIsLogin(true); setError(""); setSuccess(""); }}
               className={`flex-1 py-2.5 px-4 text-sm font-bold rounded-md transition-all ${
-                isLogin ? "btn-neon" : "text-muted-foreground"
+                isLogin ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground"
               }`}
             >
               دخول
@@ -102,7 +97,7 @@ const Auth = () => {
             <button
               onClick={() => { setIsLogin(false); setError(""); setSuccess(""); }}
               className={`flex-1 py-2.5 px-4 text-sm font-bold rounded-md transition-all ${
-                !isLogin ? "btn-neon" : "text-muted-foreground"
+                !isLogin ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground"
               }`}
             >
               تسجيل جديد
@@ -160,13 +155,13 @@ const Auth = () => {
               <p className="text-destructive text-xs text-center bg-destructive/10 rounded-lg py-2.5">{error}</p>
             )}
             {success && (
-              <p className="text-primary text-xs text-center bg-primary/10 rounded-lg py-2.5">{success}</p>
+              <p className="text-green-700 text-xs text-center bg-green-50 rounded-lg py-2.5">{success}</p>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-neon py-3.5 px-6 text-sm rounded-lg disabled:opacity-50"
+              className="w-full bg-primary text-primary-foreground py-3.5 px-6 text-sm font-bold rounded-lg disabled:opacity-50 hover:bg-primary/90 transition-colors"
             >
               {loading ? "جاري المعالجة..." : isLogin ? "دخول" : "إنشاء حساب"}
             </button>
@@ -183,7 +178,7 @@ const Auth = () => {
           <button
             onClick={handleGoogleLogin}
             disabled={googleLoading}
-            className="w-full flex items-center justify-center gap-3 py-3.5 px-6 rounded-lg border border-border bg-secondary/50 text-foreground text-sm font-medium hover:bg-secondary/80 transition-all disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-3 py-3.5 px-6 rounded-lg border border-border bg-card text-foreground text-sm font-medium hover:bg-secondary transition-all disabled:opacity-50"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -196,7 +191,7 @@ const Auth = () => {
         </div>
 
         <p className="text-center text-[9px] text-muted-foreground mt-8">
-          عُتيبي ذكي Ai — منصتك الذكية للحلول العقارية
+          عُتيبي ذكي Ai 🤖 — منصتك الذكية للحلول العقارية
         </p>
       </div>
     </div>
