@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, Home, FileSearch, Megaphone, Radio, Calculator, CreditCard, Video, LayoutDashboard, Shield } from "lucide-react";
+import { LogOut, Home, FileSearch, Megaphone, Radio, Calculator, CreditCard, Video, LayoutDashboard, Shield, Scissors, TrendingUp } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { useEffect, useState } from "react";
 import {
@@ -20,9 +20,11 @@ const menuItems = [
   { title: "الرئيسية", icon: Home, path: "/" },
   { title: "لوحة التحكم", icon: LayoutDashboard, path: "/dashboard" },
   { title: "محلل الصكوك", icon: FileSearch, path: "/" },
+  { title: "المُحرر الذكي (The Silencer)", icon: Scissors, path: "/" },
   { title: "صانع الإعلانات العقارية", icon: Megaphone, path: "/" },
   { title: "مُحلل السوق الذكي Ai", icon: Radio, path: "/" },
   { title: "صانع فيديوهات المونتاج", icon: Video, path: "/" },
+  { title: "إعلانات TikTok", icon: TrendingUp, path: "/tiktok" },
   { title: "حاسبة البركة", icon: Calculator, path: "/" },
   { title: "الاشتراكات", icon: CreditCard, path: "/" },
 ];
