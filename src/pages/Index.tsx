@@ -4,6 +4,7 @@ import SmartRadar from "@/components/SmartRadar";
 import VoiceCard from "@/components/VoiceCard";
 import ContentCard from "@/components/ContentCard";
 import VideoMontageCard from "@/components/VideoMontageCard";
+import AiVideoEditor from "@/components/AiVideoEditor";
 import BlessingCalculator from "@/components/BlessingCalculator";
 import SubscriptionRow from "@/components/SubscriptionRow";
 import AiChatbot from "@/components/AiChatbot";
@@ -27,13 +28,14 @@ const Index = () => {
           <main className="space-y-8 p-3 mt-2">
             <SmartRadar />
             <BrainCard />
+            <AiVideoEditor />
             <ContentCard />
             <VideoMontageCard />
             <VoiceCard />
             <BlessingCalculator />
           </main>
 
-          <section className="mt-8 pb-2">
+          <section id="subscription-section" className="mt-8 pb-2">
             <h2 className="text-xs font-bold text-foreground px-4 mb-3">الباقات والاشتراكات</h2>
             <SubscriptionRow />
           </section>

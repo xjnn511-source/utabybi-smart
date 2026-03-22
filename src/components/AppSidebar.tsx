@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, Home, FileSearch, Megaphone, Radio, Calculator, CreditCard, Video, LayoutDashboard, Shield, Scissors } from "lucide-react";
+import { LogOut, Home, FileSearch, Megaphone, Radio, Calculator, CreditCard, Video, LayoutDashboard, Shield, Scissors, TrendingUp } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { useEffect, useState } from "react";
 import {
