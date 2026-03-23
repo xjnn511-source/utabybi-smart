@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { CreditCard, FileText, Video, ArrowRight, Package } from "lucide-react";
+import { CreditCard, FileText, Video, ArrowRight, Package, Mic } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import type { Tables } from "@/integrations/supabase/types";
 
 const planLabels: Record<string, string> = {
   elite: "باقة النخبة",
   leadership: "باقة الأعمال",
-  office: "باقة المكتب",
+  office: "باقة المكتب Pro",
+};
+
+const planQuotas: Record<string, { chars: number; services: number }> = {
+  elite: { chars: 2000, services: 10 },
+  leadership: { chars: 15000, services: 30 },
+  office: { chars: 40000, services: 100 },
 };
 
 const UserDashboard = () => {
@@ -15,19 +22,22 @@ const UserDashboard = () => {
   const [subscription, setSubscription] = useState<Tables<"subscribers"> | null>(null);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);
+  const [analysisCount, setAnalysisCount] = useState(0);
 
   useEffect(() => {
     const load = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const [{ data: sub }, { data: prof }] = await Promise.all([
+      const [{ data: sub }, { data: prof }, { count }] = await Promise.all([
         supabase.from("subscribers").select("*").eq("user_id", user.id).eq("is_active", true).maybeSingle(),
         supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle(),
+        supabase.from("deed_analyses").select("*", { count: "exact", head: true }).eq("user_id", user.id),
       ]);
 
       setSubscription(sub);
       setProfile(prof);
+      setAnalysisCount(count || 0);
       setLoading(false);
     };
     load();
@@ -40,6 +50,13 @@ const UserDashboard = () => {
       </div>
     );
   }
+
+  const quota = subscription ? planQuotas[subscription.plan] || { chars: 0, services: 0 } : { chars: 0, services: 0 };
+  const usedServices = analysisCount;
+  const servicesPercent = quota.services > 0 ? Math.min((usedServices / quota.services) * 100, 100) : 0;
+  // Simulated char usage (would come from real tracking)
+  const usedChars = 0;
+  const charsPercent = quota.chars > 0 ? Math.min((usedChars / quota.chars) * 100, 100) : 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,20 +119,50 @@ const UserDashboard = () => {
           )}
         </div>
 
+        {/* Usage Tracker */}
+        {subscription && (
+          <div className="card-neon p-5">
+            <h2 className="text-sm font-bold text-foreground mb-4">📊 متتبع الاستخدام</h2>
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between items-center mb-1.5">
+                  <span className="text-[11px] text-muted-foreground">الخدمات المستخدمة</span>
+                  <span className="text-[11px] font-bold text-foreground">{usedServices} / {quota.services}</span>
+                </div>
+                <Progress value={servicesPercent} className="h-2.5" />
+              </div>
+              <div>
+                <div className="flex justify-between items-center mb-1.5">
+                  <span className="text-[11px] text-muted-foreground">الأحرف المستخدمة (صوت عُتيبي ذكي)</span>
+                  <span className="text-[11px] font-bold text-foreground">{usedChars.toLocaleString("ar-SA")} / {quota.chars.toLocaleString("ar-SA")}</span>
+                </div>
+                <Progress value={charsPercent} className="h-2.5" />
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Credits */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="card-neon p-4 text-center">
-            <FileText className="w-6 h-6 text-primary mx-auto mb-2" />
-            <p className="text-[10px] text-muted-foreground mb-1">إعلانات عقارية مصممة</p>
-            <p className="text-2xl font-bold text-foreground">
-              {subscription?.plan === "office" ? "∞" : subscription?.plan === "leadership" ? "30" : subscription?.plan === "elite" ? "10" : "0"}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="card-neon p-3 text-center">
+            <FileText className="w-5 h-5 text-primary mx-auto mb-1.5" />
+            <p className="text-[9px] text-muted-foreground mb-1">إعلانات مصممة</p>
+            <p className="text-xl font-bold text-foreground">
+              {subscription ? quota.services : "0"}
             </p>
           </div>
-          <div className="card-neon p-4 text-center">
-            <Video className="w-6 h-6 text-primary mx-auto mb-2" />
-            <p className="text-[10px] text-muted-foreground mb-1">مونتاج فيديو</p>
-            <p className="text-2xl font-bold text-foreground">
-              {subscription?.plan === "office" ? "∞" : subscription?.plan === "leadership" ? "✓" : "—"}
+          <div className="card-neon p-3 text-center">
+            <Video className="w-5 h-5 text-primary mx-auto mb-1.5" />
+            <p className="text-[9px] text-muted-foreground mb-1">مونتاج فيديو</p>
+            <p className="text-xl font-bold text-foreground">
+              {subscription?.plan === "office" ? "✓" : subscription?.plan === "leadership" ? "✓" : "—"}
+            </p>
+          </div>
+          <div className="card-neon p-3 text-center">
+            <Mic className="w-5 h-5 text-primary mx-auto mb-1.5" />
+            <p className="text-[9px] text-muted-foreground mb-1">صوت عُتيبي ذكي</p>
+            <p className="text-xl font-bold text-foreground">
+              {subscription ? `${(quota.chars / 1000).toFixed(0)}k` : "—"}
             </p>
           </div>
         </div>

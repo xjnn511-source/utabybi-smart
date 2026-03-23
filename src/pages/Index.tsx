@@ -47,15 +47,16 @@ const Index = () => {
               المسؤولية النهائية عن دقة البيانات تقع على عاتق المستخدم وحده.
             </p>
             <p className="text-[8px] text-muted-foreground/50 text-center mt-1">
-              ⚠️ صوت "خالد العتيبي" محمي بعلامة مائية رقمية. الاستخدام غير المصرح به يُعرّض صاحبه للمساءلة القانونية.
+              ⚠️ صوت "عُتيبي ذكي" محمي بعلامة مائية رقمية. الاستخدام غير المصرح به يُعرّض صاحبه للمساءلة القانونية.
             </p>
           </div>
 
-          <footer className="text-center pb-6 px-4 mt-6">
-            <p className="text-[9px] text-muted-foreground">
+          {/* Footer - Force Centered */}
+          <footer className="pb-6 px-4 mt-6" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+            <p className="text-[9px] text-muted-foreground" style={{ textAlign: "center" }}>
               عُتيبي ذكي Ai 🤖 – منصتك الذكية للحلول العقارية
             </p>
-            <p className="text-[8px] text-muted-foreground/40 mt-1">
+            <p className="text-[8px] text-muted-foreground/40 mt-1" style={{ textAlign: "center" }}>
               🇸🇦 🇦🇪 🇶🇦 🇧🇭 🇰🇼 🇴🇲 متاح لجميع دول الخليج العربي
             </p>
           </footer>
