@@ -1,5 +1,5 @@
-import { Video, Upload, Scissors, Volume2, Sparkles, CheckCircle } from "lucide-react";
-import { useState, useRef } from "react";
+import { Video, Upload, Scissors, Volume2, Sparkles, CheckCircle, ShieldAlert } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -9,7 +9,23 @@ const AiVideoEditor = () => {
   const [status, setStatus] = useState<RenderStatus>("idle");
   const [fileName, setFileName] = useState("");
   const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setIsAdmin(false); return; }
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      setIsAdmin(!!data);
+    };
+    checkAdmin();
+  }, []);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -24,7 +40,6 @@ const AiVideoEditor = () => {
     setStatus("uploading");
 
     try {
-      // Upload to storage
       const path = `videos/${Date.now()}_${file.name}`;
       const { error: uploadError } = await supabase.storage
         .from("deeds")
@@ -36,12 +51,10 @@ const AiVideoEditor = () => {
 
       setStatus("processing");
 
-      // Call Creatomate edge function
       const { data, error } = await supabase.functions.invoke("creatomate-render", {
         body: {
           source_url: urlData.publicUrl,
           modifications: {
-            // Trim silence settings
             volume: "100%",
           },
         },
@@ -54,7 +67,6 @@ const AiVideoEditor = () => {
         setStatus("done");
         toast({ title: "تم تحرير الفيديو بنجاح! 🎬" });
       } else if (data?.[0]?.status === "planned" || data?.[0]?.status === "rendering") {
-        // Creatomate processes async, show as done for now
         setStatus("done");
         toast({ title: "تم إرسال الفيديو للمعالجة! ستصلك النتيجة قريباً 🎬" });
       } else {
@@ -79,6 +91,46 @@ const AiVideoEditor = () => {
     if (fileRef.current) fileRef.current.value = "";
   };
 
+  // Loading state
+  if (isAdmin === null) {
+    return (
+      <div className="card-neon p-5 relative">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+            <Scissors className="w-5 h-5 text-primary" strokeWidth={2} />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-foreground">المُحرر الذكي (The Silencer) 🎬</h2>
+            <p className="text-[10px] text-muted-foreground">جاري التحميل...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Non-admin: show locked card
+  if (!isAdmin) {
+    return (
+      <div className="card-neon p-5 relative opacity-75">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+            <Scissors className="w-5 h-5 text-primary" strokeWidth={2} />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-foreground">المُحرر الذكي (The Silencer) 🎬</h2>
+            <p className="text-[10px] text-muted-foreground">حذف الصمت + صوت احترافي بالذكاء الاصطناعي</p>
+          </div>
+        </div>
+        <div className="border border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center gap-2">
+          <ShieldAlert className="w-8 h-8 text-muted-foreground" />
+          <p className="text-xs text-muted-foreground font-bold">خاصية حصرية للمدير</p>
+          <p className="text-[10px] text-muted-foreground">هذه الأداة متاحة فقط لمالك المنصة</p>
+        </div>
+        <span className="watermark">عُتيبي ذكي Ai 🤖</span>
+      </div>
+    );
+  }
+
   return (
     <div className="card-neon p-5 relative">
       <div className="flex items-center gap-3 mb-4">
@@ -89,6 +141,9 @@ const AiVideoEditor = () => {
           <h2 className="text-sm font-bold text-foreground">المُحرر الذكي (The Silencer) 🎬</h2>
           <p className="text-[10px] text-muted-foreground">حذف الصمت + صوت احترافي بالذكاء الاصطناعي</p>
         </div>
+        <span className="mr-auto text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
+          Admin ✓
+        </span>
       </div>
 
       <input
@@ -176,6 +231,12 @@ const AiVideoEditor = () => {
           </button>
         )}
       </div>
+
+      {/* Voice Brand Protection Notice */}
+      <p className="text-[8px] text-muted-foreground/50 text-center mt-2">
+        ⚠️ صوت "خالد العتيبي" محمي بعلامة مائية رقمية. الاستخدام غير المصرح به يعرّض صاحبه للمساءلة القانونية.
+      </p>
+
       <span className="watermark">عُتيبي ذكي Ai 🤖</span>
     </div>
   );

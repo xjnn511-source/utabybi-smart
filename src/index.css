@@ -56,7 +56,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-tajawal antialiased;
+    @apply bg-background text-foreground font-cairo antialiased;
     direction: rtl;
   }
 
