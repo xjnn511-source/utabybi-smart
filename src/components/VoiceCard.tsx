@@ -16,8 +16,8 @@ const VoiceCard = () => {
           <Mic className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">كاتب المحتوى والصوت</h2>
-          <p className="text-[10px] text-muted-foreground">توليد صوتي باللهجة السعودية - ElevenLabs</p>
+          <h2 className="text-sm font-bold text-foreground">صوت عُتيبي ذكي Ai</h2>
+          <p className="text-[10px] text-muted-foreground">توليد صوتي احترافي باللهجة السعودية</p>
         </div>
       </div>
 

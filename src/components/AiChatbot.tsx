@@ -1,33 +1,109 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { MessageCircle, X, Send } from "lucide-react";
-import { useState } from "react";
+import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
+
+type Msg = { role: "user" | "assistant"; content: string };
 
 const quickReplies = [
-  { text: "كيف أرفع صك؟", answer: "فقط أسقط ملف الصك في منطقة تحليل الصكوك — النظام يحلله تلقائياً خلال ثوانٍ." },
-  { text: "ما هي باقة النخبة؟", answer: "باقة النخبة بـ ٩٩ ريال/شهر تتيح صناعة عروض عقارية و10 إعلانات عقارية مصممة شهرياً." },
-  { text: "كيف يعمل المونتاج؟", answer: "ارفع صور العقار وسيقوم الذكاء الاصطناعي بإنشاء فيديو مونتاج احترافي تلقائياً." },
+  "كيف أرفع صك؟",
+  "ما هي باقة النخبة؟",
+  "كيف يعمل المونتاج؟",
+  "ما الفرق بين الباقات؟",
 ];
 
 const AiChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
-    { text: "أهلاً! أنا المستشار الذكي 🤖 كيف أقدر أساعدك؟", isUser: false },
+  const [messages, setMessages] = useState<Msg[]>([
+    { role: "assistant", content: "أهلاً! أنا المستشار الذكي 🤖 كيف أقدر أساعدك؟" },
   ]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handleSend = (text: string) => {
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleSend = async (text?: string) => {
     const userMsg = text || input;
-    if (!userMsg.trim()) return;
-    setMessages((prev) => [...prev, { text: userMsg, isUser: true }]);
-    setInput("");
+    if (!userMsg.trim() || isLoading) return;
 
-    const match = quickReplies.find((q) => q.text === userMsg);
-    setTimeout(() => {
+    const newUserMsg: Msg = { role: "user", content: userMsg };
+    const updatedMessages = [...messages, newUserMsg];
+    setMessages(updatedMessages);
+    setInput("");
+    setIsLoading(true);
+
+    let assistantSoFar = "";
+
+    try {
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: updatedMessages }),
+      });
+
+      if (!resp.ok || !resp.body) {
+        const errData = await resp.json().catch(() => ({}));
+        throw new Error(errData.error || "فشل الاتصال");
+      }
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") break;
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantSoFar += content;
+              setMessages((prev) => {
+                const last = prev[prev.length - 1];
+                if (last?.role === "assistant" && prev.length > updatedMessages.length) {
+                  return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+                }
+                return [...prev, { role: "assistant", content: assistantSoFar }];
+              });
+            }
+          } catch {
+            textBuffer = line + "\n" + textBuffer;
+            break;
+          }
+        }
+      }
+    } catch (err: any) {
       setMessages((prev) => [
         ...prev,
-        { text: match?.answer || "جاري المعالجة... النظام يعمل على استفسارك.", isUser: false },
+        { role: "assistant", content: err.message || "حدث خطأ، حاول مرة أخرى." },
       ]);
-    }, 800);
+    }
+
+    setIsLoading(false);
   };
 
   return (
@@ -54,30 +130,43 @@ const AiChatbot = () => {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-3 space-y-2">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-2">
               {messages.map((msg, i) => (
                 <div
                   key={i}
                   className={`max-w-[85%] p-2.5 rounded-lg text-xs ${
-                    msg.isUser
+                    msg.role === "user"
                       ? "bg-primary text-primary-foreground mr-auto"
                       : "bg-secondary text-foreground ml-auto"
                   }`}
                 >
-                  {msg.text}
+                  {msg.role === "assistant" ? (
+                    <div className="prose prose-sm prose-slate max-w-none text-xs [&>p]:m-0 [&>ul]:m-0 [&>ol]:m-0">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    msg.content
+                  )}
                 </div>
               ))}
+              {isLoading && messages[messages.length - 1]?.role === "user" && (
+                <div className="max-w-[85%] p-2.5 rounded-lg bg-secondary text-foreground ml-auto flex items-center gap-2">
+                  <Loader2 className="w-3 h-3 animate-spin text-primary" />
+                  <span className="text-[10px] text-muted-foreground">جاري التفكير...</span>
+                </div>
+              )}
             </div>
 
             <div className="p-2.5 border-t border-border">
               <div className="flex gap-1.5 overflow-x-auto pb-1.5 mb-1.5">
                 {quickReplies.map((q) => (
                   <button
-                    key={q.text}
-                    onClick={() => handleSend(q.text)}
-                    className="whitespace-nowrap text-[10px] px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+                    key={q}
+                    onClick={() => handleSend(q)}
+                    disabled={isLoading}
+                    className="whitespace-nowrap text-[10px] px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground transition-colors disabled:opacity-50"
                   >
-                    {q.text}
+                    {q}
                   </button>
                 ))}
               </div>
@@ -85,13 +174,15 @@ const AiChatbot = () => {
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSend("")}
+                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
                   placeholder="اكتب سؤالك..."
-                  className="flex-1 h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  disabled={isLoading}
+                  className="flex-1 h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
                 />
                 <button
-                  onClick={() => handleSend("")}
-                  className="w-9 h-9 rounded-lg btn-neon flex items-center justify-center"
+                  onClick={() => handleSend()}
+                  disabled={isLoading}
+                  className="w-9 h-9 rounded-lg btn-neon flex items-center justify-center disabled:opacity-50"
                 >
                   <Send className="w-3.5 h-3.5" strokeWidth={2} />
                 </button>

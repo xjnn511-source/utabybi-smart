@@ -1,11 +1,11 @@
-import { Crown, Building2, Rocket, Gift } from "lucide-react";
+import { Crown, Building2, Rocket, Gift, Gem } from "lucide-react";
 
 const plans = [
   {
     name: "تجربة مجانية",
     price: "0",
     icon: Gift,
-    features: ["تحليل صك واحد مجاناً", "إعلان فيديو Ai واحد مجاناً"],
+    features: ["تحليل صك واحد مجاناً", "إعلان فيديو Ai واحد مجاناً", "صوت عُتيبي ذكي (150 حرف)"],
     highlight: false,
     isFree: true,
   },
@@ -13,7 +13,7 @@ const plans = [
     name: "باقة النخبة",
     price: "99",
     icon: Crown,
-    features: ["صناعة عروض عقارية", "10 إعلانات عقارية مصممة", "صوت خالد العتيبي Ai"],
+    features: ["صناعة عروض عقارية", "10 خدمات شهرياً", "2,000 حرف/شهر", "صوت عُتيبي ذكي Ai"],
     highlight: false,
     isFree: false,
   },
@@ -21,17 +21,18 @@ const plans = [
     name: "باقة الأعمال",
     price: "299",
     icon: Building2,
-    features: ["مونتاج فيديو Ai", "صناعة عروض عقارية", "30 إعلان عقاري مصمم", "صوت خالد العتيبي Ai"],
+    features: ["مونتاج فيديو Ai", "30 خدمة شهرياً", "15,000 حرف/شهر", "صوت عُتيبي ذكي Ai"],
     highlight: true,
     isFree: false,
   },
   {
-    name: "باقة المكتب",
+    name: "باقة المكتب Pro",
     price: "499",
     icon: Rocket,
-    features: ["كل الخدمات بلا حدود", "إعلانات غير محدودة", "مونتاج + عروض + دعم", "صوت خالد العتيبي Ai"],
+    features: ["كل الخدمات بلا حدود", "100 خدمة شهرياً", "40,000 حرف/شهر", "صوت عُتيبي ذكي Ai"],
     highlight: false,
     isFree: false,
+    isPro: true,
   },
 ];
 
@@ -44,17 +45,23 @@ const SubscriptionRow = () => {
             key={plan.name}
             className={`card-neon p-4 min-w-[185px] snap-center flex flex-col ${
               plan.highlight ? "border-primary border-2" : ""
-            } ${plan.isFree ? "border-green-500/50" : ""}`}
+            } ${plan.isFree ? "border-green-500/50" : ""} ${"isPro" in plan && plan.isPro ? "border-amber-500/50" : ""}`}
           >
             <div className="flex items-center gap-2 mb-2">
-              <div className={`w-7 h-7 rounded-md flex items-center justify-center ${plan.isFree ? "bg-green-100" : "bg-primary/10"}`}>
-                <plan.icon className={`w-3.5 h-3.5 ${plan.isFree ? "text-green-600" : "text-primary"}`} strokeWidth={2} />
+              <div className={`w-7 h-7 rounded-md flex items-center justify-center ${
+                plan.isFree ? "bg-green-100" : "isPro" in plan && plan.isPro ? "bg-amber-100" : "bg-primary/10"
+              }`}>
+                <plan.icon className={`w-3.5 h-3.5 ${
+                  plan.isFree ? "text-green-600" : "isPro" in plan && plan.isPro ? "text-amber-600" : "text-primary"
+                }`} strokeWidth={2} />
               </div>
               <h3 className="text-xs font-bold text-foreground">{plan.name}</h3>
             </div>
 
             <div className="mb-2">
-              <span className={`text-xl font-bold ${plan.isFree ? "text-green-600" : "text-primary"}`}>{plan.price}</span>
+              <span className={`text-xl font-bold ${
+                plan.isFree ? "text-green-600" : "isPro" in plan && plan.isPro ? "text-amber-600" : "text-primary"
+              }`}>{plan.price}</span>
               <span className="text-[10px] text-muted-foreground mr-1">
                 {plan.isFree ? "مجاناً" : "ر.س/شهر"}
               </span>
@@ -63,7 +70,9 @@ const SubscriptionRow = () => {
             <ul className="space-y-1 mb-3 flex-1">
               {plan.features.map((f) => (
                 <li key={f} className="text-[10px] text-muted-foreground flex items-center gap-1.5">
-                  <span className={`w-1 h-1 rounded-full inline-block ${plan.isFree ? "bg-green-500" : "bg-primary"}`} />
+                  <span className={`w-1 h-1 rounded-full inline-block ${
+                    plan.isFree ? "bg-green-500" : "isPro" in plan && plan.isPro ? "bg-amber-500" : "bg-primary"
+                  }`} />
                   {f}
                 </li>
               ))}
@@ -74,7 +83,9 @@ const SubscriptionRow = () => {
                 ? "bg-green-600 text-white hover:bg-green-700"
                 : plan.highlight
                   ? "btn-neon"
-                  : "bg-secondary border border-border text-foreground hover:border-primary hover:text-primary"
+                  : "isPro" in plan && plan.isPro
+                    ? "bg-amber-600 text-white hover:bg-amber-700"
+                    : "bg-secondary border border-border text-foreground hover:border-primary hover:text-primary"
             }`}>
               {plan.isFree ? "ابدأ مجاناً" : "اشترك الآن"}
             </button>
@@ -82,8 +93,18 @@ const SubscriptionRow = () => {
         ))}
       </div>
 
+      {/* Payment Methods */}
+      <div className="flex items-center justify-center gap-4 px-4 pb-2">
+        <span className="text-[9px] text-muted-foreground">طرق الدفع:</span>
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] font-bold text-foreground bg-secondary px-2 py-0.5 rounded">Apple Pay</span>
+          <span className="text-[10px] font-bold text-foreground bg-secondary px-2 py-0.5 rounded">mada</span>
+          <span className="text-[10px] font-bold text-foreground bg-secondary px-2 py-0.5 rounded">STC Pay</span>
+        </div>
+      </div>
+
       <p className="text-[10px] text-muted-foreground text-center px-6 pb-3 leading-relaxed">
-        تنبيه: 5% من قيمة اشتراكك تُستقطع كصدقة جارية لوالدينا ووالديكم في بند البركة.
+        تنبيه: 5% من قيمة اشتراكك تُستقطع كصدقة جارية لوالدينا ووالديكم في بند البركة. 💚
       </p>
     </>
   );
