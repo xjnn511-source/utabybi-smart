@@ -40,9 +40,23 @@ const Index = () => {
             <SubscriptionRow />
           </section>
 
-          <footer className="text-center pb-6 px-4 mt-8">
+          {/* Legal Disclaimer */}
+          <div className="mx-4 mt-4 p-3 rounded-lg bg-secondary/50 border border-border">
+            <p className="text-[8px] text-muted-foreground leading-relaxed text-center">
+              ⚖️ إخلاء مسؤولية قانوني: هذا التطبيق أداة تقنية مساعدة فقط ولا يُعدّ مستنداً رسمياً أو بديلاً عن الاستشارة العقارية/القانونية المتخصصة.
+              المسؤولية النهائية عن دقة البيانات تقع على عاتق المستخدم وحده.
+            </p>
+            <p className="text-[8px] text-muted-foreground/50 text-center mt-1">
+              ⚠️ صوت "خالد العتيبي" محمي بعلامة مائية رقمية. الاستخدام غير المصرح به يُعرّض صاحبه للمساءلة القانونية.
+            </p>
+          </div>
+
+          <footer className="text-center pb-6 px-4 mt-6">
             <p className="text-[9px] text-muted-foreground">
               عُتيبي ذكي Ai 🤖 – منصتك الذكية للحلول العقارية
+            </p>
+            <p className="text-[8px] text-muted-foreground/40 mt-1">
+              🇸🇦 🇦🇪 🇶🇦 🇧🇭 🇰🇼 🇴🇲 متاح لجميع دول الخليج العربي
             </p>
           </footer>
 
