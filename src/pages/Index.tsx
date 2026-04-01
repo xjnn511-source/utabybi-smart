@@ -9,6 +9,7 @@ import BlessingCalculator from "@/components/BlessingCalculator";
 import SubscriptionRow from "@/components/SubscriptionRow";
 import AiChatbot from "@/components/AiChatbot";
 import AppSidebar from "@/components/AppSidebar";
+import Footer from "@/components/Footer";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu } from "lucide-react";
 
@@ -51,15 +52,7 @@ const Index = () => {
             </p>
           </div>
 
-          {/* Footer - Force Centered */}
-          <footer className="pb-6 px-4 mt-6" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-            <p className="text-[9px] text-muted-foreground" style={{ textAlign: "center" }}>
-              عُتيبي ذكي Ai 🤖 – منصتك الذكية للحلول العقارية
-            </p>
-            <p className="text-[8px] text-muted-foreground/40 mt-1" style={{ textAlign: "center" }}>
-              🇸🇦 🇦🇪 🇶🇦 🇧🇭 🇰🇼 🇴🇲 متاح لجميع دول الخليج العربي
-            </p>
-          </footer>
+          <Footer />
 
           <AiChatbot />
         </div>
