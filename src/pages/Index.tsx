@@ -9,6 +9,7 @@ import BlessingCalculator from "@/components/BlessingCalculator";
 import SubscriptionRow from "@/components/SubscriptionRow";
 import AiChatbot from "@/components/AiChatbot";
 import AppSidebar from "@/components/AppSidebar";
+import Footer from "@/components/Footer";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu } from "lucide-react";
 
