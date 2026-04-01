@@ -9,6 +9,9 @@ import UserDashboard from "./pages/UserDashboard.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import TikTokDashboard from "./pages/TikTokDashboard.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
+import TermsOfService from "./pages/TermsOfService.tsx";
+import RefundPolicy from "./pages/RefundPolicy.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const queryClient = new QueryClient();
