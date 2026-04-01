@@ -43,6 +43,10 @@ const VoiceCard = () => {
         <Volume2 className="w-3.5 h-3.5" strokeWidth={2} />
         {isGenerating ? "جاري التوليد الصوتي..." : "تحويل النص لصوت احترافي"}
       </button>
+      <p className="text-[8px] text-muted-foreground/50 text-center mt-2 leading-relaxed">
+        ⚠️ صوت "عُتيبي ذكي" محمي بعلامة مائية رقمية. الاستخدام غير المصرح به يعرّض صاحبه للمساءلة القانونية.
+        <br />عُتيبي ذكي Ai 🤖
+      </p>
     </div>
   );
 };

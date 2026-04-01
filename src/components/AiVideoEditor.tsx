@@ -233,8 +233,9 @@ const AiVideoEditor = () => {
       </div>
 
       {/* Voice Brand Protection Notice */}
-      <p className="text-[8px] text-muted-foreground/50 text-center mt-2">
-        ⚠️ صوت "خالد العتيبي" محمي بعلامة مائية رقمية. الاستخدام غير المصرح به يعرّض صاحبه للمساءلة القانونية.
+      <p className="text-[8px] text-muted-foreground/50 text-center mt-2 leading-relaxed">
+        ⚠️ صوت "عُتيبي ذكي" محمي بعلامة مائية رقمية. الاستخدام غير المصرح به يعرّض صاحبه للمساءلة القانونية.
+        <br />عُتيبي ذكي Ai 🤖
       </p>
 
       <span className="watermark">عُتيبي ذكي Ai 🤖</span>
