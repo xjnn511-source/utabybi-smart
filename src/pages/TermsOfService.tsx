@@ -8,7 +8,7 @@ const TermsOfService = () => (
     </Link>
     <h1 className="text-2xl font-bold text-foreground mb-4">شروط الاستخدام</h1>
     <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
-      <p>باستخدامك لمنصة "عُتيبي ذكي Ai" للحلول البرمجية والذكاء الاصطناعي، فإنك توافق على الالتزام بالشروط والأحكام التالية.</p>
+      <p>باستخدامك لمنصة "عُتيبي ذكي Ai" – منصة SaaS لتطوير البرمجيات والذكاء الاصطناعي – فإنك توافق على الالتزام بالشروط والأحكام التالية.</p>
       <h2 className="text-lg font-semibold text-foreground">الخدمات المقدمة</h2>
       <p>تقدم المنصة حلولاً برمجية متقدمة تعتمد على الذكاء الاصطناعي لتحليل البيانات، إنشاء محتوى تسويقي، ومونتاج فيديو احترافي. المنصة أداة تقنية مساعدة ولا تُعدّ بديلاً عن الاستشارة المتخصصة.</p>
       <h2 className="text-lg font-semibold text-foreground">الاشتراكات والدفع</h2>
