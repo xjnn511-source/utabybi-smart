@@ -46,16 +46,16 @@ const BrainCard = () => {
       // Record the analysis
       await supabase.from("deed_analyses").insert({
         user_id: user.id,
-        file_name: "تحليل_صك_" + Date.now(),
+        file_name: "تحليل_مستند_" + Date.now(),
         status: "completed",
         analysis_result: {
-          landmarks: 7,
-          area: "450 م²",
-          location: "الرياض - حي النخيل",
-          type: "سكني",
-          owner: "تم التحقق ✓",
-          boundaries: "شمال: شارع 15م | جنوب: عقار مجاور",
-          notes: "العقار خالي من الرهونات والقيود",
+          fields: 7,
+          format: "PDF/JSON",
+          source: "مستند مُحمّل",
+          type: "تقرير بيانات",
+          validation: "تم التحقق ✓",
+          structure: "جداول: 3 | حقول: 12 | سجلات: 148",
+          notes: "المستند مكتمل وصالح للمعالجة",
         },
       });
 
@@ -63,9 +63,9 @@ const BrainCard = () => {
       await new Promise((r) => setTimeout(r, 3500));
 
       setIsProcessing(false);
-      setResult("تم استخراج ٧ معالم عقارية من الصك بنجاح ✓");
+      setResult("تم استخراج ٧ حقول بيانات من المستند بنجاح ✓");
       setAnalysisCount((c) => c + 1);
-      toast({ title: "تم تحليل الصك بنجاح! 📄" });
+      toast({ title: "تم تحليل المستند بنجاح! 📄" });
     } catch (err) {
       setIsProcessing(false);
       toast({ title: "حدث خطأ", variant: "destructive" });
@@ -79,8 +79,8 @@ const BrainCard = () => {
           <Brain className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">محلل الصكوك الذكي</h2>
-          <p className="text-[10px] text-muted-foreground">تحليل تلقائي بالذكاء الاصطناعي GPT-4o</p>
+          <h2 className="text-sm font-bold text-foreground">Code & Document AI Analyzer</h2>
+          <p className="text-[10px] text-muted-foreground">تحليل مستندات وأكواد بالذكاء الاصطناعي</p>
         </div>
         {analysisCount === 0 && !hasSubscription && (
           <span className="mr-auto text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
@@ -94,10 +94,10 @@ const BrainCard = () => {
         <div className="mb-3 rounded-lg bg-secondary border border-border p-4">
           <div className="flex items-center gap-2 mb-3">
             <FileSearch className="w-4 h-4 text-primary animate-pulse" />
-            <p className="text-[11px] text-primary font-bold">جاري تحليل الصك...</p>
+            <p className="text-[11px] text-primary font-bold">جاري تحليل المستند...</p>
           </div>
           <div className="space-y-2">
-            {["قراءة بيانات الصك...", "استخراج المساحة والموقع...", "التحقق من الملكية...", "تحليل الحدود والأطوال..."].map((step, i) => (
+            {["قراءة بيانات المستند...", "استخراج الحقول والجداول...", "التحقق من صحة البيانات...", "تحليل البنية والمحتوى..."].map((step, i) => (
               <div key={i} className="flex items-center gap-2 animate-pulse" style={{ animationDelay: `${i * 0.8}s` }}>
                 <Zap className="w-3 h-3 text-primary" />
                 <span className="text-[10px] text-muted-foreground">{step}</span>
@@ -119,7 +119,7 @@ const BrainCard = () => {
             <Upload className="w-5 h-5 text-primary" strokeWidth={2} />
           </div>
           <p className="text-[11px] text-muted-foreground">
-            {analysisCount === 0 ? "أول تحليل مجاني! انقر للبدء" : "انقر لتحليل صك جديد"}
+            {analysisCount === 0 ? "أول تحليل مجاني! انقر للبدء" : "انقر لتحليل مستند جديد"}
           </p>
         </div>
       )}

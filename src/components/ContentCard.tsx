@@ -21,8 +21,8 @@ const ContentCard = () => {
           <FileText className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">مُنشئ المحتوى التسويقي الذكي</h2>
-          <p className="text-[10px] text-muted-foreground">تصميم محتوى احترافي بتقنيات الذكاء الاصطناعي</p>
+          <h2 className="text-sm font-bold text-foreground">Creative Content AI Generator</h2>
+          <p className="text-[10px] text-muted-foreground">إنشاء محتوى تسويقي احترافي بالذكاء الاصطناعي</p>
         </div>
       </div>
 
@@ -30,17 +30,17 @@ const ContentCard = () => {
         {isCreating ? (
           <div className="absolute inset-0 flex flex-col gap-2 items-center justify-center">
             <div className="w-7 h-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-[10px] text-muted-foreground">جاري إنشاء الإعلان العقاري...</p>
+            <p className="text-[10px] text-muted-foreground">جاري إنشاء المحتوى التسويقي...</p>
           </div>
         ) : posterReady ? (
           <div className="absolute inset-0 bg-primary/5 flex flex-col items-center justify-center p-3">
             <Sparkles className="w-7 h-7 text-primary mb-2" />
-            <p className="text-xs text-primary font-bold text-center">إعلان عقاري مصمم وموثق</p>
+            <p className="text-xs text-primary font-bold text-center">محتوى تسويقي احترافي جاهز</p>
             <p className="text-[10px] text-muted-foreground mt-1">جاهز للتحميل والمشاركة</p>
           </div>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-[10px] text-muted-foreground">معاينة الإعلان العقاري</p>
+            <p className="text-[10px] text-muted-foreground">معاينة المحتوى التسويقي</p>
           </div>
         )}
       </div>
@@ -50,7 +50,7 @@ const ContentCard = () => {
         className="w-full h-10 btn-neon text-xs flex items-center justify-center gap-2"
       >
         <Sparkles className="w-3.5 h-3.5" strokeWidth={2} />
-        {isCreating ? "جاري التصميم..." : "إنشاء إعلان عقاري مصمم"}
+        {isCreating ? "جاري التصميم..." : "إنشاء محتوى تسويقي احترافي"}
       </button>
       <span className="watermark">عُتيبي ذكي Ai 🤖</span>
     </div>

@@ -22,7 +22,7 @@ const BlessingCalculator = () => {
 
       <input
         type="number"
-        placeholder="أدخل سعر العقار (ريال)"
+        placeholder="أدخل قيمة الاشتراك (ريال)"
         value={price}
         onChange={(e) => setPrice(e.target.value)}
         className="w-full h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors mb-3"

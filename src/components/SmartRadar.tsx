@@ -26,29 +26,29 @@ const SmartRadar = () => {
           <BarChart3 className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">محلل البيانات الذكي Ai</h2>
-          <p className="text-[10px] text-muted-foreground">تحليل بيانات متقدم بالذكاء الاصطناعي</p>
+         <h2 className="text-sm font-bold text-foreground">Smart Data Analyst Ai</h2>
+          <p className="text-[10px] text-muted-foreground">تحليل بيانات وذكاء أعمال متقدم</p>
         </div>
       </div>
 
       <div className="space-y-3 mb-4">
         <div>
-          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">الميزانية (ريال)</label>
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">مصدر البيانات</label>
           <input
             type="text"
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
-            placeholder="مثال: 500,000"
+            placeholder="مثال: ملف CSV، قاعدة بيانات، API"
             className="w-full h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
         <div>
-          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">المدن المستهدفة</label>
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">نوع التحليل المطلوب</label>
           <input
             type="text"
             value={cities}
             onChange={(e) => setCities(e.target.value)}
-            placeholder="مثال: الرياض، جدة، الدمام"
+            placeholder="مثال: تحليل أداء، تقرير مالي، ذكاء أعمال"
             className="w-full h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
@@ -78,7 +78,7 @@ const SmartRadar = () => {
 
       {isSearching && (
         <div className="mt-3 p-3 rounded-lg bg-primary/5 border border-primary/20 text-center">
-          <p className="text-xs text-primary">جاري تحليل السوق العقاري...</p>
+          <p className="text-xs text-primary">جاري تحليل البيانات...</p>
         </div>
       )}
     </div>
