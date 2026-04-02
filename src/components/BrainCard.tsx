@@ -46,16 +46,16 @@ const BrainCard = () => {
       // Record the analysis
       await supabase.from("deed_analyses").insert({
         user_id: user.id,
-        file_name: "تحليل_صك_" + Date.now(),
+        file_name: "تحليل_مستند_" + Date.now(),
         status: "completed",
         analysis_result: {
-          landmarks: 7,
-          area: "450 م²",
-          location: "الرياض - حي النخيل",
-          type: "سكني",
-          owner: "تم التحقق ✓",
-          boundaries: "شمال: شارع 15م | جنوب: عقار مجاور",
-          notes: "العقار خالي من الرهونات والقيود",
+          fields: 7,
+          format: "PDF/JSON",
+          source: "مستند مُحمّل",
+          type: "تقرير بيانات",
+          validation: "تم التحقق ✓",
+          structure: "جداول: 3 | حقول: 12 | سجلات: 148",
+          notes: "المستند مكتمل وصالح للمعالجة",
         },
       });
 
