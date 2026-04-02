@@ -35,7 +35,7 @@ const ContentCard = () => {
         ) : posterReady ? (
           <div className="absolute inset-0 bg-primary/5 flex flex-col items-center justify-center p-3">
             <Sparkles className="w-7 h-7 text-primary mb-2" />
-            <p className="text-xs text-primary font-bold text-center">إعلان عقاري مصمم وموثق</p>
+            <p className="text-xs text-primary font-bold text-center">محتوى تسويقي احترافي جاهز</p>
             <p className="text-[10px] text-muted-foreground mt-1">جاهز للتحميل والمشاركة</p>
           </div>
         ) : (
