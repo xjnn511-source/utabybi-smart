@@ -16,7 +16,7 @@ const DashboardHeader = () => {
             عُتيبي ذكي Ai 🤖
           </h1>
           <p className="text-[10px] text-muted-foreground mt-0.5">
-            منصة الحلول العقارية الذكية
+            حلول تقنية متقدمة بالذكاء الاصطناعي
           </p>
         </div>
       </div>
