@@ -21,8 +21,8 @@ const ContentCard = () => {
           <FileText className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">مُنشئ المحتوى التسويقي الذكي</h2>
-          <p className="text-[10px] text-muted-foreground">تصميم محتوى احترافي بتقنيات الذكاء الاصطناعي</p>
+          <h2 className="text-sm font-bold text-foreground">Creative Content AI Generator</h2>
+          <p className="text-[10px] text-muted-foreground">إنشاء محتوى تسويقي احترافي بالذكاء الاصطناعي</p>
         </div>
       </div>
 
