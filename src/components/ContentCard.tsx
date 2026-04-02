@@ -30,7 +30,7 @@ const ContentCard = () => {
         {isCreating ? (
           <div className="absolute inset-0 flex flex-col gap-2 items-center justify-center">
             <div className="w-7 h-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-[10px] text-muted-foreground">جاري إنشاء الإعلان العقاري...</p>
+            <p className="text-[10px] text-muted-foreground">جاري إنشاء المحتوى التسويقي...</p>
           </div>
         ) : posterReady ? (
           <div className="absolute inset-0 bg-primary/5 flex flex-col items-center justify-center p-3">
