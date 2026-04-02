@@ -44,7 +44,7 @@ const Index = () => {
           {/* Legal Disclaimer */}
           <div className="mx-4 mt-4 p-3 rounded-lg bg-secondary/50 border border-border">
             <p className="text-[8px] text-muted-foreground leading-relaxed text-center">
-              ⚖️ إخلاء مسؤولية قانوني: هذا التطبيق أداة تقنية مساعدة فقط ولا يُعدّ مستنداً رسمياً أو بديلاً عن الاستشارة العقارية/القانونية المتخصصة.
+              ⚖️ إخلاء مسؤولية قانوني: هذا التطبيق أداة برمجية مساعدة تعمل بالذكاء الاصطناعي ولا يُعدّ مستنداً رسمياً أو بديلاً عن الاستشارة المتخصصة.
               المسؤولية النهائية عن دقة البيانات تقع على عاتق المستخدم وحده.
             </p>
             <p className="text-[8px] text-muted-foreground/50 text-center mt-1">
