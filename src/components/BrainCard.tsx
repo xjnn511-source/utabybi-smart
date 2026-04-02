@@ -94,7 +94,7 @@ const BrainCard = () => {
         <div className="mb-3 rounded-lg bg-secondary border border-border p-4">
           <div className="flex items-center gap-2 mb-3">
             <FileSearch className="w-4 h-4 text-primary animate-pulse" />
-            <p className="text-[11px] text-primary font-bold">جاري تحليل الصك...</p>
+            <p className="text-[11px] text-primary font-bold">جاري تحليل المستند...</p>
           </div>
           <div className="space-y-2">
             {["قراءة بيانات المستند...", "استخراج الحقول والجداول...", "التحقق من صحة البيانات...", "تحليل البنية والمحتوى..."].map((step, i) => (
