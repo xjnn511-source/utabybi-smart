@@ -40,7 +40,7 @@ const ContentCard = () => {
           </div>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-[10px] text-muted-foreground">معاينة الإعلان العقاري</p>
+            <p className="text-[10px] text-muted-foreground">معاينة المحتوى التسويقي</p>
           </div>
         )}
       </div>
