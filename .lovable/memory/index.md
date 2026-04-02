@@ -1,4 +1,4 @@
-Design: Professional Qoyod style - White (#F9FAFB) bg, Navy Blue (#1a2744) primary, Cairo Bold font
+Design: Professional Qoyod style - White (#F9FAFB) bg, Navy Blue (#1a2744) primary, Cairo Bold font. License: Web Development & Programming freelance. Content framed as AI/Software solutions for real estate sector.
 Logo: src/assets/logo.png (عتيبي ذكي Smart Ai image)
 Deed sample: src/assets/deed-sample.png (virtual data reference)
 Favicon: public/favicon.png
