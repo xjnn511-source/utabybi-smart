@@ -97,7 +97,7 @@ const BrainCard = () => {
             <p className="text-[11px] text-primary font-bold">جاري تحليل الصك...</p>
           </div>
           <div className="space-y-2">
-            {["قراءة بيانات الصك...", "استخراج المساحة والموقع...", "التحقق من الملكية...", "تحليل الحدود والأطوال..."].map((step, i) => (
+            {["قراءة بيانات المستند...", "استخراج الحقول والجداول...", "التحقق من صحة البيانات...", "تحليل البنية والمحتوى..."].map((step, i) => (
               <div key={i} className="flex items-center gap-2 animate-pulse" style={{ animationDelay: `${i * 0.8}s` }}>
                 <Zap className="w-3 h-3 text-primary" />
                 <span className="text-[10px] text-muted-foreground">{step}</span>
