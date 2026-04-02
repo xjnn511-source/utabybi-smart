@@ -79,8 +79,8 @@ const BrainCard = () => {
           <Brain className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">محلل الصكوك الذكي</h2>
-          <p className="text-[10px] text-muted-foreground">تحليل تلقائي بالذكاء الاصطناعي GPT-4o</p>
+          <h2 className="text-sm font-bold text-foreground">Code & Document AI Analyzer</h2>
+          <p className="text-[10px] text-muted-foreground">تحليل مستندات وأكواد بالذكاء الاصطناعي</p>
         </div>
         {analysisCount === 0 && !hasSubscription && (
           <span className="mr-auto text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
