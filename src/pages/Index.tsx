@@ -37,7 +37,7 @@ const Index = () => {
           </main>
 
           <section id="subscription-section" className="mt-8 pb-2">
-            <h2 className="text-xs font-bold text-foreground px-4 mb-3">الباقات والحلول التقنية</h2>
+            <h2 className="text-xs font-bold text-foreground px-4 mb-3">الباقات والحلول البرمجية</h2>
             <SubscriptionRow />
           </section>
 
