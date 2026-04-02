@@ -41,7 +41,7 @@ const VideoMontageCard = () => {
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
             <Upload className="w-5 h-5 text-muted-foreground" />
-            <p className="text-[10px] text-muted-foreground">ارفع صور العقار لإنشاء فيديو</p>
+            <p className="text-[10px] text-muted-foreground">ارفع ملفاتك لإنشاء فيديو احترافي</p>
           </div>
         )}
       </div>

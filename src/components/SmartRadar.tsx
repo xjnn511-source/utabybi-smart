@@ -78,7 +78,7 @@ const SmartRadar = () => {
 
       {isSearching && (
         <div className="mt-3 p-3 rounded-lg bg-primary/5 border border-primary/20 text-center">
-          <p className="text-xs text-primary">جاري تحليل السوق العقاري...</p>
+          <p className="text-xs text-primary">جاري تحليل البيانات...</p>
         </div>
       )}
     </div>

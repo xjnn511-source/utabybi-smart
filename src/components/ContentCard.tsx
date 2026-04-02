@@ -50,7 +50,7 @@ const ContentCard = () => {
         className="w-full h-10 btn-neon text-xs flex items-center justify-center gap-2"
       >
         <Sparkles className="w-3.5 h-3.5" strokeWidth={2} />
-        {isCreating ? "جاري التصميم..." : "إنشاء إعلان عقاري مصمم"}
+        {isCreating ? "جاري التصميم..." : "إنشاء محتوى تسويقي احترافي"}
       </button>
       <span className="watermark">عُتيبي ذكي Ai 🤖</span>
     </div>

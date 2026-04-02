@@ -119,7 +119,7 @@ const BrainCard = () => {
             <Upload className="w-5 h-5 text-primary" strokeWidth={2} />
           </div>
           <p className="text-[11px] text-muted-foreground">
-            {analysisCount === 0 ? "أول تحليل مجاني! انقر للبدء" : "انقر لتحليل صك جديد"}
+            {analysisCount === 0 ? "أول تحليل مجاني! انقر للبدء" : "انقر لتحليل مستند جديد"}
           </p>
         </div>
       )}
