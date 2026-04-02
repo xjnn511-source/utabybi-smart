@@ -63,9 +63,9 @@ const BrainCard = () => {
       await new Promise((r) => setTimeout(r, 3500));
 
       setIsProcessing(false);
-      setResult("تم استخراج ٧ معالم عقارية من الصك بنجاح ✓");
+      setResult("تم استخراج ٧ حقول بيانات من المستند بنجاح ✓");
       setAnalysisCount((c) => c + 1);
-      toast({ title: "تم تحليل الصك بنجاح! 📄" });
+      toast({ title: "تم تحليل المستند بنجاح! 📄" });
     } catch (err) {
       setIsProcessing(false);
       toast({ title: "حدث خطأ", variant: "destructive" });
