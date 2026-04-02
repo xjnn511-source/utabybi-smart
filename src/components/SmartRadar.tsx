@@ -33,22 +33,22 @@ const SmartRadar = () => {
 
       <div className="space-y-3 mb-4">
         <div>
-          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">الميزانية (ريال)</label>
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">مصدر البيانات</label>
           <input
             type="text"
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
-            placeholder="مثال: 500,000"
+            placeholder="مثال: ملف CSV، قاعدة بيانات، API"
             className="w-full h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
         <div>
-          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">المدن المستهدفة</label>
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">نوع التحليل المطلوب</label>
           <input
             type="text"
             value={cities}
             onChange={(e) => setCities(e.target.value)}
-            placeholder="مثال: الرياض، جدة، الدمام"
+            placeholder="مثال: تحليل أداء، تقرير مالي، ذكاء أعمال"
             className="w-full h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
