@@ -8,7 +8,7 @@ const PrivacyPolicy = () => (
     </Link>
     <h1 className="text-2xl font-bold text-foreground mb-4">سياسة الخصوصية</h1>
     <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
-      <p>نحن في "عُتيبي ذكي Ai" – شركة تطوير برمجيات متخصصة في حلول الذكاء الاصطناعي – نلتزم بحماية خصوصية مستخدمينا.</p>
+      <p>نحن في "عُتيبي ذكي Ai" – منصة SaaS متخصصة في تطوير البرمجيات وحلول الذكاء الاصطناعي – نلتزم بحماية خصوصية مستخدمينا.</p>
       <h2 className="text-lg font-semibold text-foreground">البيانات التي نجمعها</h2>
       <p>نجمع المعلومات التي تقدمها لنا مباشرةً مثل الاسم، البريد الإلكتروني، ورقم الجوال عند التسجيل. كما نجمع البيانات التي ترفعها للتحليل والمعالجة البرمجية.</p>
       <h2 className="text-lg font-semibold text-foreground">كيف نستخدم بياناتك</h2>
