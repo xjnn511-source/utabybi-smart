@@ -56,7 +56,7 @@ const Footer = () => {
 
         {/* Branding */}
         <p className="text-[9px] text-muted-foreground text-center">
-          عُتيبي ذكي Ai 🤖 – منصتك الذكية للحلول العقارية
+          عُتيبي ذكي Ai 🤖 – حلول برمجية وذكاء اصطناعي متقدمة للقطاع العقاري
         </p>
         <p className="text-[8px] text-muted-foreground/40 text-center">
           🇸🇦 🇦🇪 🇶🇦 🇧🇭 🇰🇼 🇴🇲 متاح لجميع دول الخليج العربي

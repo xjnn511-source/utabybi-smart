@@ -37,14 +37,14 @@ const Index = () => {
           </main>
 
           <section id="subscription-section" className="mt-8 pb-2">
-            <h2 className="text-xs font-bold text-foreground px-4 mb-3">الباقات والاشتراكات</h2>
+            <h2 className="text-xs font-bold text-foreground px-4 mb-3">الباقات والحلول التقنية</h2>
             <SubscriptionRow />
           </section>
 
           {/* Legal Disclaimer */}
           <div className="mx-4 mt-4 p-3 rounded-lg bg-secondary/50 border border-border">
             <p className="text-[8px] text-muted-foreground leading-relaxed text-center">
-              ⚖️ إخلاء مسؤولية قانوني: هذا التطبيق أداة تقنية مساعدة فقط ولا يُعدّ مستنداً رسمياً أو بديلاً عن الاستشارة العقارية/القانونية المتخصصة.
+              ⚖️ إخلاء مسؤولية قانوني: هذا التطبيق أداة برمجية مساعدة تعمل بالذكاء الاصطناعي ولا يُعدّ مستنداً رسمياً أو بديلاً عن الاستشارة المتخصصة.
               المسؤولية النهائية عن دقة البيانات تقع على عاتق المستخدم وحده.
             </p>
             <p className="text-[8px] text-muted-foreground/50 text-center mt-1">
