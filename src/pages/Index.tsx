@@ -44,7 +44,7 @@ const Index = () => {
             <ContentCard />
             <VideoMontageCard />
             <VoiceCard />
-            <BlessingCalculator />
+            <NewsTicker />
 
             {/* Subscription CTA */}
             <SubscriptionCTA />
