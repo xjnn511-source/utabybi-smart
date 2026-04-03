@@ -8,7 +8,7 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 type Msg = { role: "user" | "assistant"; content: string };
 
 const quickReplies = [
-  "كيف أرفع صك؟",
+  "كيف أستخدم أدوات المعالجة الرقمية؟",
   "ما هي باقة النخبة؟",
   "كيف يعمل المونتاج؟",
   "ما الفرق بين الباقات؟",

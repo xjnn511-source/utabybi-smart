@@ -93,18 +93,8 @@ const SubscriptionRow = () => {
         ))}
       </div>
 
-      {/* Payment Methods */}
-      <div className="flex items-center justify-center gap-4 px-4 pb-2">
-        <span className="text-[9px] text-muted-foreground">طرق الدفع:</span>
-        <div className="flex items-center gap-3">
-          <span className="text-[10px] font-bold text-foreground bg-secondary px-2 py-0.5 rounded">Apple Pay</span>
-          <span className="text-[10px] font-bold text-foreground bg-secondary px-2 py-0.5 rounded">mada</span>
-          <span className="text-[10px] font-bold text-foreground bg-secondary px-2 py-0.5 rounded">STC Pay</span>
-        </div>
-      </div>
-
-      <p className="text-[10px] text-muted-foreground text-center px-6 pb-3 leading-relaxed">
-        تنبيه: 5% من قيمة اشتراكك تُستقطع كصدقة جارية لوالدينا ووالديكم في بند البركة. 💚
+      <p className="text-[9px] text-muted-foreground text-center px-6 pb-3">
+        وثيقة العمل الحر: FL-822675484 | المنصة الرسمية (SaaS) لحلول الذكاء الاصطناعي والمعالجة الرقمية
       </p>
     </>
   );

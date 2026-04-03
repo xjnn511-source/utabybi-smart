@@ -350,7 +350,7 @@ const Auth = () => {
         </div>
 
         <p className="text-center text-[9px] text-muted-foreground mt-4">
-          عُتيبي ذكي Ai 🤖 — منصتك الذكية للحلول العقارية
+          عُتيبي ذكي Ai 🤖 — منصة SaaS للحلول البرمجية والذكاء الاصطناعي
         </p>
       </div>
     </div>
