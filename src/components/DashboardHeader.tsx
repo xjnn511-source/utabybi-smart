@@ -20,9 +20,8 @@ const DashboardHeader = () => {
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-green-500" />
-        <span className="text-[10px] text-muted-foreground">متصل</span>
+      <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded-full">
+        <span className="text-[9px] font-bold text-primary">منصة SaaS للحلول البرمجية</span>
       </div>
     </header>
   );

@@ -10,8 +10,10 @@ import SubscriptionRow from "@/components/SubscriptionRow";
 import AiChatbot from "@/components/AiChatbot";
 import AppSidebar from "@/components/AppSidebar";
 import Footer from "@/components/Footer";
+import ComplianceSection from "@/components/ComplianceSection";
+import SubscriptionCTA from "@/components/SubscriptionCTA";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Menu } from "lucide-react";
+import { Menu, LayoutGrid } from "lucide-react";
 
 const Index = () => {
   return (
@@ -27,6 +29,15 @@ const Index = () => {
           </SidebarTrigger>
 
           <main className="space-y-8 p-3 mt-2">
+            {/* Digital Compliance Section */}
+            <ComplianceSection />
+
+            {/* AI Engines Section Header */}
+            <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
+              <LayoutGrid className="w-4 h-4 text-primary" />
+              محركات المعالجة والذكاء الاصطناعي
+            </h2>
+
             <SmartRadar />
             <BrainCard />
             <AiVideoEditor />
@@ -34,6 +45,9 @@ const Index = () => {
             <VideoMontageCard />
             <VoiceCard />
             <BlessingCalculator />
+
+            {/* Subscription CTA */}
+            <SubscriptionCTA />
           </main>
 
           <section id="subscription-section" className="mt-8 pb-2">
