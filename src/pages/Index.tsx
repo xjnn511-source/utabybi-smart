@@ -5,7 +5,7 @@ import VoiceCard from "@/components/VoiceCard";
 import ContentCard from "@/components/ContentCard";
 import VideoMontageCard from "@/components/VideoMontageCard";
 import AiVideoEditor from "@/components/AiVideoEditor";
-import BlessingCalculator from "@/components/BlessingCalculator";
+import NewsTicker from "@/components/BlessingCalculator";
 import SubscriptionRow from "@/components/SubscriptionRow";
 import AiChatbot from "@/components/AiChatbot";
 import AppSidebar from "@/components/AppSidebar";
