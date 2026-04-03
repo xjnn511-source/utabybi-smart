@@ -124,7 +124,7 @@ const Auth = () => {
             <img src={logo} alt="عتيبي ذكي" className="w-full h-full rounded-xl object-cover" />
           </div>
           <h1 className="text-2xl font-bold text-primary">عُتيبي ذكي Ai 🤖</h1>
-          <p className="text-xs text-muted-foreground mt-2">منصة الحلول العقارية الذكية</p>
+          <p className="text-xs text-muted-foreground mt-2">منصة SaaS للحلول البرمجية والذكاء الاصطناعي</p>
           <p className="text-[9px] text-muted-foreground mt-1">🇸🇦 🇦🇪 🇶🇦 🇧🇭 🇰🇼 🇴🇲 دول الخليج العربي</p>
         </div>
 
