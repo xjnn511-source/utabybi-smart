@@ -2,12 +2,12 @@ import { CreditCard, Zap } from "lucide-react";
 
 const SubscriptionCTA = () => {
   return (
-    <div className="bg-primary rounded-3xl p-8 text-primary-foreground text-center shadow-2xl relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-accent blur-[80px] opacity-20"></div>
-      <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent blur-[60px] opacity-10"></div>
-      <CreditCard className="w-10 h-10 mx-auto mb-3 text-accent opacity-80" />
-      <h2 className="text-xl font-black text-primary-foreground mb-2 text-center">تفعيل اشتراك الأدوات</h2>
-      <p className="text-primary-foreground/60 text-xs mb-6 max-w-sm mx-auto text-center">
+    <div className="bg-gradient-to-br from-card to-secondary rounded-3xl p-8 text-foreground text-center shadow-2xl relative overflow-hidden border border-primary/20">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary blur-[80px] opacity-10"></div>
+      <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary blur-[60px] opacity-5"></div>
+      <CreditCard className="w-10 h-10 mx-auto mb-3 text-primary opacity-80" />
+      <h2 className="text-xl font-black mb-2 text-center text-primary">تفعيل اشتراك الأدوات</h2>
+      <p className="text-muted-foreground text-xs mb-6 max-w-sm mx-auto text-center">
         احصل على وصول كامل للمحركات البرمجية والذكاء الاصطناعي
       </p>
       <button

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import DashboardHeader from "@/components/DashboardHeader";
 import BrainCard from "@/components/BrainCard";
 import SmartRadar from "@/components/SmartRadar";
@@ -13,30 +14,34 @@ import Footer from "@/components/Footer";
 import ComplianceSection from "@/components/ComplianceSection";
 import SubscriptionCTA from "@/components/SubscriptionCTA";
 import ServiceQuickGrid from "@/components/ServiceQuickGrid";
+import BottomNav from "@/components/BottomNav";
+import DeedAnalyzer from "@/components/DeedAnalyzer";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu, LayoutGrid } from "lucide-react";
 
 const Index = () => {
+  const [activeTab, setActiveTab] = useState("home");
+
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
 
-        <div className="flex-1 flex flex-col max-w-md mx-auto relative">
+        <div className="flex-1 flex flex-col max-w-md mx-auto relative pb-20">
           <DashboardHeader />
 
-          <SidebarTrigger className="fixed top-4 left-3 z-50 w-9 h-9 rounded-lg bg-primary/80 border border-accent/30 text-accent hover:bg-primary">
+          <SidebarTrigger className="fixed top-4 left-3 z-50 w-9 h-9 rounded-lg bg-card border border-primary/20 text-primary hover:bg-secondary">
             <Menu className="w-4 h-4" />
           </SidebarTrigger>
 
           {/* News Ticker */}
-          <div className="bg-card border-b border-border overflow-hidden py-2.5">
+          <div className="bg-card/80 border-b border-border overflow-hidden py-2.5">
             <div className="animate-marquee whitespace-nowrap flex gap-10 text-[11px] font-bold text-primary">
               <span>✨ تم تحديث دقة محرك OCR إلى 99.8%</span>
-              <span>🚀 تسريع عمليات التحليل الرقمي لباقة النخبة</span>
+              <span>🚀 تسريع عمليات تحليل الصكوك العقارية</span>
               <span>📊 معالجة 10,000 نقطة بيانات لتحديث السوق</span>
               <span>✨ تم تحديث دقة محرك OCR إلى 99.8%</span>
-              <span>🚀 تسريع عمليات التحليل الرقمي لباقة النخبة</span>
+              <span>🚀 تسريع عمليات تحليل الصكوك العقارية</span>
             </div>
           </div>
 
@@ -44,12 +49,15 @@ const Index = () => {
             {/* Quick Access Grid */}
             <ServiceQuickGrid />
 
+            {/* Deed Analyzer - Hero Feature */}
+            <DeedAnalyzer />
+
             {/* Digital Compliance Section */}
             <ComplianceSection />
 
             {/* AI Engines Section Header */}
             <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
-              <LayoutGrid className="w-4 h-4 text-accent" />
+              <LayoutGrid className="w-4 h-4 text-primary" />
               محركات المعالجة والذكاء الاصطناعي
             </h2>
 
@@ -84,6 +92,7 @@ const Index = () => {
           <Footer />
 
           <AiChatbot />
+          <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
       </div>
     </SidebarProvider>
