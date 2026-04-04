@@ -113,9 +113,22 @@
   }
 
   .btn-neon:hover {
-    background: hsl(220 60% 25%);
+    background: hsl(220 45% 15%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px -2px hsl(var(--primary) / 0.3);
+    box-shadow: 0 4px 16px -2px hsl(var(--primary) / 0.4);
+  }
+
+  .btn-accent {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    font-weight: 800;
+    border-radius: 9999px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-accent:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 20px -4px hsl(var(--accent) / 0.5);
   }
 
   .watermark {
