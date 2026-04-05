@@ -13,9 +13,9 @@ const ServiceQuickGrid = () => {
       {services.map(({ icon: Icon, label }) => (
         <div
           key={label}
-          className="bg-card p-4 rounded-2xl border border-border shadow-sm text-center cursor-pointer hover:border-primary/50 hover:shadow-[0_0_15px_hsl(var(--primary)/0.15)] hover:-translate-y-1 transition-all duration-300 group"
+          className="bg-card p-4 rounded-2xl border border-primary/10 text-center cursor-pointer hover:border-primary/40 hover:shadow-[0_0_25px_hsl(var(--primary)/0.15)] hover:-translate-y-1 transition-all duration-300 group"
         >
-          <Icon className="w-6 h-6 mx-auto mb-2 text-primary group-hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)] transition-all" />
+          <Icon className="w-6 h-6 mx-auto mb-2 text-primary group-hover:icon-glow transition-all" />
           <p className="text-[10px] font-bold text-foreground text-center">{label}</p>
         </div>
       ))}
