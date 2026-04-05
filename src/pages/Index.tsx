@@ -53,6 +53,9 @@ const Index = () => {
             {/* Deed Analyzer - Hero Feature */}
             <DeedAnalyzer />
 
+            {/* AI Engine Portal */}
+            <AiEnginePortal />
+
             {/* Digital Compliance Section */}
             <ComplianceSection />
 
