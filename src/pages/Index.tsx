@@ -16,6 +16,7 @@ import SubscriptionCTA from "@/components/SubscriptionCTA";
 import ServiceQuickGrid from "@/components/ServiceQuickGrid";
 import BottomNav from "@/components/BottomNav";
 import DeedAnalyzer from "@/components/DeedAnalyzer";
+import AiEnginePortal from "@/components/AiEnginePortal";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu, LayoutGrid } from "lucide-react";
 
@@ -51,6 +52,9 @@ const Index = () => {
 
             {/* Deed Analyzer - Hero Feature */}
             <DeedAnalyzer />
+
+            {/* AI Engine Portal */}
+            <AiEnginePortal />
 
             {/* Digital Compliance Section */}
             <ComplianceSection />
