@@ -5,6 +5,15 @@ const Footer = () => {
   return (
     <footer className="w-full border-t border-border bg-card mt-8">
       <div className="max-w-md mx-auto px-4 py-6 space-y-5">
+        {/* Branding */}
+        <p className="text-[10px] text-primary font-black text-center tracking-widest">
+          حلول العتيبي التقنية | برمجة وتطوير
+        </p>
+        <p className="text-xs text-foreground font-bold leading-relaxed text-center">
+          عُتيبي ذكي Hub: منصة برمجية رائدة متخصصة في تطوير الأدوات التقنية وحلول معالجة البيانات الرقمية الموجهة لخدمة المسوقين والشركات العقارية.
+        </p>
+
+        {/* Links */}
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <Link to="/privacy" className="text-[11px] text-muted-foreground hover:text-primary transition-colors">
             سياسة الخصوصية
@@ -19,6 +28,7 @@ const Footer = () => {
           </Link>
         </div>
 
+        {/* Payment */}
         <div className="space-y-2">
           <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
             <ShieldCheck className="w-3.5 h-3.5 text-green-500" />
@@ -44,9 +54,12 @@ const Footer = () => {
           </div>
         </div>
 
-        <p className="text-[9px] text-muted-foreground text-center">
-          عُتيبي ذكي Ai 🤖 – نحلل بالرؤية والصوت | FL-822675484
-        </p>
+        {/* Meta */}
+        <div className="flex flex-wrap justify-center items-center gap-3 text-[9px] text-muted-foreground/50 font-mono">
+          <span>رقم الوثيقة: FL-822675484</span>
+          <span className="w-1 h-1 bg-muted-foreground/20 rounded-full" />
+          <span>جدة، المملكة العربية السعودية</span>
+        </div>
         <p className="text-[8px] text-muted-foreground/40 text-center">
           🇸🇦 🇦🇪 🇶🇦 🇧🇭 🇰🇼 🇴🇲 متاح لجميع دول الخليج العربي
         </p>
