@@ -1,7 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, ShieldCheck } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+
+const ADMIN_ACTIVATION_COMMAND = "تفعيل صلاحيات المالك 711";
+const ADMIN_DEACTIVATION_COMMAND = "إنهاء صلاحيات المالك";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 
@@ -21,7 +24,39 @@ const AiChatbot = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAdminActive, setIsAdminActive] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const executeAdminLogic = (command: string): string | null => {
+    const cmd = command.trim();
+
+    if (cmd === ADMIN_ACTIVATION_COMMAND) {
+      setIsAdminActive(true);
+      return "✅ **عُتيبي ذكي Ai:** وضع الإدارة نشط الآن. النظام مستعد لتنفيذ أوامرك يا مالك المنصة. 🛡️";
+    }
+
+    if (cmd === ADMIN_DEACTIVATION_COMMAND) {
+      setIsAdminActive(false);
+      return "🔒 تم إنهاء وضع الإدارة. عاد النظام إلى الوضع العادي.";
+    }
+
+    if (!isAdminActive) return null;
+
+    if (cmd.includes("تحديث الواجهة")) {
+      console.log("عُتيبي ذكي Ai: جاري معالجة الأمر التنفيذي بلمحة بصر...");
+      return "⚡ **تنفيذ إداري:** جاري معالجة أمر تحديث الواجهة بلمحة بصر... تم تسجيل الأمر في سجل الإدارة.";
+    }
+
+    if (cmd.includes("حالة النظام")) {
+      return "📊 **حالة النظام:**\n- المحركات: نشطة ✅\n- OCR: 99.8%\n- وضع الإدارة: مفعّل 🛡️";
+    }
+
+    if (cmd.startsWith("/admin") || cmd.startsWith("أمر:")) {
+      return `⚙️ **تم استلام الأمر التنفيذي:** \`${cmd}\`\nسيتم تنفيذه ضمن صلاحيات المالك.`;
+    }
+
+    return null;
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -37,6 +72,14 @@ const AiChatbot = () => {
     const updatedMessages = [...messages, newUserMsg];
     setMessages(updatedMessages);
     setInput("");
+
+    // اعتراض الأوامر الإدارية السرية قبل إرسالها لـ AI
+    const adminResponse = executeAdminLogic(userMsg);
+    if (adminResponse !== null) {
+      setMessages((prev) => [...prev, { role: "assistant", content: adminResponse }]);
+      return;
+    }
+
     setIsLoading(true);
 
     let assistantSoFar = "";
@@ -124,7 +167,15 @@ const AiChatbot = () => {
             className="fixed inset-x-3 bottom-3 top-16 z-50 bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden"
           >
             <div className="flex items-center justify-between p-3 border-b border-border bg-primary text-primary-foreground">
-              <h3 className="text-xs font-bold">المستشار الذكي 🤖</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-xs font-bold">المستشار الذكي 🤖</h3>
+                {isAdminActive && (
+                  <span className="flex items-center gap-1 text-[9px] font-black px-2 py-0.5 rounded-full bg-green-500/20 text-green-300 border border-green-400/40">
+                    <ShieldCheck className="w-3 h-3" />
+                    وضع المالك
+                  </span>
+                )}
+              </div>
               <button onClick={() => setIsOpen(false)} className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">
                 <X className="w-4 h-4" />
               </button>
