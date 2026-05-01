@@ -72,6 +72,14 @@ const AiChatbot = () => {
     const updatedMessages = [...messages, newUserMsg];
     setMessages(updatedMessages);
     setInput("");
+
+    // اعتراض الأوامر الإدارية السرية قبل إرسالها لـ AI
+    const adminResponse = executeAdminLogic(userMsg);
+    if (adminResponse !== null) {
+      setMessages((prev) => [...prev, { role: "assistant", content: adminResponse }]);
+      return;
+    }
+
     setIsLoading(true);
 
     let assistantSoFar = "";
