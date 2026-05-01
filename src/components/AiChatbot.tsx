@@ -167,7 +167,15 @@ const AiChatbot = () => {
             className="fixed inset-x-3 bottom-3 top-16 z-50 bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden"
           >
             <div className="flex items-center justify-between p-3 border-b border-border bg-primary text-primary-foreground">
-              <h3 className="text-xs font-bold">المستشار الذكي 🤖</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-xs font-bold">المستشار الذكي 🤖</h3>
+                {isAdminActive && (
+                  <span className="flex items-center gap-1 text-[9px] font-black px-2 py-0.5 rounded-full bg-green-500/20 text-green-300 border border-green-400/40">
+                    <ShieldCheck className="w-3 h-3" />
+                    وضع المالك
+                  </span>
+                )}
+              </div>
               <button onClick={() => setIsOpen(false)} className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">
                 <X className="w-4 h-4" />
               </button>
