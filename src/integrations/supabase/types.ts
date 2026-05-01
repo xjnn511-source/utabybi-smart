@@ -44,6 +44,33 @@ export type Database = {
         }
         Relationships: []
       }
+      label_overrides: {
+        Row: {
+          created_at: string
+          id: string
+          label_key: string
+          label_value: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label_key: string
+          label_value: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label_key?: string
+          label_value?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
