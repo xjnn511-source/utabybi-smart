@@ -83,6 +83,37 @@ const AiChatbot = () => {
       return;
     }
 
+    // إذا كان وضع المالك نشطاً وأمر تعديل، أرسله لمحرك التعديل
+    const isEditCommand = isAdminActive && EDIT_TRIGGERS.some(t => userMsg.includes(t));
+    if (isEditCommand) {
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase.functions.invoke("apply-label-edit", {
+          body: { command: userMsg },
+        });
+        if (error) throw error;
+        if (data?.success) {
+          const list = data.edits.map((e: any) => `• \`${e.key}\` → **${e.value}**`).join("\n");
+          setMessages((prev) => [...prev, {
+            role: "assistant",
+            content: `✅ **تم التعديل وحفظه مباشرة في قاعدة البيانات:**\n${list}\n\nسيظهر التغيير فوراً على الواجهة لكل المستخدمين.`,
+          }]);
+        } else {
+          setMessages((prev) => [...prev, {
+            role: "assistant",
+            content: data?.message || "⚠️ لم أستطع تنفيذ الأمر.",
+          }]);
+        }
+      } catch (err: any) {
+        setMessages((prev) => [...prev, {
+          role: "assistant",
+          content: `❌ فشل التعديل: ${err.message || "خطأ غير معروف"}`,
+        }]);
+      }
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
 
     let assistantSoFar = "";
