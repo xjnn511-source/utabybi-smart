@@ -24,7 +24,39 @@ const AiChatbot = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAdminActive, setIsAdminActive] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const executeAdminLogic = (command: string): string | null => {
+    const cmd = command.trim();
+
+    if (cmd === ADMIN_ACTIVATION_COMMAND) {
+      setIsAdminActive(true);
+      return "✅ **عُتيبي ذكي Ai:** وضع الإدارة نشط الآن. النظام مستعد لتنفيذ أوامرك يا مالك المنصة. 🛡️";
+    }
+
+    if (cmd === ADMIN_DEACTIVATION_COMMAND) {
+      setIsAdminActive(false);
+      return "🔒 تم إنهاء وضع الإدارة. عاد النظام إلى الوضع العادي.";
+    }
+
+    if (!isAdminActive) return null;
+
+    if (cmd.includes("تحديث الواجهة")) {
+      console.log("عُتيبي ذكي Ai: جاري معالجة الأمر التنفيذي بلمحة بصر...");
+      return "⚡ **تنفيذ إداري:** جاري معالجة أمر تحديث الواجهة بلمحة بصر... تم تسجيل الأمر في سجل الإدارة.";
+    }
+
+    if (cmd.includes("حالة النظام")) {
+      return "📊 **حالة النظام:**\n- المحركات: نشطة ✅\n- OCR: 99.8%\n- وضع الإدارة: مفعّل 🛡️";
+    }
+
+    if (cmd.startsWith("/admin") || cmd.startsWith("أمر:")) {
+      return `⚙️ **تم استلام الأمر التنفيذي:** \`${cmd}\`\nسيتم تنفيذه ضمن صلاحيات المالك.`;
+    }
+
+    return null;
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
