@@ -2,9 +2,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, X, Send, Loader2, ShieldCheck } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import { supabase } from "@/integrations/supabase/client";
 
 const ADMIN_ACTIVATION_COMMAND = "تفعيل صلاحيات المالك 711";
 const ADMIN_DEACTIVATION_COMMAND = "إنهاء صلاحيات المالك";
+
+const EDIT_TRIGGERS = ["غيّر", "غير ", "عدّل", "عدل ", "خلّ", "خل ", "بدّل", "بدل ", "سمّ", "سم "];
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 
@@ -77,6 +80,37 @@ const AiChatbot = () => {
     const adminResponse = executeAdminLogic(userMsg);
     if (adminResponse !== null) {
       setMessages((prev) => [...prev, { role: "assistant", content: adminResponse }]);
+      return;
+    }
+
+    // إذا كان وضع المالك نشطاً وأمر تعديل، أرسله لمحرك التعديل
+    const isEditCommand = isAdminActive && EDIT_TRIGGERS.some(t => userMsg.includes(t));
+    if (isEditCommand) {
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase.functions.invoke("apply-label-edit", {
+          body: { command: userMsg },
+        });
+        if (error) throw error;
+        if (data?.success) {
+          const list = data.edits.map((e: any) => `• \`${e.key}\` → **${e.value}**`).join("\n");
+          setMessages((prev) => [...prev, {
+            role: "assistant",
+            content: `✅ **تم التعديل وحفظه مباشرة في قاعدة البيانات:**\n${list}\n\nسيظهر التغيير فوراً على الواجهة لكل المستخدمين.`,
+          }]);
+        } else {
+          setMessages((prev) => [...prev, {
+            role: "assistant",
+            content: data?.message || "⚠️ لم أستطع تنفيذ الأمر.",
+          }]);
+        }
+      } catch (err: any) {
+        setMessages((prev) => [...prev, {
+          role: "assistant",
+          content: `❌ فشل التعديل: ${err.message || "خطأ غير معروف"}`,
+        }]);
+      }
+      setIsLoading(false);
       return;
     }
 

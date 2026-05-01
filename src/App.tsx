@@ -13,6 +13,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import TermsOfService from "./pages/TermsOfService.tsx";
 import RefundPolicy from "./pages/RefundPolicy.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import { LabelsProvider } from "./hooks/useLabels.tsx";
 
 const queryClient = new QueryClient();
 
@@ -21,20 +22,21 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/tiktok" element={<ProtectedRoute><TikTokDashboard /></ProtectedRoute>} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/refund" element={<RefundPolicy />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <LabelsProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/tiktok" element={<ProtectedRoute><TikTokDashboard /></ProtectedRoute>} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/refund" element={<RefundPolicy />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </LabelsProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
