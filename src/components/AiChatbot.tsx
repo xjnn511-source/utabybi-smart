@@ -153,7 +153,7 @@ const AiChatbot = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-5 left-5 w-12 h-12 rounded-full btn-neon flex items-center justify-center z-50"
+        className="fixed bottom-24 left-5 w-14 h-14 rounded-full btn-neon flex items-center justify-center z-50 shadow-[0_0_20px_hsl(var(--primary)/0.6)]"
       >
         <MessageCircle className="w-5 h-5" strokeWidth={2} />
       </button>
