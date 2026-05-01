@@ -221,14 +221,17 @@ const AiChatbot = () => {
                   </button>
                 ))}
               </div>
-              <div className="flex gap-1.5">
+              <div className="flex gap-2">
                 <input
+                  type="text"
+                  dir="rtl"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  placeholder="اكتب سؤالك..."
+                  placeholder="اكتب سؤالك هنا..."
                   disabled={isLoading}
-                  className="flex-1 h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
+                  autoFocus
+                  className="flex-1 h-11 px-3 rounded-lg border-2 border-primary/40 bg-background text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary disabled:opacity-50"
                 />
                 <button
                   onClick={() => handleSend()}
