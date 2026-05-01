@@ -1,15 +1,17 @@
 import { FileText, Cpu, ShieldCheck, Box, Search, BarChart3 } from "lucide-react";
-
-const services = [
-  { icon: FileText, label: "معالجة البيانات الهيكلية" },
-  { icon: Cpu, label: "أتمتة التقارير التقنية" },
-  { icon: ShieldCheck, label: "مستكشف الثغرات الرقمية" },
-  { icon: Box, label: "هندسة الوسائط الرقمية" },
-  { icon: Search, label: "رادار التنقيب البرمجي" },
-  { icon: BarChart3, label: "لوحة مؤشرات البيانات" },
-];
+import { useLabels } from "@/hooks/useLabels";
 
 const ServiceQuickGrid = () => {
+  const { t } = useLabels();
+  const services = [
+    { icon: FileText, label: t("service.data_processing") },
+    { icon: Cpu, label: t("service.code_generator", "أتمتة التقارير التقنية") },
+    { icon: ShieldCheck, label: t("service.vulnerability_scanner") },
+    { icon: Box, label: t("service.deed_analyzer") },
+    { icon: Search, label: t("service.smart_radar") },
+    { icon: BarChart3, label: t("service.ai_advisor") },
+  ];
+
   return (
     <div className="grid grid-cols-3 gap-3">
       {services.map(({ icon: Icon, label }) => (
