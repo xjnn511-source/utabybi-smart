@@ -2,9 +2,9 @@ import { Home, Radio, FileSearch, Scissors } from "lucide-react";
 
 const tabs = [
   { id: "home", icon: Home, label: "الرئيسية" },
-  { id: "radar", icon: Radio, label: "الرادار" },
-  { id: "analyze", icon: FileSearch, label: "تحليل الصك" },
-  { id: "editor", icon: Scissors, label: "المحرر" },
+  { id: "radar", icon: Radio, label: "نظام الفحص" },
+  { id: "analyze", icon: FileSearch, label: "المعالج الرقمي" },
+  { id: "editor", icon: Scissors, label: "محرك الأتمتة" },
 ];
 
 interface BottomNavProps {

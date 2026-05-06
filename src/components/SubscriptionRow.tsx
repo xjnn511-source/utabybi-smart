@@ -2,7 +2,7 @@ import { Building2, Rocket, Crown, ChevronRight } from "lucide-react";
 
 const plans = [
   {
-    name: "باقة المكاتب المعتمدة",
+    name: "باقة التراخيص الأساسية",
     price: "99",
     icon: Crown,
     features: [
@@ -14,7 +14,7 @@ const plans = [
     cta: "اشترك الآن",
   },
   {
-    name: "باقة الشركات العقارية",
+    name: "باقة الأنظمة المتقدمة (Pro)",
     price: "299",
     icon: Building2,
     features: [
@@ -27,7 +27,7 @@ const plans = [
     cta: "اشترك الآن",
   },
   {
-    name: "باقة المؤسسات الكبرى",
+    name: "باقة الحلول البرمجية (Enterprise)",
     price: "499",
     icon: Rocket,
     features: [
