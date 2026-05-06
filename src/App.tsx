@@ -14,6 +14,7 @@ import TermsOfService from "./pages/TermsOfService.tsx";
 import RefundPolicy from "./pages/RefundPolicy.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import { LabelsProvider } from "./hooks/useLabels.tsx";
+import TextReplacer from "./components/TextReplacer.tsx";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
       <Sonner />
       <LabelsProvider>
         <BrowserRouter>
+          <TextReplacer />
           <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<Index />} />
