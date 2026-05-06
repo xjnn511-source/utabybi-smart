@@ -198,7 +198,7 @@ const AiChatbot = () => {
             initial={{ opacity: 0, y: 100, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.95 }}
-            className="fixed inset-x-3 bottom-3 top-16 z-50 bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden"
+            className="fixed inset-x-3 bottom-24 top-16 z-50 bg-card border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden"
           >
             <div className="flex items-center justify-between p-3 border-b border-border bg-primary text-primary-foreground">
               <div className="flex items-center gap-2">
