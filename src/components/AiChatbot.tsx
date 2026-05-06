@@ -88,12 +88,12 @@ const AiChatbot = () => {
     if (isEditCommand) {
       setIsLoading(true);
       try {
-        const { data, error } = await supabase.functions.invoke("apply-label-edit", {
+        const { data, error } = await supabase.functions.invoke("apply-text-replace", {
           body: { command: userMsg },
         });
         if (error) throw error;
         if (data?.success) {
-          const list = data.edits.map((e: any) => `• \`${e.key}\` → **${e.value}**`).join("\n");
+          const list = data.pairs.map((p: any) => `• **${p.find}** → **${p.replace}**`).join("\n");
           setMessages((prev) => [...prev, {
             role: "assistant",
             content: `✅ **تم التعديل وحفظه مباشرة في قاعدة البيانات:**\n${list}\n\nسيظهر التغيير فوراً على الواجهة لكل المستخدمين.`,

@@ -193,6 +193,33 @@ export type Database = {
         }
         Relationships: []
       }
+      text_replacements: {
+        Row: {
+          created_at: string
+          find_text: string
+          id: string
+          replace_text: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          find_text: string
+          id?: string
+          replace_text: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          find_text?: string
+          id?: string
+          replace_text?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
