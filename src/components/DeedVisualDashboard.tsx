@@ -224,10 +224,7 @@ const ParchmentDeed = ({ deed, compact = false }: { deed: DeedVisualData; compac
     </div>
 
     {/* Body */}
-    <div
-      className="select-text px-4 py-3 text-right"
-      style={{ color: ink, fontWeight: 800 }}
-    >
+    <div className="select-text px-4 py-3 text-right" style={{ color: text, fontWeight: 800 }}>
       <DeedRow label="رقم الصك" value={valueOf(deed.deedNumber)} />
       <DeedRow label="المالك" value={valueOf(deed.owner)} />
       <DeedRow label="المساحة" value={deed.area ? `${deed.area} م²` : "—"} />
@@ -236,7 +233,7 @@ const ParchmentDeed = ({ deed, compact = false }: { deed: DeedVisualData; compac
 
       <p
         className="mt-3 border-t pt-2 text-center text-[9px]"
-        style={{ borderColor: "hsl(var(--deed-ink) / 0.35)", color: "hsl(var(--deed-ink) / 0.75)" }}
+        style={{ borderColor: "hsl(var(--deed-gold) / 0.25)", color: muted }}
       >
         تم استخراج البيانات وطباعتها داخل إطار الصك
       </p>
@@ -247,10 +244,10 @@ const ParchmentDeed = ({ deed, compact = false }: { deed: DeedVisualData; compac
 const DeedRow = ({ label, value }: { label: string; value: string }) => (
   <div
     className="flex items-center justify-between gap-2 border-b py-1 text-[11px] sm:text-xs"
-    style={{ borderColor: "hsl(var(--deed-ink) / 0.22)" }}
+    style={{ borderColor: "hsl(var(--deed-gold) / 0.18)" }}
   >
-    <span style={{ color: "hsl(var(--deed-ink) / 0.75)", fontWeight: 700 }}>{label}</span>
-    <span className="truncate" style={{ color: ink, fontWeight: 900 }}>
+    <span style={{ color: muted, fontWeight: 700 }}>{label}</span>
+    <span className="truncate" style={{ color: text, fontWeight: 900, textShadow: "0 0 5px hsl(var(--deed-gold) / 0.4)" }}>
       {value}
     </span>
   </div>
