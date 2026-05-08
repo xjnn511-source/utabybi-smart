@@ -22,7 +22,7 @@ const VideoMontageCard = () => {
         </div>
         <div>
           <h2 className="text-sm font-bold text-foreground">صانع فيديوهات المونتاج Ai</h2>
-          <p className="text-[10px] text-muted-foreground">مونتاج فيديو احترافي بالذكاء الاصطناعي</p>
+          <p className="text-[10px] text-muted-foreground">معالجة الوسائط التقنية</p>
         </div>
       </div>
 

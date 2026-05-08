@@ -39,10 +39,10 @@ const Index = () => {
           <div className="bg-card/80 border-b border-border overflow-hidden py-2.5">
             <div className="animate-marquee whitespace-nowrap flex gap-10 text-[11px] font-bold text-primary">
               <span>✨ تم تحديث دقة محرك OCR إلى 99.8%</span>
-              <span>🚀 تسريع عمليات تحليل الصكوك العقارية</span>
+              <span>🚀 تسريع عمليات معالجة الصكوك العقارية</span>
               <span>📊 معالجة 10,000 نقطة بيانات لتحديث السوق</span>
               <span>✨ تم تحديث دقة محرك OCR إلى 99.8%</span>
-              <span>🚀 تسريع عمليات تحليل الصكوك العقارية</span>
+              <span>🚀 تسريع عمليات معالجة الصكوك العقارية</span>
             </div>
           </div>
 
@@ -85,7 +85,7 @@ const Index = () => {
           {/* Legal Disclaimer */}
           <div className="mx-4 mt-4 p-3 rounded-lg bg-secondary/50 border border-border">
             <p className="text-[8px] text-muted-foreground leading-relaxed text-center">
-              ⚖️ إخلاء مسؤولية قانوني: هذا التطبيق منصة برمجية مساعدة تعمل بالذكاء الاصطناعي لتحليل البيانات وإنشاء المحتوى، ولا يُعدّ بديلاً عن الاستشارة المتخصصة.
+              ⚖️ إخلاء مسؤولية قانوني: هذا التطبيق منصة برمجية مساعدة تعمل بالذكاء الاصطناعي لمعالجة البيانات وإنشاء المحتوى، ولا يُعدّ بديلاً عن الاستشارة المتخصصة.
               المسؤولية النهائية عن دقة البيانات تقع على عاتق المستخدم وحده.
             </p>
             <p className="text-[8px] text-muted-foreground/50 text-center mt-1">

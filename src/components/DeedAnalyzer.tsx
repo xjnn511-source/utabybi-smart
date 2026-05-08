@@ -169,7 +169,7 @@ const DeedAnalyzer = () => {
             {state === "error" && (
               <div className="flex items-center gap-2 mb-3 p-2 rounded-lg bg-destructive/10 border border-destructive/20">
                 <AlertCircle className="w-4 h-4 text-destructive" />
-                <p className="text-[10px] text-destructive font-bold">فشل التحليل — يرجى المحاولة مرة أخرى</p>
+                <p className="text-[10px] text-destructive font-bold">فشل المعالجة — يرجى المحاولة مرة أخرى</p>
               </div>
             )}
 
@@ -199,13 +199,13 @@ const DeedAnalyzer = () => {
               <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center animate-pulse-glow">
                 <Loader2 className="w-8 h-8 text-primary animate-spin" />
               </div>
-              <p className="text-sm font-bold text-primary">جاري مسح وتحليل الصك...</p>
+              <p className="text-sm font-bold text-primary">جاري مسح ومعالجة الصك...</p>
 
               <div className="space-y-2">
                 {[
                   "قراءة بيانات الصك...",
                   "استخراج رقم الصك والمالك...",
-                  "تحليل الموقع والمساحة...",
+                  "معالجة الموقع والمساحة...",
                   "التحقق من صلاحية الصك...",
                 ].map((step, i) => (
                   <motion.div
