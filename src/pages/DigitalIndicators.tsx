@@ -5,8 +5,8 @@ import {
   ArrowRight, Activity, TrendingUp, BarChart3, Star, Zap, Radio, ShieldCheck, Cpu,
 } from "lucide-react";
 
-const CYAN = "#22d3ee";
-const GREEN = "#10b981";
+const CYAN = "#bf5af2"; // fuchsia accent (theme)
+const GREEN = "#2563eb"; // blue accent (theme)
 const SCORE = 92;
 
 const DigitalIndicators = () => {
