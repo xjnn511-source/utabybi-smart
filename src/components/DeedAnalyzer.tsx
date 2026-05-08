@@ -504,7 +504,7 @@ const DeedAnalyzer = () => {
               </span>
             </div>
 
-            <div ref={deedPanelRef}>
+            <div ref={deedPanelRef} className="overflow-x-auto pb-2">
               <DeedVisualDashboard deed={deedData} />
             </div>
 

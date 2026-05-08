@@ -80,7 +80,9 @@ const DigitalIndicators = () => {
       </header>
 
       <main className="relative mx-auto max-w-7xl px-3 py-5 space-y-4">
-        <DeedVisualDashboard deed={deed} />
+        <div className="overflow-x-auto pb-2">
+          <DeedVisualDashboard deed={deed} />
+        </div>
 
         {/* Footer */}
         <div
