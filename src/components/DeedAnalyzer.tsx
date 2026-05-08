@@ -217,6 +217,7 @@ const DeedAnalyzer = () => {
         cacheBust: true,
         pixelRatio: 3,
         backgroundColor: DEED_BG,
+        skipFonts: true,
       });
       const fileName = `utaybi-deed-${deedData?.deedNumber || "document"}.png`;
 
@@ -255,6 +256,7 @@ const DeedAnalyzer = () => {
         cacheBust: true,
         pixelRatio: 3,
         backgroundColor: DEED_BG,
+        skipFonts: true,
       });
       const img = new Image();
       img.src = dataUrl;
