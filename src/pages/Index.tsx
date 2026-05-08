@@ -39,10 +39,10 @@ const Index = () => {
           <div className="bg-card/80 border-b border-border overflow-hidden py-2.5">
             <div className="animate-marquee whitespace-nowrap flex gap-10 text-[11px] font-bold text-primary">
               <span>✨ تم تحديث دقة محرك OCR إلى 99.8%</span>
-              <span>🚀 تسريع عمليات معالجة الصكوك العقارية</span>
+              <span>🚀 تسريع عمليات معالجة الصكوك التقنية</span>
               <span>📊 معالجة 10,000 نقطة بيانات لتحديث السوق</span>
               <span>✨ تم تحديث دقة محرك OCR إلى 99.8%</span>
-              <span>🚀 تسريع عمليات معالجة الصكوك العقارية</span>
+              <span>🚀 تسريع عمليات معالجة الصكوك التقنية</span>
             </div>
           </div>
 
