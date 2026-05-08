@@ -1,420 +1,389 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import {
-  ArrowRight, Activity, TrendingUp, BarChart3, Star, Zap, Radio, ShieldCheck, Cpu,
-} from "lucide-react";
+import { ArrowRight, MapPin, User, Ruler, FileText, CheckCircle2, Radio } from "lucide-react";
 
-const CYAN = "#bf5af2"; // fuchsia accent (theme)
-const GREEN = "#2563eb"; // blue accent (theme)
-const SCORE = 92;
+const CYAN = "#00FFFF";
+
+interface DeedData {
+  deedNumber: string;
+  area: string;
+  owner: string;
+  city: string;
+  district: string;
+}
 
 const DigitalIndicators = () => {
   const navigate = useNavigate();
-  const [animatedScore, setAnimatedScore] = useState(0);
+  const [deed, setDeed] = useState<DeedData>({
+    deedNumber: "",
+    area: "",
+    owner: "",
+    city: "",
+    district: "",
+  });
 
   useEffect(() => {
-    let raf: number;
-    const start = performance.now();
-    const tick = (t: number) => {
-      const p = Math.min((t - start) / 1500, 1);
-      setAnimatedScore(Math.round(SCORE * p));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    try {
+      const raw = localStorage.getItem("utaybi.deedData");
+      if (raw) setDeed(JSON.parse(raw));
+    } catch {}
   }, []);
-
-  // Gauge math (semi-circle)
-  const radius = 110;
-  const circumference = Math.PI * radius;
-  const dash = (animatedScore / 100) * circumference;
-
-  const trendBars = [42, 55, 48, 62, 58, 71, 68, 79, 84, 88, 92];
-  const demandBars = [30, 45, 38, 60, 55, 72, 80, 86];
-  const ratingStars = 4.7;
 
   return (
     <div
       className="min-h-screen w-full relative overflow-hidden font-cairo notranslate"
       dir="rtl"
       style={{
-        background: "radial-gradient(ellipse at top, #04111a 0%, #020617 60%, #000 100%)",
+        background: "radial-gradient(ellipse at center, #00131f 0%, #000508 60%, #000 100%)",
         color: "#e2e8f0",
       }}
     >
-      {/* Grid overlay */}
+      {/* grid overlay */}
       <div
         className="absolute inset-0 pointer-events-none opacity-25"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(191,90,242,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(191,90,242,0.07) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
+          backgroundImage: `linear-gradient(${CYAN}10 1px, transparent 1px), linear-gradient(90deg, ${CYAN}10 1px, transparent 1px)`,
+          backgroundSize: "30px 30px",
         }}
       />
 
       {/* Header */}
       <header
         className="relative px-4 py-4 flex items-center justify-between border-b"
-        style={{ borderColor: "rgba(191,90,242,0.25)", background: "rgba(2,6,23,0.7)", backdropFilter: "blur(8px)" }}
+        style={{ borderColor: `${CYAN}30`, background: "rgba(0,8,20,0.7)", backdropFilter: "blur(8px)" }}
       >
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all"
-          style={{
-            background: "rgba(191,90,242,0.08)",
-            border: "1px solid rgba(191,90,242,0.4)",
-            color: CYAN,
-          }}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold"
+          style={{ background: `${CYAN}10`, border: `1px solid ${CYAN}50`, color: CYAN }}
         >
           <ArrowRight className="w-4 h-4" />
           رجوع
         </button>
-
         <div className="text-center flex-1">
-          <h1
-            className="text-base md:text-lg font-extrabold"
-            style={{ color: CYAN, textShadow: "0 0 12px rgba(191,90,242,0.7)" }}
-          >
-            التقرير التقني للمؤشرات الرقمية
+          <h1 className="text-base md:text-lg font-extrabold" style={{ color: CYAN, textShadow: `0 0 12px ${CYAN}` }}>
+            عُتيبي ذكي Ai: تحليل صك عقاري
           </h1>
-          <p className="text-[10px] mt-0.5" style={{ color: "rgba(191,219,254,0.7)" }}>
-            نظام برمجي مؤتمت لتقييم الأصول التقنية — Enterprise Edition
+          <p className="text-[10px] mt-0.5" style={{ color: `${CYAN}aa` }}>
+            نظام برمجي مؤتمت — Tactical Real-Estate Interface
           </p>
         </div>
-
         <div
           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px] font-bold"
-          style={{
-            background: "rgba(37,99,235,0.1)",
-            border: "1px solid rgba(37,99,235,0.5)",
-            color: "#60a5fa",
-            boxShadow: "0 0 12px rgba(37,99,235,0.3)",
-          }}
+          style={{ background: `${CYAN}10`, border: `1px solid ${CYAN}60`, color: CYAN, boxShadow: `0 0 12px ${CYAN}40` }}
         >
           <Radio className="w-3 h-3 animate-pulse" />
           LIVE
         </div>
       </header>
 
-      <main className="relative max-w-6xl mx-auto px-4 py-6 space-y-5">
-        {/* Catch / Efficiency Status Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="relative rounded-2xl p-4 overflow-hidden"
-          style={{
-            background: "linear-gradient(90deg, rgba(37,99,235,0.18), rgba(191,90,242,0.12))",
-            border: "1.5px solid rgba(37,99,235,0.6)",
-            boxShadow: "0 0 30px rgba(37,99,235,0.4), inset 0 0 30px rgba(37,99,235,0.08)",
-            animation: "pulseGlow 2.5s ease-in-out infinite",
-          }}
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div
-                className="w-11 h-11 rounded-full flex items-center justify-center"
-                style={{
-                  background: "rgba(37,99,235,0.2)",
-                  border: "1.5px solid #2563eb",
-                  boxShadow: "0 0 20px #2563eb",
-                }}
-              >
-                <ShieldCheck className="w-5 h-5" style={{ color: GREEN, filter: "drop-shadow(0 0 6px #2563eb)" }} />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold" style={{ color: "rgba(191,219,254,0.8)" }}>
-                  مؤشر كفاءة القيمة
-                </p>
-                <p className="text-base font-extrabold" style={{ color: "#60a5fa", textShadow: "0 0 10px #2563eb" }}>
-                  مثالي (نظام برمجى مؤتمت)
-                </p>
-              </div>
-            </div>
-            <div className="text-left">
-              <p className="text-[9px]" style={{ color: "rgba(191,219,254,0.6)" }}>درجة الكفاءة</p>
-              <p className="text-2xl font-black" style={{ color: GREEN, textShadow: "0 0 10px #2563eb" }}>
-                {animatedScore}%
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Central Gauge */}
+      <main className="relative max-w-7xl mx-auto px-3 py-5 space-y-4">
+        {/* Status banner */}
         <div
-          className="relative rounded-2xl p-6 overflow-hidden"
+          className="mx-auto w-fit px-5 py-2 rounded-full flex items-center gap-2"
           style={{
-            background: "rgba(2,6,23,0.6)",
-            border: "1px solid rgba(191,90,242,0.3)",
-            boxShadow: "0 0 30px rgba(191,90,242,0.2), inset 0 0 40px rgba(191,90,242,0.05)",
+            background: "rgba(0,8,20,0.8)",
+            border: `1.5px solid ${CYAN}`,
+            boxShadow: `0 0 25px ${CYAN}55, inset 0 0 12px ${CYAN}30`,
           }}
         >
-          <div className="flex items-center gap-2 mb-2">
-            <Cpu className="w-4 h-4" style={{ color: CYAN, filter: "drop-shadow(0 0 4px #bf5af2)" }} />
-            <h2 className="text-sm font-extrabold" style={{ color: CYAN, textShadow: "0 0 8px #bf5af2" }}>
-              العداد المركزي للقيمة التقنية
-            </h2>
-          </div>
-
-          <div className="flex flex-col items-center justify-center py-4">
-            <svg width="280" height="170" viewBox="0 0 280 170">
-              <defs>
-                <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#bf5af2" />
-                  <stop offset="100%" stopColor="#2563eb" />
-                </linearGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3.5" result="b" />
-                  <feMerge>
-                    <feMergeNode in="b" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              {/* Track */}
-              <path
-                d="M 30 140 A 110 110 0 0 1 250 140"
-                fill="none"
-                stroke="rgba(191,90,242,0.15)"
-                strokeWidth="14"
-                strokeLinecap="round"
-              />
-              {/* Filled */}
-              <path
-                d="M 30 140 A 110 110 0 0 1 250 140"
-                fill="none"
-                stroke="url(#gaugeGrad)"
-                strokeWidth="14"
-                strokeLinecap="round"
-                strokeDasharray={`${dash} ${circumference}`}
-                filter="url(#glow)"
-              />
-              {/* Tick marks */}
-              {[0, 25, 50, 75, 100].map((v) => {
-                const angle = Math.PI - (v / 100) * Math.PI;
-                const x1 = 140 + Math.cos(angle) * 95;
-                const y1 = 140 - Math.sin(angle) * 95;
-                const x2 = 140 + Math.cos(angle) * 80;
-                const y2 = 140 - Math.sin(angle) * 80;
-                return (
-                  <line
-                    key={v}
-                    x1={x1}
-                    y1={y1}
-                    x2={x2}
-                    y2={y2}
-                    stroke="#bf5af2"
-                    strokeWidth="1.5"
-                    opacity="0.6"
-                  />
-                );
-              })}
-              {/* Center text */}
-              <text
-                x="140"
-                y="125"
-                textAnchor="middle"
-                fontSize="48"
-                fontWeight="900"
-                fill="#bf5af2"
-                style={{ filter: "drop-shadow(0 0 8px #bf5af2)" }}
-                fontFamily="Cairo, sans-serif"
-              >
-                {animatedScore}
-              </text>
-              <text
-                x="140"
-                y="155"
-                textAnchor="middle"
-                fontSize="11"
-                fontWeight="700"
-                fill="#2563eb"
-                fontFamily="Cairo, sans-serif"
-              >
-                درجة الكفاءة البرمجية
-              </text>
-            </svg>
-
-            <div className="grid grid-cols-3 gap-2 w-full max-w-md mt-3 text-center">
-              {[
-                { label: "ضعيف", color: "#ef4444", range: "0-40" },
-                { label: "متوسط", color: "#eab308", range: "41-70" },
-                { label: "مثالي", color: GREEN, range: "71-100" },
-              ].map((s) => (
-                <div
-                  key={s.label}
-                  className="rounded-lg p-2"
-                  style={{
-                    background: "rgba(2,6,23,0.6)",
-                    border: `1px solid ${s.color}40`,
-                    boxShadow: s.label === "مثالي" ? `0 0 10px ${s.color}80` : undefined,
-                  }}
-                >
-                  <p className="text-[10px] font-bold" style={{ color: s.color }}>{s.label}</p>
-                  <p className="text-[9px]" style={{ color: "rgba(226,232,240,0.5)" }}>{s.range}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <CheckCircle2 className="w-4 h-4" style={{ color: CYAN, filter: `drop-shadow(0 0 4px ${CYAN})` }} />
+          <span className="text-xs font-extrabold" style={{ color: "#fff", textShadow: `0 0 6px ${CYAN}` }}>
+            حالة الصك: محدّث وساري
+          </span>
+          <span className="text-[10px] font-bold mr-2" style={{ color: CYAN }}>100% Match Score</span>
         </div>
 
-        {/* 3 Charts grid */}
+        {/* Three Panel Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* District Price Trends */}
-          <ChartCard
-            icon={TrendingUp}
-            title="مؤشر أسعار الحي"
-            subtitle="اتجاه آخر 11 فترة برمجية"
-            color={CYAN}
-            value="+18.4%"
-          >
-            <svg viewBox="0 0 220 100" className="w-full h-24">
-              <defs>
-                <linearGradient id="lineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#bf5af2" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="#bf5af2" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              {(() => {
-                const pts = trendBars.map((v, i) => `${(i / (trendBars.length - 1)) * 220},${100 - v}`);
-                const path = `M ${pts.join(" L ")}`;
-                const area = `${path} L 220,100 L 0,100 Z`;
-                return (
-                  <>
-                    <path d={area} fill="url(#lineGrad)" />
-                    <motion.path
-                      d={path}
-                      fill="none"
-                      stroke="#bf5af2"
-                      strokeWidth="2"
-                      style={{ filter: "drop-shadow(0 0 4px #bf5af2)" }}
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 1.5 }}
-                    />
-                    {pts.map((p, i) => {
-                      const [x, y] = p.split(",").map(Number);
-                      return <circle key={i} cx={x} cy={y} r="2" fill="#bf5af2" />;
-                    })}
-                  </>
-                );
-              })()}
-            </svg>
-          </ChartCard>
+          {/* LEFT: Leather-framed deed */}
+          <Panel label="01 · DIGITAL DEED">
+            <LeatherDeed deed={deed} />
+          </Panel>
 
-          {/* Demand Analysis */}
-          <ChartCard
-            icon={BarChart3}
-            title="مؤشر معالجة الطلب"
-            subtitle="حجم الطلب الرقمي"
-            color={GREEN}
-            value="عالي"
-          >
-            <svg viewBox="0 0 220 100" className="w-full h-24">
-              {demandBars.map((v, i) => {
-                const w = 220 / demandBars.length - 4;
-                const x = i * (220 / demandBars.length) + 2;
-                const h = v;
-                return (
-                  <motion.rect
-                    key={i}
-                    x={x}
-                    y={100 - h}
-                    width={w}
-                    height={h}
-                    fill={GREEN}
-                    rx="2"
-                    style={{ filter: "drop-shadow(0 0 3px #2563eb)" }}
-                    initial={{ height: 0, y: 100 }}
-                    animate={{ height: h, y: 100 - h }}
-                    transition={{ duration: 0.6, delay: i * 0.08 }}
-                  />
-                );
-              })}
-            </svg>
-          </ChartCard>
+          {/* CENTER: Pulse waveform deed-like card */}
+          <Panel label="02 · PULSE MATCH">
+            <PulseCard deed={deed} />
+          </Panel>
 
-          {/* Property Rating */}
-          <ChartCard
-            icon={Star}
-            title="تقييم الأصل التقني"
-            subtitle="معالجة برمجية متعددة المعايير"
-            color={CYAN}
-            value={`${ratingStars} / 5`}
-          >
-            <div className="flex items-center justify-center gap-1.5 h-24">
-              {[1, 2, 3, 4, 5].map((i) => {
-                const filled = i <= Math.floor(ratingStars);
-                const half = !filled && i - 0.5 <= ratingStars;
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ scale: 0, rotate: -45 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                  >
-                    <Star
-                      className="w-7 h-7"
-                      style={{
-                        color: filled || half ? CYAN : "rgba(191,90,242,0.2)",
-                        fill: filled ? CYAN : half ? "url(#halfGrad)" : "transparent",
-                        filter: filled || half ? "drop-shadow(0 0 6px #bf5af2)" : undefined,
-                      }}
-                    />
-                  </motion.div>
-                );
-              })}
-            </div>
-          </ChartCard>
+          {/* RIGHT: Map */}
+          <Panel label="03 · GEO LOCATOR">
+            <MapCard deed={deed} />
+          </Panel>
         </div>
 
-        {/* Footer indicators */}
+        {/* Bottom 4 icon summary */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-1">
+          {[
+            { icon: FileText, label: "رقم الصك", value: deed.deedNumber || "—" },
+            { icon: User, label: "المالك", value: deed.owner || "—" },
+            { icon: Ruler, label: "المساحة", value: deed.area ? `${deed.area} m²` : "—" },
+            {
+              icon: MapPin,
+              label: "الموقع",
+              value: [deed.city, deed.district].filter(Boolean).join(" - ") || "—",
+            },
+          ].map(({ icon: Icon, label, value }) => (
+            <div
+              key={label}
+              className="rounded-xl p-3 flex items-center gap-3"
+              style={{
+                background: "rgba(0,8,20,0.85)",
+                border: `1px solid ${CYAN}60`,
+                boxShadow: `inset 0 0 14px ${CYAN}15, 0 0 12px ${CYAN}25`,
+              }}
+            >
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                style={{ background: `${CYAN}15`, border: `1px solid ${CYAN}80`, boxShadow: `0 0 10px ${CYAN}50` }}
+              >
+                <Icon className="w-4 h-4" style={{ color: CYAN, filter: `drop-shadow(0 0 4px ${CYAN})` }} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[10px]" style={{ color: `${CYAN}aa` }}>{label}</p>
+                <p className="text-xs font-extrabold truncate" style={{ color: "#fff", textShadow: `0 0 6px ${CYAN}` }}>
+                  {value}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
         <div
-          className="rounded-xl p-3 flex items-center justify-between text-[10px]"
-          style={{
-            background: "rgba(2,6,23,0.6)",
-            border: "1px solid rgba(191,90,242,0.2)",
-          }}
+          className="rounded-xl p-3 flex items-center justify-center text-[10px] mt-2"
+          style={{ background: "rgba(0,8,20,0.6)", border: `1px solid ${CYAN}25` }}
         >
-          <div className="flex items-center gap-2">
-            <Activity className="w-3.5 h-3.5 animate-pulse" style={{ color: GREEN }} />
-            <span style={{ color: "rgba(191,219,254,0.8)" }}>المعالجة البرمجية نشطة</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Zap className="w-3.5 h-3.5" style={{ color: CYAN }} />
-            <span style={{ color: "rgba(191,90,242,0.8)" }}>تحديث تلقائي كل 30 ثانية</span>
-          </div>
-          <span style={{ color: "rgba(226,232,240,0.4)" }}>عُتيبي ذكي 🤖 Hub</span>
+          <span style={{ color: `${CYAN}aa` }}>
+            عُتيبي ذكي Ai: نحلل بالرؤية والصوت — معالجة برمجية مؤتمتة
+          </span>
         </div>
       </main>
     </div>
   );
 };
 
-const ChartCard = ({
-  icon: Icon, title, subtitle, color, value, children,
-}: {
-  icon: any; title: string; subtitle: string; color: string; value: string; children: React.ReactNode;
-}) => (
+const Panel = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div
-    className="rounded-xl p-4"
+    className="relative rounded-2xl p-3"
     style={{
-      background: "rgba(2,6,23,0.6)",
-      border: `1px solid ${color}40`,
-      boxShadow: `0 0 18px ${color}20, inset 0 0 20px ${color}08`,
+      background: "rgba(0,8,20,0.75)",
+      border: `1.5px solid ${CYAN}80`,
+      boxShadow: `0 0 25px ${CYAN}30, inset 0 0 25px ${CYAN}10`,
     }}
   >
-    <div className="flex items-center justify-between mb-2">
-      <div className="flex items-center gap-2">
-        <Icon className="w-3.5 h-3.5" style={{ color, filter: `drop-shadow(0 0 4px ${color})` }} />
-        <div>
-          <p className="text-xs font-extrabold" style={{ color, textShadow: `0 0 6px ${color}80` }}>{title}</p>
-          <p className="text-[9px]" style={{ color: "rgba(226,232,240,0.5)" }}>{subtitle}</p>
+    {[
+      { top: 4, left: 4, b: "border-t-2 border-l-2" },
+      { top: 4, right: 4, b: "border-t-2 border-r-2" },
+      { bottom: 4, left: 4, b: "border-b-2 border-l-2" },
+      { bottom: 4, right: 4, b: "border-b-2 border-r-2" },
+    ].map((c, i) => (
+      <div key={i} className={`absolute w-4 h-4 ${c.b}`} style={{ ...c, borderColor: CYAN, boxShadow: `0 0 6px ${CYAN}` }} />
+    ))}
+    <p className="text-[9px] font-bold tracking-[0.3em] mb-2" style={{ color: `${CYAN}aa` }}>{label}</p>
+    {children}
+  </div>
+);
+
+/* ---------- LEATHER DEED (left) ---------- */
+const LeatherDeed = ({ deed }: { deed: DeedData }) => (
+  <div
+    className="rounded-lg p-3 relative overflow-hidden"
+    style={{
+      background:
+        "radial-gradient(ellipse at top, #1a2a18 0%, #0a1a14 60%, #000a08 100%)",
+      border: `2px solid ${CYAN}80`,
+      boxShadow: `0 0 18px ${CYAN}50, inset 0 0 30px rgba(0,0,0,0.6)`,
+    }}
+  >
+    {/* inner ornate frame */}
+    <div
+      className="rounded-md p-3 relative"
+      style={{
+        border: `1px dashed ${CYAN}60`,
+        background:
+          "linear-gradient(180deg, rgba(0,30,40,0.35) 0%, rgba(0,8,12,0.55) 100%)",
+        minHeight: 320,
+      }}
+    >
+      {/* Saudi emblem */}
+      <div className="flex justify-center mb-2">
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center"
+          style={{
+            background: `radial-gradient(circle, ${CYAN}25 0%, transparent 70%)`,
+            border: `1.5px solid ${CYAN}`,
+            boxShadow: `0 0 14px ${CYAN}`,
+          }}
+        >
+          <svg viewBox="0 0 64 64" className="w-7 h-7" fill="none" stroke={CYAN} strokeWidth="2"
+            strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 4px ${CYAN})` }}>
+            <path d="M32 50 L32 28" />
+            <path d="M32 28 C 22 22, 16 24, 14 30" />
+            <path d="M32 28 C 42 22, 48 24, 50 30" />
+            <path d="M32 28 C 26 18, 22 16, 18 18" />
+            <path d="M32 28 C 38 18, 42 16, 46 18" />
+            <path d="M32 28 C 30 20, 32 14, 32 12" />
+            <path d="M14 54 L30 42" />
+            <path d="M50 54 L34 42" />
+          </svg>
         </div>
       </div>
-      <span className="text-xs font-black" style={{ color, textShadow: `0 0 6px ${color}` }}>{value}</span>
+      <p className="text-center text-[11px] font-extrabold tracking-widest mb-2"
+         style={{ color: "#fff", textShadow: `0 0 8px ${CYAN}` }}>
+        حصة العقارات العقارية
+      </p>
+      <div className="space-y-1.5 text-[11px] leading-relaxed" style={{ color: "#e6f9ff" }}>
+        <Row k="رقم الصك" v={deed.deedNumber || "—"} />
+        <Row k="نوع الصك" v="ملكية" />
+        <Row k="المالك" v={deed.owner || "—"} />
+        <Row k="المساحة" v={deed.area ? `${deed.area} م²` : "—"} />
+        <Row k="الحي" v={deed.district || "—"} />
+        <Row k="المدينة" v={deed.city || "—"} />
+        <Row k="الموقع" v={[deed.city, deed.district].filter(Boolean).join(" — ") || "—"} />
+      </div>
+      <p className="mt-3 text-center text-[10px]" style={{ color: `${CYAN}cc` }}>
+        والسلام يوم الإصدار
+      </p>
     </div>
-    {children}
+  </div>
+);
+
+const Row = ({ k, v }: { k: string; v: string }) => (
+  <div className="flex items-baseline gap-2">
+    <span className="text-[10px] font-bold" style={{ color: `${CYAN}cc` }}>{k}:</span>
+    <span className="font-extrabold truncate" style={{ color: "#fff", textShadow: `0 0 4px ${CYAN}` }}>{v}</span>
+  </div>
+);
+
+/* ---------- PULSE CARD (center) ---------- */
+const PulseCard = ({ deed }: { deed: DeedData }) => (
+  <div
+    className="rounded-lg p-3 relative overflow-hidden"
+    style={{
+      background:
+        "radial-gradient(ellipse at top, #08222e 0%, #03121a 60%, #000508 100%)",
+      border: `2px solid ${CYAN}80`,
+      boxShadow: `0 0 18px ${CYAN}50, inset 0 0 30px rgba(0,0,0,0.6)`,
+      minHeight: 360,
+    }}
+  >
+    <div
+      className="rounded-md p-3 relative"
+      style={{
+        border: `1px dashed ${CYAN}60`,
+        background: "linear-gradient(180deg, rgba(0,30,45,0.45) 0%, rgba(0,8,15,0.7) 100%)",
+        minHeight: 340,
+      }}
+    >
+      <p className="text-center text-[11px] font-extrabold tracking-widest mb-2"
+         style={{ color: "#fff", textShadow: `0 0 8px ${CYAN}` }}>
+        حصة العقارات العقارية
+      </p>
+
+      {/* deed text */}
+      <div className="space-y-1 text-[10px]" style={{ color: "#e6f9ff" }}>
+        <p>رقم الصك: <span className="font-bold" style={{ color: "#fff" }}>{deed.deedNumber || "—"}</span></p>
+        <p>المالك: <span className="font-bold">{deed.owner || "—"}</span></p>
+        <p>المساحة: <span className="font-bold">{deed.area ? `${deed.area} م²` : "—"}</span></p>
+        <p>المدينة: <span className="font-bold">{deed.city || "—"}</span></p>
+        <p>الحي: <span className="font-bold">{deed.district || "—"}</span></p>
+      </div>
+
+      {/* pulse waveform */}
+      <div className="my-3 relative h-20 rounded-md overflow-hidden"
+           style={{ background: "rgba(0,0,0,0.5)", border: `1px solid ${CYAN}40` }}>
+        <svg viewBox="0 0 300 80" className="w-full h-full">
+          <defs>
+            <linearGradient id="pulseGrad" x1="0%" x2="100%">
+              <stop offset="0%" stopColor={CYAN} stopOpacity="0" />
+              <stop offset="50%" stopColor={CYAN} stopOpacity="1" />
+              <stop offset="100%" stopColor={CYAN} stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="40" x2="300" y2="40" stroke={`${CYAN}40`} strokeWidth="0.5" />
+          <motion.path
+            d="M 0 40 L 80 40 L 110 40 L 125 12 L 140 68 L 155 25 L 170 55 L 185 40 L 220 40 L 300 40"
+            fill="none"
+            stroke="url(#pulseGrad)"
+            strokeWidth="2.2"
+            style={{ filter: `drop-shadow(0 0 6px ${CYAN})` }}
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </svg>
+        <div className="absolute top-1 right-2 text-[9px] font-bold" style={{ color: CYAN }}>
+          100% MATCH
+        </div>
+      </div>
+
+      <p className="text-center text-[10px]" style={{ color: `${CYAN}cc` }}>
+        والسلام يوم الإصدار
+      </p>
+    </div>
+  </div>
+);
+
+/* ---------- MAP CARD (right) ---------- */
+const MapCard = ({ deed }: { deed: DeedData }) => (
+  <div
+    className="rounded-lg p-3 relative overflow-hidden"
+    style={{
+      background: "radial-gradient(ellipse at center, #002535 0%, #000a12 70%, #000508 100%)",
+      border: `2px solid ${CYAN}80`,
+      boxShadow: `0 0 18px ${CYAN}50, inset 0 0 30px rgba(0,0,0,0.6)`,
+      minHeight: 360,
+    }}
+  >
+    <div className="relative h-[320px] rounded-md overflow-hidden" style={{ border: `1px dashed ${CYAN}60` }}>
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 300 320" preserveAspectRatio="none">
+        <defs>
+          <pattern id="mg" width="24" height="24" patternUnits="userSpaceOnUse">
+            <path d="M 24 0 L 0 0 0 24" fill="none" stroke={`${CYAN}25`} strokeWidth="0.5" />
+          </pattern>
+        </defs>
+        <rect width="300" height="320" fill="url(#mg)" />
+        {/* roads */}
+        <path d="M 0 100 Q 120 60 300 130" stroke={`${CYAN}90`} strokeWidth="1.4" fill="none" />
+        <path d="M 150 0 Q 130 160 170 320" stroke={`${CYAN}80`} strokeWidth="1.2" fill="none" />
+        <path d="M 30 250 L 290 60" stroke={`${CYAN}50`} strokeWidth="0.8" fill="none" strokeDasharray="4 4" />
+        <path d="M 0 220 L 300 240" stroke={`${CYAN}40`} strokeWidth="0.6" fill="none" />
+        {/* district shapes */}
+        <path d="M 70 80 Q 110 60 130 100 Q 120 150 75 130 Z" fill={`${CYAN}15`} stroke={`${CYAN}55`} strokeWidth="0.7" />
+        <path d="M 180 170 Q 230 160 240 200 Q 215 240 175 220 Z" fill={`${CYAN}10`} stroke={`${CYAN}45`} strokeWidth="0.7" />
+        <path d="M 40 200 Q 90 195 95 235 Q 60 250 35 235 Z" fill={`${CYAN}10`} stroke={`${CYAN}40`} strokeWidth="0.6" />
+      </svg>
+
+      {/* glowing pin */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full">
+        <motion.div
+          animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0.2, 0.6] }}
+          transition={{ duration: 1.8, repeat: Infinity }}
+          className="absolute -inset-4 rounded-full"
+          style={{ background: `${CYAN}50`, filter: "blur(10px)" }}
+        />
+        <MapPin className="w-9 h-9 relative" style={{ color: CYAN, fill: CYAN, filter: `drop-shadow(0 0 12px ${CYAN})` }} />
+      </div>
+
+      {/* small badge */}
+      <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[10px] font-extrabold"
+           style={{ background: "rgba(0,8,12,0.85)", border: `1px solid ${CYAN}60`, color: CYAN }}>
+        55
+      </div>
+
+      {/* coords label */}
+      <div
+        className="absolute bottom-2 left-2 right-2 px-2 py-1.5 rounded text-center"
+        style={{ background: "rgba(0,8,20,0.9)", border: `1px solid ${CYAN}70`, boxShadow: `0 0 10px ${CYAN}40` }}
+      >
+        <p className="text-[9px]" style={{ color: `${CYAN}cc` }}>الموقع</p>
+        <p className="text-xs font-extrabold" style={{ color: "#fff", textShadow: `0 0 6px ${CYAN}` }}>
+          {[deed.city, deed.district].filter(Boolean).join(" - ") || "—"}
+        </p>
+      </div>
+    </div>
   </div>
 );
 
