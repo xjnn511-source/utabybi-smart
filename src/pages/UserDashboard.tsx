@@ -153,7 +153,7 @@ const UserDashboard = () => {
           </div>
           <div className="card-neon p-3 text-center">
             <Video className="w-5 h-5 text-primary mx-auto mb-1.5" />
-            <p className="text-[9px] text-muted-foreground mb-1">مونتاج فيديو</p>
+            <p className="text-[9px] text-muted-foreground mb-1">معالجة الوسائط</p>
             <p className="text-xl font-bold text-foreground">
               {subscription?.plan === "office" ? "✓" : subscription?.plan === "leadership" ? "✓" : "—"}
             </p>
