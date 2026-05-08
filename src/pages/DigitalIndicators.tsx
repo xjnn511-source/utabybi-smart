@@ -48,7 +48,7 @@ const DigitalIndicators = () => {
         className="absolute inset-0 pointer-events-none opacity-25"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(34,211,238,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.07) 1px, transparent 1px)",
+            "linear-gradient(rgba(191,90,242,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(191,90,242,0.07) 1px, transparent 1px)",
           backgroundSize: "32px 32px",
         }}
       />
@@ -56,14 +56,14 @@ const DigitalIndicators = () => {
       {/* Header */}
       <header
         className="relative px-4 py-4 flex items-center justify-between border-b"
-        style={{ borderColor: "rgba(34,211,238,0.25)", background: "rgba(2,6,23,0.7)", backdropFilter: "blur(8px)" }}
+        style={{ borderColor: "rgba(191,90,242,0.25)", background: "rgba(2,6,23,0.7)", backdropFilter: "blur(8px)" }}
       >
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all"
           style={{
-            background: "rgba(34,211,238,0.08)",
-            border: "1px solid rgba(34,211,238,0.4)",
+            background: "rgba(191,90,242,0.08)",
+            border: "1px solid rgba(191,90,242,0.4)",
             color: CYAN,
           }}
         >
@@ -74,11 +74,11 @@ const DigitalIndicators = () => {
         <div className="text-center flex-1">
           <h1
             className="text-base md:text-lg font-extrabold"
-            style={{ color: CYAN, textShadow: "0 0 12px rgba(34,211,238,0.7)" }}
+            style={{ color: CYAN, textShadow: "0 0 12px rgba(191,90,242,0.7)" }}
           >
             التقرير التقني للمؤشرات الرقمية
           </h1>
-          <p className="text-[10px] mt-0.5" style={{ color: "rgba(167,243,208,0.7)" }}>
+          <p className="text-[10px] mt-0.5" style={{ color: "rgba(191,219,254,0.7)" }}>
             نظام برمجي مؤتمت لتقييم الأصول التقنية — Enterprise Edition
           </p>
         </div>
@@ -86,10 +86,10 @@ const DigitalIndicators = () => {
         <div
           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px] font-bold"
           style={{
-            background: "rgba(16,185,129,0.1)",
-            border: "1px solid rgba(16,185,129,0.5)",
-            color: "#34d399",
-            boxShadow: "0 0 12px rgba(16,185,129,0.3)",
+            background: "rgba(37,99,235,0.1)",
+            border: "1px solid rgba(37,99,235,0.5)",
+            color: "#60a5fa",
+            boxShadow: "0 0 12px rgba(37,99,235,0.3)",
           }}
         >
           <Radio className="w-3 h-3 animate-pulse" />
@@ -104,9 +104,9 @@ const DigitalIndicators = () => {
           animate={{ opacity: 1, y: 0 }}
           className="relative rounded-2xl p-4 overflow-hidden"
           style={{
-            background: "linear-gradient(90deg, rgba(16,185,129,0.18), rgba(34,211,238,0.12))",
-            border: "1.5px solid rgba(16,185,129,0.6)",
-            boxShadow: "0 0 30px rgba(16,185,129,0.4), inset 0 0 30px rgba(16,185,129,0.08)",
+            background: "linear-gradient(90deg, rgba(37,99,235,0.18), rgba(191,90,242,0.12))",
+            border: "1.5px solid rgba(37,99,235,0.6)",
+            boxShadow: "0 0 30px rgba(37,99,235,0.4), inset 0 0 30px rgba(37,99,235,0.08)",
             animation: "pulseGlow 2.5s ease-in-out infinite",
           }}
         >
@@ -115,25 +115,25 @@ const DigitalIndicators = () => {
               <div
                 className="w-11 h-11 rounded-full flex items-center justify-center"
                 style={{
-                  background: "rgba(16,185,129,0.2)",
-                  border: "1.5px solid #10b981",
-                  boxShadow: "0 0 20px #10b981",
+                  background: "rgba(37,99,235,0.2)",
+                  border: "1.5px solid #2563eb",
+                  boxShadow: "0 0 20px #2563eb",
                 }}
               >
-                <ShieldCheck className="w-5 h-5" style={{ color: GREEN, filter: "drop-shadow(0 0 6px #10b981)" }} />
+                <ShieldCheck className="w-5 h-5" style={{ color: GREEN, filter: "drop-shadow(0 0 6px #2563eb)" }} />
               </div>
               <div>
-                <p className="text-[10px] font-bold" style={{ color: "rgba(167,243,208,0.8)" }}>
+                <p className="text-[10px] font-bold" style={{ color: "rgba(191,219,254,0.8)" }}>
                   مؤشر كفاءة القيمة
                 </p>
-                <p className="text-base font-extrabold" style={{ color: "#34d399", textShadow: "0 0 10px #10b981" }}>
+                <p className="text-base font-extrabold" style={{ color: "#60a5fa", textShadow: "0 0 10px #2563eb" }}>
                   مثالي (نظام برمجى مؤتمت)
                 </p>
               </div>
             </div>
             <div className="text-left">
-              <p className="text-[9px]" style={{ color: "rgba(167,243,208,0.6)" }}>درجة الكفاءة</p>
-              <p className="text-2xl font-black" style={{ color: GREEN, textShadow: "0 0 10px #10b981" }}>
+              <p className="text-[9px]" style={{ color: "rgba(191,219,254,0.6)" }}>درجة الكفاءة</p>
+              <p className="text-2xl font-black" style={{ color: GREEN, textShadow: "0 0 10px #2563eb" }}>
                 {animatedScore}%
               </p>
             </div>
@@ -145,13 +145,13 @@ const DigitalIndicators = () => {
           className="relative rounded-2xl p-6 overflow-hidden"
           style={{
             background: "rgba(2,6,23,0.6)",
-            border: "1px solid rgba(34,211,238,0.3)",
-            boxShadow: "0 0 30px rgba(34,211,238,0.2), inset 0 0 40px rgba(34,211,238,0.05)",
+            border: "1px solid rgba(191,90,242,0.3)",
+            boxShadow: "0 0 30px rgba(191,90,242,0.2), inset 0 0 40px rgba(191,90,242,0.05)",
           }}
         >
           <div className="flex items-center gap-2 mb-2">
-            <Cpu className="w-4 h-4" style={{ color: CYAN, filter: "drop-shadow(0 0 4px #22d3ee)" }} />
-            <h2 className="text-sm font-extrabold" style={{ color: CYAN, textShadow: "0 0 8px #22d3ee" }}>
+            <Cpu className="w-4 h-4" style={{ color: CYAN, filter: "drop-shadow(0 0 4px #bf5af2)" }} />
+            <h2 className="text-sm font-extrabold" style={{ color: CYAN, textShadow: "0 0 8px #bf5af2" }}>
               العداد المركزي للقيمة التقنية
             </h2>
           </div>
@@ -160,8 +160,8 @@ const DigitalIndicators = () => {
             <svg width="280" height="170" viewBox="0 0 280 170">
               <defs>
                 <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#22d3ee" />
-                  <stop offset="100%" stopColor="#10b981" />
+                  <stop offset="0%" stopColor="#bf5af2" />
+                  <stop offset="100%" stopColor="#2563eb" />
                 </linearGradient>
                 <filter id="glow">
                   <feGaussianBlur stdDeviation="3.5" result="b" />
@@ -175,7 +175,7 @@ const DigitalIndicators = () => {
               <path
                 d="M 30 140 A 110 110 0 0 1 250 140"
                 fill="none"
-                stroke="rgba(34,211,238,0.15)"
+                stroke="rgba(191,90,242,0.15)"
                 strokeWidth="14"
                 strokeLinecap="round"
               />
@@ -203,7 +203,7 @@ const DigitalIndicators = () => {
                     y1={y1}
                     x2={x2}
                     y2={y2}
-                    stroke="#22d3ee"
+                    stroke="#bf5af2"
                     strokeWidth="1.5"
                     opacity="0.6"
                   />
@@ -216,8 +216,8 @@ const DigitalIndicators = () => {
                 textAnchor="middle"
                 fontSize="48"
                 fontWeight="900"
-                fill="#22d3ee"
-                style={{ filter: "drop-shadow(0 0 8px #22d3ee)" }}
+                fill="#bf5af2"
+                style={{ filter: "drop-shadow(0 0 8px #bf5af2)" }}
                 fontFamily="Cairo, sans-serif"
               >
                 {animatedScore}
@@ -228,7 +228,7 @@ const DigitalIndicators = () => {
                 textAnchor="middle"
                 fontSize="11"
                 fontWeight="700"
-                fill="#10b981"
+                fill="#2563eb"
                 fontFamily="Cairo, sans-serif"
               >
                 درجة الكفاءة البرمجية
@@ -271,8 +271,8 @@ const DigitalIndicators = () => {
             <svg viewBox="0 0 220 100" className="w-full h-24">
               <defs>
                 <linearGradient id="lineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+                  <stop offset="0%" stopColor="#bf5af2" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#bf5af2" stopOpacity="0" />
                 </linearGradient>
               </defs>
               {(() => {
@@ -285,16 +285,16 @@ const DigitalIndicators = () => {
                     <motion.path
                       d={path}
                       fill="none"
-                      stroke="#22d3ee"
+                      stroke="#bf5af2"
                       strokeWidth="2"
-                      style={{ filter: "drop-shadow(0 0 4px #22d3ee)" }}
+                      style={{ filter: "drop-shadow(0 0 4px #bf5af2)" }}
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
                       transition={{ duration: 1.5 }}
                     />
                     {pts.map((p, i) => {
                       const [x, y] = p.split(",").map(Number);
-                      return <circle key={i} cx={x} cy={y} r="2" fill="#22d3ee" />;
+                      return <circle key={i} cx={x} cy={y} r="2" fill="#bf5af2" />;
                     })}
                   </>
                 );
@@ -324,7 +324,7 @@ const DigitalIndicators = () => {
                     height={h}
                     fill={GREEN}
                     rx="2"
-                    style={{ filter: "drop-shadow(0 0 3px #10b981)" }}
+                    style={{ filter: "drop-shadow(0 0 3px #2563eb)" }}
                     initial={{ height: 0, y: 100 }}
                     animate={{ height: h, y: 100 - h }}
                     transition={{ duration: 0.6, delay: i * 0.08 }}
@@ -356,9 +356,9 @@ const DigitalIndicators = () => {
                     <Star
                       className="w-7 h-7"
                       style={{
-                        color: filled || half ? CYAN : "rgba(34,211,238,0.2)",
+                        color: filled || half ? CYAN : "rgba(191,90,242,0.2)",
                         fill: filled ? CYAN : half ? "url(#halfGrad)" : "transparent",
-                        filter: filled || half ? "drop-shadow(0 0 6px #22d3ee)" : undefined,
+                        filter: filled || half ? "drop-shadow(0 0 6px #bf5af2)" : undefined,
                       }}
                     />
                   </motion.div>
@@ -373,16 +373,16 @@ const DigitalIndicators = () => {
           className="rounded-xl p-3 flex items-center justify-between text-[10px]"
           style={{
             background: "rgba(2,6,23,0.6)",
-            border: "1px solid rgba(34,211,238,0.2)",
+            border: "1px solid rgba(191,90,242,0.2)",
           }}
         >
           <div className="flex items-center gap-2">
             <Activity className="w-3.5 h-3.5 animate-pulse" style={{ color: GREEN }} />
-            <span style={{ color: "rgba(167,243,208,0.8)" }}>المعالجة البرمجية نشطة</span>
+            <span style={{ color: "rgba(191,219,254,0.8)" }}>المعالجة البرمجية نشطة</span>
           </div>
           <div className="flex items-center gap-2">
             <Zap className="w-3.5 h-3.5" style={{ color: CYAN }} />
-            <span style={{ color: "rgba(34,211,238,0.8)" }}>تحديث تلقائي كل 30 ثانية</span>
+            <span style={{ color: "rgba(191,90,242,0.8)" }}>تحديث تلقائي كل 30 ثانية</span>
           </div>
           <span style={{ color: "rgba(226,232,240,0.4)" }}>عُتيبي ذكي 🤖 Hub</span>
         </div>
