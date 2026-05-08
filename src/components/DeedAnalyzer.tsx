@@ -285,7 +285,7 @@ const DeedAnalyzer = () => {
         className="absolute inset-0 pointer-events-none opacity-20"
         style={{
           backgroundImage:
-            `linear-gradient(${NEON_PINK}15 1px, transparent 1px), linear-gradient(90deg, ${NEON_PINK}15 1px, transparent 1px)`,
+            "linear-gradient(hsl(var(--deed-cyan) / 0.09) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--deed-cyan) / 0.09) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
       />
@@ -295,7 +295,7 @@ const DeedAnalyzer = () => {
         <div
           className="w-11 h-11 rounded-xl flex items-center justify-center"
           style={{
-            background: `${NEON_PINK}10`,
+            background: cyanA(0.06),
             border: `1px solid ${NEON_PINK}80`,
             boxShadow: `0 0 18px ${NEON_PINK}70`,
           }}
@@ -309,14 +309,14 @@ const DeedAnalyzer = () => {
           >
             معالجة برمجية مؤتمتة
           </h2>
-          <p className="text-[10px]" style={{ color: `${NEON_PURPLE}cc` }}>
+          <p className="text-[10px]" style={{ color: blueA(0.8) }}>
             منصة الأتمتة البرمجية للوثائق العقارية — Utaybi Smart AI
           </p>
         </div>
         <div
           className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-bold"
           style={{
-            background: `${NEON_PURPLE}20`,
+            background: blueA(0.13),
             border: `1px solid ${NEON_PURPLE}80`,
             color: NEON_PURPLE,
           }}
@@ -352,7 +352,7 @@ const DeedAnalyzer = () => {
                 <div className="text-center">
                   <CheckCircle className="w-9 h-9 mx-auto mb-2" style={{ color: NEON_PURPLE, filter: `drop-shadow(0 0 8px ${NEON_PURPLE})` }} />
                   <p className="text-xs font-bold" style={{ color: DEED_TEXT }}>{file.name}</p>
-                  <p className="text-[9px] mt-1" style={{ color: `${NEON_PURPLE}99` }}>
+                  <p className="text-[9px] mt-1" style={{ color: blueA(0.6) }}>
                     {(file.size / 1024).toFixed(0)} كيلوبايت — اضغط لتغيير الملف
                   </p>
                 </div>
@@ -360,7 +360,7 @@ const DeedAnalyzer = () => {
                 <div className="text-center">
                   <UploadCloud className="w-9 h-9 mx-auto mb-2 animate-pulse" style={{ color: NEON_PINK, filter: `drop-shadow(0 0 8px ${NEON_PINK})` }} />
                   <p className="text-xs font-bold" style={{ color: NEON_PINK }}>ارفع صورة الوثيقة العقارية</p>
-                  <p className="text-[9px] mt-1" style={{ color: `${NEON_PINK}99` }}>صور فقط — حد أقصى 10 ميجابايت</p>
+                  <p className="text-[9px] mt-1" style={{ color: cyanA(0.6) }}>صور فقط — حد أقصى 10 ميجابايت</p>
                 </div>
               )}
             </div>
@@ -407,7 +407,7 @@ const DeedAnalyzer = () => {
               <div
                 className="w-16 h-16 mx-auto rounded-full flex items-center justify-center"
                 style={{
-                  background: `${NEON_PINK}15`,
+                  background: cyanA(0.09),
                   border: `1px solid ${NEON_PINK}90`,
                   boxShadow: `0 0 30px ${NEON_PINK}80`,
                 }}
@@ -441,7 +441,7 @@ const DeedAnalyzer = () => {
                 ))}
               </div>
 
-              <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: `${NEON_PINK}15` }}>
+              <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: cyanA(0.09) }}>
                 <motion.div
                   className="h-full rounded-full"
                   style={{
@@ -470,7 +470,7 @@ const DeedAnalyzer = () => {
             <div
               className="rounded-xl p-3 flex items-center justify-between"
               style={{
-                background: `${NEON_PINK}10`,
+                background: cyanA(0.06),
                 border: `1px solid ${NEON_PINK}70`,
                 boxShadow: `0 0 20px ${NEON_PINK}30`,
               }}
@@ -498,7 +498,7 @@ const DeedAnalyzer = () => {
                 border: `1px solid ${NEON_PINK}40`,
               }}
             >
-              <p className="text-[10px] font-bold mb-2" style={{ color: `${NEON_PINK}cc` }}>
+              <p className="text-[10px] font-bold mb-2" style={{ color: cyanA(0.8) }}>
                 تعديل البيانات المستخرجة (اختياري)
               </p>
               <div className="grid grid-cols-2 gap-2">
@@ -561,7 +561,7 @@ const DeedAnalyzer = () => {
                   onClick={() => toast({ title: "تم تأكيد البيانات", description: "تم حفظ المدخلات النهائية للمعالجة البرمجية" })}
                   className="h-10 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
                   style={{
-                    background: `${NEON_PINK}15`,
+                    background: cyanA(0.09),
                     border: `1px solid ${NEON_PINK}70`,
                     color: NEON_PINK,
                     boxShadow: `0 0 12px ${NEON_PINK}30`,
@@ -587,7 +587,7 @@ const DeedAnalyzer = () => {
         )}
       </AnimatePresence>
 
-      <span className="watermark" style={{ color: `${NEON_PINK}66` }}>عُتيبي ذكي 🤖</span>
+      <span className="watermark" style={{ color: cyanA(0.4) }}>عُتيبي ذكي 🤖</span>
     </div>
   );
 };
