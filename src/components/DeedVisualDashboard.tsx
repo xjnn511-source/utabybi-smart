@@ -173,7 +173,7 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
       <h2 className="truncate text-[9px] font-black leading-tight sm:text-[17px] md:text-[22px]" style={{ color: goldSoft, textShadow: "0 0 12px hsl(var(--deed-gold) / 0.45)", letterSpacing: "0.03em" }}>عُتيبي ذكي Ai: تحليل صك عقاري</h2>
     </header>
 
-    <div className="absolute left-[38.5%] top-[7.6%] z-50 flex items-center gap-1.5 rounded-[6px] border px-[2.4%] py-[1.4%] text-[7px] font-black leading-tight sm:text-[12px] md:text-[15px]" style={{ color: text, borderColor: line, background: "hsl(var(--deed-bg) / 0.86)", boxShadow: "0 0 16px hsl(var(--deed-gold) / 0.27)", letterSpacing: "0.04em" }}>
+    <div className="absolute left-[32%] top-[11.5%] z-50 flex items-center gap-1.5 rounded-[6px] border px-[2.4%] py-[1.4%] text-[7px] font-black leading-tight sm:text-[12px] md:text-[15px]" style={{ color: text, borderColor: line, background: "hsl(var(--deed-bg) / 0.86)", boxShadow: "0 0 16px hsl(var(--deed-gold) / 0.27)", letterSpacing: "0.04em" }}>
       <CheckCircle2 className="h-3 w-3 sm:h-5 sm:w-5" style={{ color: mint }} />
       حالة الصك: محدّث وساري
     </div>
