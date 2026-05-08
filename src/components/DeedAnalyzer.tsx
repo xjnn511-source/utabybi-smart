@@ -212,7 +212,7 @@ const DeedAnalyzer = () => {
       const dataUrl = await toPng(deedPanelRef.current, {
         cacheBust: true,
         pixelRatio: 2,
-        backgroundColor: "#000814",
+        backgroundColor: DEED_BG,
       });
       const link = document.createElement("a");
       link.download = `deed-${deedData?.deedNumber || "document"}.png`;
@@ -231,7 +231,7 @@ const DeedAnalyzer = () => {
       const dataUrl = await toPng(deedPanelRef.current, {
         cacheBust: true,
         pixelRatio: 3,
-        backgroundColor: "#000814",
+        backgroundColor: DEED_BG,
       });
       const img = new Image();
       img.src = dataUrl;
@@ -273,7 +273,7 @@ const DeedAnalyzer = () => {
     <div
       className="relative overflow-hidden rounded-2xl p-5"
       style={{
-        background: "linear-gradient(160deg, #000010 0%, #001428 55%, #000008 100%)",
+        background: "linear-gradient(160deg, hsl(var(--deed-bg)) 0%, hsl(var(--deed-navy)) 55%, hsl(var(--deed-bg)) 100%)",
         border: `1px solid ${NEON_PINK}40`,
         boxShadow: `0 0 40px -8px ${NEON_PINK}40, inset 0 0 30px -10px ${NEON_PURPLE}20`,
       }}
@@ -339,7 +339,7 @@ const DeedAnalyzer = () => {
               onClick={() => fileInputRef.current?.click()}
               className="w-full h-36 mb-4 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all"
               style={{
-                background: "rgba(0,8,20,0.6)",
+                background: "hsl(var(--deed-bg) / 0.72)",
                 border: file ? `2px dashed ${NEON_PURPLE}80` : `2px dashed ${NEON_PINK}60`,
                 boxShadow: file
                   ? `inset 0 0 25px ${NEON_PURPLE}25`
@@ -349,7 +349,7 @@ const DeedAnalyzer = () => {
               {file ? (
                 <div className="text-center">
                   <CheckCircle className="w-9 h-9 mx-auto mb-2" style={{ color: NEON_PURPLE, filter: `drop-shadow(0 0 8px ${NEON_PURPLE})` }} />
-                  <p className="text-xs font-bold" style={{ color: "#f5d0fe" }}>{file.name}</p>
+                  <p className="text-xs font-bold" style={{ color: DEED_TEXT }}>{file.name}</p>
                   <p className="text-[9px] mt-1" style={{ color: `${NEON_PURPLE}99` }}>
                     {(file.size / 1024).toFixed(0)} كيلوبايت — اضغط لتغيير الملف
                   </p>
@@ -368,7 +368,7 @@ const DeedAnalyzer = () => {
               className="w-full h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-3 transition-all hover:scale-[1.01]"
               style={{
                 background: `linear-gradient(135deg, ${NEON_PINK} 0%, ${NEON_VIOLET} 100%)`,
-                color: "#fff",
+                color: "hsl(var(--deed-bg))",
                 boxShadow: `0 0 30px ${NEON_PINK}80, 0 0 60px ${NEON_PURPLE}40`,
               }}
             >
