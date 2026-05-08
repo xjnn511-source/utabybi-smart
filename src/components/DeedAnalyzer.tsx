@@ -271,6 +271,24 @@ const DeedAnalyzer = () => {
     }
   };
 
+  const handleCopyData = async () => {
+    if (!deedData) return;
+    const lines = [
+      `صك عقاري رقمي - عُتيبي ذكي Ai`,
+      `رقم الصك: ${deedData.deedNumber || "—"}`,
+      `المالك: ${deedData.owner || "—"}`,
+      `المساحة: ${deedData.area ? `${deedData.area} م²` : "—"}`,
+      `المدينة: ${deedData.city || "—"}`,
+      `الحي: ${deedData.district || "—"}`,
+    ].join("\n");
+    try {
+      await navigator.clipboard.writeText(lines);
+      toast({ title: "تم نسخ بيانات الصك", description: "يمكنك لصقها في أي مكان" });
+    } catch (err: any) {
+      toast({ title: "فشل النسخ", description: err.message, variant: "destructive" });
+    }
+  };
+
   return (
     <div
       className="relative overflow-hidden rounded-2xl p-5"
