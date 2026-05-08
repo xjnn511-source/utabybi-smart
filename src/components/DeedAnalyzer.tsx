@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   FileSearch, ShieldCheck, FileText,
   Loader2, Zap, CheckCircle, UploadCloud, Edit3, Radio, Download, Copy,
@@ -37,6 +37,7 @@ const DeedAnalyzer = () => {
   const [, setEditMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const deedPanelRef = useRef<HTMLDivElement>(null);
+  const autoExportedRef = useRef<string | null>(null);
 
   const fileToBase64 = (f: File): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -120,6 +121,7 @@ const DeedAnalyzer = () => {
     setFile(null);
     setDeedData(null);
     setEditMode(false);
+    autoExportedRef.current = null;
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -270,6 +272,19 @@ const DeedAnalyzer = () => {
       toast({ title: "فشل تصدير PDF", description: err.message, variant: "destructive" });
     }
   };
+
+  // Auto-export PDF once when analysis completes successfully
+  useEffect(() => {
+    if (state !== "done" || !deedData) return;
+    const key = `${deedData.deedNumber}|${deedData.owner}`;
+    if (autoExportedRef.current === key) return;
+    autoExportedRef.current = key;
+    const t = setTimeout(() => {
+      handleDownloadPdf();
+    }, 900);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, deedData]);
 
   const handleCopyData = async () => {
     if (!deedData) return;
