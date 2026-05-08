@@ -1,4 +1,5 @@
-import { CheckCircle2, FileText, Home, MapPin, Ruler, ShieldCheck, Smartphone, User } from "lucide-react";
+import { motion } from "framer-motion";
+import { Award, CheckCircle2, FileText, Home, MapPin, Ruler, ShieldCheck, Smartphone, User, type LucideIcon } from "lucide-react";
 
 export interface DeedVisualData {
   deedNumber: string;
@@ -8,203 +9,191 @@ export interface DeedVisualData {
   district: string;
 }
 
-const value = (text?: string) => (text && text.trim() ? text.trim() : "—");
-const locationValue = (deed: DeedVisualData) => [deed.city, deed.district].filter(Boolean).join(" - ") || "—";
+const mint = "hsl(var(--deed-cyan))";
+const gold = "hsl(var(--deed-gold))";
+const goldSoft = "hsl(var(--deed-gold-soft))";
+const text = "hsl(var(--deed-text))";
+const muted = "hsl(var(--deed-muted))";
+const panel = "hsl(var(--deed-panel) / 0.78)";
+const line = "hsl(var(--deed-gold) / 0.68)";
 
-const DeedPaper = ({ deed, compact = false }: { deed: DeedVisualData; compact?: boolean }) => {
-  const fields = [
-    { label: "رقم الصك", value: value(deed.deedNumber) },
-    { label: "اسم المالك", value: value(deed.owner) },
-    { label: "المساحة", value: deed.area ? `${deed.area} م²` : "—" },
-    { label: "الموقع", value: locationValue(deed) },
-  ];
-
-  return (
-    <article
-      dir="rtl"
-      className="relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[8px] border-2 p-[5%] font-cairo notranslate"
-      style={{
-        background:
-          "linear-gradient(180deg, hsl(var(--deed-parchment)) 0%, hsl(var(--deed-parchment-deep)) 100%)",
-        borderColor: "hsl(var(--deed-gold))",
-        color: "hsl(var(--deed-ink))",
-        boxShadow: "inset 0 0 22px hsl(var(--deed-ink) / 0.12)",
-      }}
-    >
-      <div className="pointer-events-none absolute inset-[3%] rounded-[6px] border" style={{ borderColor: "hsl(var(--deed-gold) / 0.55)" }} />
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col gap-[3%]">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 flex-col gap-1">
-            <p className="text-[9px] font-black leading-tight sm:text-[12px] md:text-[15px]">وزارة العدل</p>
-            <p className="text-[7px] font-black leading-tight opacity-75 sm:text-[10px] md:text-[12px]">وثيقة عقارية رقمية</p>
-          </div>
-          <div
-            className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-full border sm:h-[42px] sm:w-[42px] md:h-[54px] md:w-[54px]"
-            style={{ borderColor: "hsl(var(--deed-gold))", background: "hsl(var(--deed-gold) / 0.18)" }}
-          >
-            <ShieldCheck className="h-[58%] w-[58%]" />
-          </div>
-        </div>
-
-        <div className="text-center">
-          <h3 className="text-[13px] font-black leading-tight sm:text-[18px] md:text-[24px]">حجة استحكام عقاري</h3>
-          <div className="mx-auto mt-2 h-px w-[70%]" style={{ background: "hsl(var(--deed-gold))" }} />
-        </div>
-
-        <div className="grid min-h-0 flex-1 content-start gap-2 sm:gap-2.5">
-          {fields.map((field) => (
-            <div
-              key={field.label}
-              className="grid min-w-0 grid-cols-[34%_1fr] items-start gap-2 rounded-[6px] border px-2 py-1.5 sm:px-3 sm:py-2"
-              style={{ borderColor: "hsl(var(--deed-ink) / 0.16)", background: "hsl(var(--deed-gold) / 0.1)" }}
-            >
-              <span className="whitespace-nowrap text-[8px] font-black leading-relaxed sm:text-[11px] md:text-[13px]">{field.label}</span>
-              <span
-                className="min-w-0 break-words text-right text-[8px] font-black leading-relaxed sm:text-[11px] md:text-[13px]"
-                style={{ overflowWrap: "anywhere" }}
-              >
-                {field.value}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {!compact && (
-          <div className="flex shrink-0 items-end justify-between gap-3 pt-1">
-            <p className="max-w-[62%] text-[7px] font-black leading-relaxed sm:text-[10px] md:text-[12px]">
-              تم استخراج البيانات وعرضها برمجياً بواسطة عُتيبي ذكي Ai.
-            </p>
-            <p className="whitespace-nowrap text-[10px] font-black italic sm:text-[14px] md:text-[18px]">معتمد</p>
-          </div>
-        )}
-      </div>
-    </article>
-  );
+const valueOf = (v?: string) => v?.trim() || "—";
+const compact = (v?: string, max = 16, fallback = "...") => {
+  const value = valueOf(v);
+  if (value === "—") return fallback;
+  return value.length > max ? `...${value.slice(-(max - 3))}` : value;
 };
+const locationOf = (d: DeedVisualData) => [d.city, d.district].filter(Boolean).join(" - ") || "—";
+
+const GlowDot = ({ className }: { className: string }) => (
+  <span
+    className={`absolute z-40 h-[0.9%] w-[0.9%] rounded-full ${className}`}
+    style={{ background: gold, boxShadow: `0 0 8px ${gold}, 0 0 18px hsl(var(--deed-gold) / 0.45)` }}
+  />
+);
+
+const ConnectorLines = () => (
+  <svg className="pointer-events-none absolute inset-0 z-30 h-full w-full" viewBox="0 0 1000 595" preserveAspectRatio="none" aria-hidden="true">
+    <g fill="none" stroke="hsl(var(--deed-gold) / 0.68)" strokeWidth="2">
+      <path d="M146 407 V463 H286" />
+      <path d="M510 314 V463 H494" />
+      <path d="M815 377 V463 H692" />
+      <path d="M408 435 V463 H332" />
+      <path d="M702 439 V463 H736" />
+      <path d="M523 196 V162" />
+      <path d="M316 281 H633" stroke="hsl(var(--deed-cyan) / 0.62)" />
+    </g>
+  </svg>
+);
+
+const MiniField = ({ label, value }: { label: string; value: string }) => (
+  <div className="grid grid-cols-[1fr_0.78fr] items-center gap-[10%] border-b py-[4.5%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.28)" }}>
+    <span className="truncate text-left text-[8px] font-black leading-tight sm:text-[12px] md:text-[14px]" style={{ color: text, letterSpacing: "0.05em" }}>{value}</span>
+    <span className="text-right text-[7px] font-black leading-tight sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: "0.08em" }}>{label}</span>
+  </div>
+);
+
+const DigitalDeed = ({ deed, phone = false }: { deed: DeedVisualData; phone?: boolean }) => (
+  <div
+    className="relative h-full w-full overflow-hidden rounded-[3px] border"
+    style={{
+      background: "linear-gradient(135deg, hsl(var(--deed-panel)), hsl(var(--deed-bg)))",
+      borderColor: "hsl(var(--deed-cyan) / 0.5)",
+      boxShadow: "inset 0 0 28px hsl(var(--deed-cyan) / 0.15)",
+    }}
+  >
+    <div className="absolute inset-[4%] rotate-45 border" style={{ borderColor: "hsl(var(--deed-cyan) / 0.18)" }} />
+    <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "radial-gradient(circle at 35% 30%, hsl(var(--deed-cyan) / 0.3), transparent 22%)" }} />
+    <div className="relative z-10 mx-auto mt-[5%] flex aspect-square h-[18%] items-center justify-center rounded-full border" style={{ color: mint, borderColor: "hsl(var(--deed-cyan) / 0.55)", background: "hsl(var(--deed-cyan) / 0.12)", boxShadow: "0 0 14px hsl(var(--deed-cyan) / 0.45)" }}>
+      <Award className="h-[62%] w-[62%]" />
+    </div>
+    <p className="relative z-10 mt-[3%] text-center text-[8px] font-black leading-tight sm:text-[11px] md:text-[14px]" style={{ color: mint, textShadow: "0 0 8px hsl(var(--deed-cyan) / 0.5)", letterSpacing: "0.06em" }}>صك عقاري رقمي</p>
+    <div className="relative z-10 mx-auto mt-[4%] w-[72%]">
+      <MiniField label="رقم الصك" value={compact(deed.deedNumber, phone ? 10 : 16)} />
+      <MiniField label="المالك" value={compact(deed.owner, phone ? 9 : 15)} />
+      <MiniField label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "..."} />
+      {!phone && <MiniField label="الموقع" value={compact(locationOf(deed), 15)} />}
+    </div>
+    <div className="absolute bottom-[7%] left-[16%] right-[16%] h-px" style={{ background: "hsl(var(--deed-cyan) / 0.34)" }} />
+  </div>
+);
 
 const PhonePreview = ({ deed }: { deed: DeedVisualData }) => (
   <div
-    className="absolute bottom-[8%] right-[4%] hidden h-[48%] w-[21%] min-w-[112px] rounded-[18px] border p-[1.1%] sm:block"
-    style={{ borderColor: "hsl(var(--deed-gold))", background: "hsl(var(--deed-ink))", boxShadow: "0 0 22px hsl(var(--deed-gold) / 0.28)" }}
+    className="absolute left-[2.3%] top-[3.4%] z-20 h-[88.5%] w-[27.2%] overflow-hidden rounded-[11%] border-[3px] p-[1.55%]"
+    style={{ borderColor: "hsl(var(--deed-ink))", background: "hsl(var(--deed-ink))", boxShadow: "0 0 0 1px hsl(var(--deed-gold) / 0.32), 0 0 28px hsl(var(--deed-bg) / 0.85)" }}
   >
-    <div className="h-full overflow-hidden rounded-[14px] border" style={{ borderColor: "hsl(var(--deed-gold) / 0.32)", background: "hsl(var(--deed-bg))" }}>
-      <div className="flex h-[14%] items-center justify-between px-[8%] text-[6px] font-black sm:text-[8px]" style={{ color: "hsl(var(--deed-gold-soft))" }}>
-        <Smartphone className="h-3 w-3" />
-        <span className="whitespace-nowrap">عُتيبي ذكي</span>
+    <div className="absolute left-1/2 top-[2%] z-40 h-[4%] w-[33%] -translate-x-1/2 rounded-b-full" style={{ background: "hsl(var(--deed-bg))" }} />
+    <div className="relative h-full w-full overflow-hidden rounded-[8%] border" style={{ borderColor: "hsl(var(--deed-gold) / 0.18)", background: "linear-gradient(180deg, hsl(var(--deed-panel) / 0.92), hsl(var(--deed-bg)))" }}>
+      <div className="absolute inset-x-[8%] top-[8%] h-[71%]">
+        <DigitalDeed deed={deed} phone />
       </div>
-      <div className="mx-auto h-[70%] w-[84%]">
-        <DeedPaper deed={deed} compact />
+      <div className="absolute inset-x-[7%] bottom-[14%] rounded-[7px] border px-[7%] py-[4%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 12px hsl(var(--deed-gold) / 0.18)" }}>
+        <p className="text-center text-[6px] font-black leading-none sm:text-[8px]" style={{ color: muted }}>رقم الصك</p>
+        <p className="mt-[4%] truncate text-center text-[7px] font-black leading-none sm:text-[11px] md:text-[13px]" style={{ color: text }}>{compact(deed.deedNumber, 12)}</p>
       </div>
-      <div className="grid h-[16%] grid-cols-4 items-center px-[5%] text-[5px] font-black sm:text-[7px]" style={{ color: "hsl(var(--deed-muted))" }}>
-        {[
-          [Home, "الرئيسية"],
-          [FileText, "برامج"],
-          [CheckCircle2, "تحليل"],
-          [User, "حسابي"],
-        ].map(([Icon, label]) => {
-          const NavIcon = Icon as typeof Home;
-          return (
-            <div key={label as string} className="flex flex-col items-center gap-1 text-center">
-              <NavIcon className="h-3 w-3" />
-              <span className="text-center leading-none">{label as string}</span>
-            </div>
-          );
-        })}
+      <div className="absolute bottom-0 grid h-[11%] w-full grid-cols-4 border-t" style={{ borderColor: "hsl(var(--deed-gold) / 0.15)", background: "hsl(var(--deed-bg) / 0.92)" }}>
+        {[Home, FileText, ShieldCheck, Smartphone].map((Icon, i) => (
+          <div key={i} className="flex items-center justify-center">
+            <Icon className="h-[38%] w-[38%]" style={{ color: mint }} />
+          </div>
+        ))}
       </div>
     </div>
   </div>
 );
 
-const Metric = ({ icon: Icon, label, value: metricValue }: { icon: typeof User; label: string; value: string }) => (
-  <div
-    className="min-w-0 rounded-[8px] border px-2.5 py-2 sm:px-3 sm:py-2.5"
-    style={{ borderColor: "hsl(var(--deed-gold) / 0.55)", background: "hsl(var(--deed-ink) / 0.62)" }}
-  >
-    <div className="mb-1.5 flex items-center gap-1.5">
-      <Icon className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" style={{ color: "hsl(var(--deed-cyan))" }} />
-      <span className="whitespace-nowrap text-[9px] font-black sm:text-[11px]" style={{ color: "hsl(var(--deed-muted))" }}>
-        {label}
-      </span>
+const CenterDeed = ({ deed }: { deed: DeedVisualData }) => (
+  <div className="absolute left-[31.2%] top-[15.8%] z-20 h-[53.5%] w-[36.2%] rounded-[5px] border p-[1%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.54)", background: "hsl(var(--deed-bg) / 0.3)", boxShadow: "0 0 22px hsl(var(--deed-cyan) / 0.18), inset 0 0 18px hsl(var(--deed-cyan) / 0.08)" }}>
+    <div className="absolute -top-[12.5%] left-[30%] right-[30%] z-30 rounded-b-[8px] border px-1 py-[1.4%] text-center text-[6px] font-black leading-[1.1] sm:text-[9px] md:text-[11px]" style={{ color: text, borderColor: line, background: "hsl(var(--deed-bg) / 0.88)", boxShadow: "0 0 13px hsl(var(--deed-gold) / 0.22)" }}>
+      100% Match Score
     </div>
-    <p
-      className="min-w-0 break-words text-[10px] font-black leading-relaxed sm:text-[13px] md:text-[15px]"
-      style={{ color: "hsl(var(--deed-gold-soft))", overflowWrap: "anywhere" }}
-    >
-      {metricValue}
+    <DigitalDeed deed={deed} />
+    <svg className="pointer-events-none absolute inset-x-[-23%] top-[37%] z-30 h-[28%]" viewBox="0 0 620 120" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="62" x2="620" y2="62" stroke="hsl(var(--deed-gold) / 0.48)" strokeWidth="2" />
+      <motion.path d="M0 62 L186 62 L221 18 L253 103 L290 31 L323 76 L357 62 L620 62" fill="none" stroke={mint} strokeWidth="5" strokeLinecap="round" style={{ filter: "drop-shadow(0 0 10px hsl(var(--deed-cyan)))" }} initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }} />
+    </svg>
+  </div>
+);
+
+const MapPanel = ({ deed }: { deed: DeedVisualData }) => (
+  <div className="absolute right-[2.4%] top-[15.8%] z-20 h-[53.5%] w-[28.2%] overflow-hidden rounded-[4px] border" style={{ borderColor: "hsl(var(--deed-cyan) / 0.58)", background: panel, boxShadow: "inset 0 0 25px hsl(var(--deed-cyan) / 0.12), 0 0 18px hsl(var(--deed-cyan) / 0.18)" }}>
+    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 330 230" preserveAspectRatio="none" aria-hidden="true">
+      <pattern id="deedReferenceMapGrid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0 L0 0 0 28" fill="none" stroke="hsl(var(--deed-gold) / 0.1)" /></pattern>
+      <rect width="330" height="230" fill="url(#deedReferenceMapGrid)" />
+      <g fill="none" strokeLinecap="round">
+        <path d="M-10 89 C70 64 142 62 210 76 S302 86 350 60" stroke="hsl(var(--deed-cyan) / 0.42)" strokeWidth="2.3" />
+        <path d="M60 230 L296 4" stroke="hsl(var(--deed-gold) / 0.28)" strokeWidth="2" />
+        <path d="M24 170 L170 24 L312 42" stroke="hsl(var(--deed-cyan) / 0.24)" strokeWidth="1.7" strokeDasharray="8 7" />
+        <path d="M52 70 H136 V128 H86 V185" stroke="hsl(var(--deed-cyan) / 0.32)" strokeWidth="1.6" />
+        <path d="M176 92 H300 V170 H228 V216" stroke="hsl(var(--deed-cyan) / 0.3)" strokeWidth="1.6" />
+        <path d="M108 96 Q148 66 166 111 Q134 145 100 128 Z" fill="hsl(var(--deed-cyan) / 0.08)" stroke="hsl(var(--deed-cyan) / 0.36)" />
+      </g>
+    </svg>
+    <div className="absolute left-[55%] top-[43%] -translate-x-1/2 -translate-y-1/2">
+      <motion.div className="absolute -inset-5 rounded-full" style={{ background: "hsl(var(--deed-gold) / 0.3)", filter: "blur(12px)" }} animate={{ scale: [1, 1.35, 1], opacity: [0.75, 0.18, 0.75] }} transition={{ duration: 1.8, repeat: Infinity }} />
+      <MapPin className="relative h-8 w-8 sm:h-12 sm:w-12 md:h-14 md:w-14" style={{ color: gold, fill: gold, filter: "drop-shadow(0 0 12px hsl(var(--deed-gold)))" }} />
+    </div>
+    <p className="absolute bottom-[7%] left-[8%] right-[8%] truncate rounded-[5px] border px-2 py-[3%] text-center text-[6px] font-black leading-none sm:text-[10px] md:text-[12px]" style={{ color: text, borderColor: "hsl(var(--deed-gold) / 0.42)", background: "hsl(var(--deed-bg) / 0.82)", textShadow: "0 0 8px hsl(var(--deed-gold) / 0.55)" }}>
+      {compact(locationOf(deed), 20)}
     </p>
   </div>
 );
 
-const MapPanel = () => (
-  <div
-    className="absolute bottom-[8%] left-[4%] hidden h-[26%] w-[28%] rounded-[8px] border md:block"
-    style={{ borderColor: "hsl(var(--deed-gold) / 0.6)", background: "hsl(var(--deed-parchment) / 0.92)" }}
-  >
-    <svg viewBox="0 0 320 180" className="h-full w-full" aria-hidden="true">
-      <path d="M15 58 C75 12 110 92 166 49 S270 22 304 85" fill="none" stroke="hsl(var(--deed-ink))" strokeWidth="4" strokeDasharray="10 8" opacity=".45" />
-      <path d="M34 148 C98 96 138 168 196 106 S268 88 306 144" fill="none" stroke="hsl(var(--deed-gold))" strokeWidth="5" opacity=".7" />
-      <circle cx="210" cy="96" r="20" fill="hsl(var(--deed-cyan) / 0.22)" stroke="hsl(var(--deed-cyan))" strokeWidth="4" />
-      <path d="M0 36H320M0 72H320M0 108H320M0 144H320M64 0V180M128 0V180M192 0V180M256 0V180" stroke="hsl(var(--deed-ink))" strokeWidth="1" opacity=".18" />
-    </svg>
+const Metric = ({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) => (
+  <div className="flex min-w-0 items-center justify-between gap-[5%] rounded-[6px] border px-[5%] py-[6%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 14px hsl(var(--deed-gold) / 0.16)" }}>
+    <Icon className="h-4 w-4 shrink-0 sm:h-6 sm:w-6 md:h-7 md:w-7" style={{ color: mint }} />
+    <div className="min-w-0 flex-1 text-right leading-tight">
+      <p className="truncate text-[7px] font-black sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: "0.06em" }}>{label}</p>
+      <p className="mt-[8%] truncate text-[8px] font-black sm:text-[12px] md:text-[14px]" style={{ color: text, letterSpacing: "0.05em" }}>{value}</p>
+    </div>
   </div>
 );
 
 export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
   <section
     dir="rtl"
-    className="relative mx-auto aspect-[9/13] w-full min-w-[320px] max-w-[920px] overflow-hidden rounded-[10px] border-2 font-cairo notranslate sm:aspect-[16/10]"
+    className="relative mx-auto aspect-[1.68/1] w-full max-w-[980px] overflow-hidden rounded-[10px] border font-cairo notranslate"
     style={{
-      background:
-        "radial-gradient(circle at 50% 36%, hsl(var(--deed-surface)) 0%, hsl(var(--deed-navy)) 46%, hsl(var(--deed-bg)) 100%)",
-      borderColor: "hsl(var(--deed-gold))",
-      color: "hsl(var(--deed-text))",
-      boxShadow: "0 0 34px hsl(var(--deed-gold) / 0.28), inset 0 0 70px hsl(var(--deed-cyan) / 0.08)",
+      background: "radial-gradient(circle at 18% 44%, hsl(var(--deed-cyan) / 0.16), transparent 17%), radial-gradient(circle at 58% 40%, hsl(var(--deed-gold) / 0.1), transparent 24%), linear-gradient(90deg, hsl(var(--deed-bg)), hsl(var(--deed-surface) / 0.96), hsl(var(--deed-bg)))",
+      borderColor: "hsl(var(--deed-gold) / 0.55)",
+      boxShadow: "0 0 28px hsl(var(--deed-cyan) / 0.16), inset 0 0 48px hsl(var(--deed-gold) / 0.08)",
     }}
   >
-    <div
-      className="pointer-events-none absolute inset-0 opacity-30"
-      style={{
-        backgroundImage:
-          "linear-gradient(hsl(var(--deed-gold) / 0.12) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--deed-gold) / 0.12) 1px, transparent 1px)",
-        backgroundSize: "32px 32px",
-      }}
-    />
+    <div className="absolute inset-0 opacity-40" style={{ backgroundImage: "linear-gradient(hsl(var(--deed-gold) / 0.07) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--deed-gold) / 0.07) 1px, transparent 1px)", backgroundSize: "34px 34px" }} />
+    <div className="absolute inset-[2.1%] rounded-[8px] border" style={{ borderColor: "hsl(var(--deed-gold) / 0.24)" }} />
+    <ConnectorLines />
+    <GlowDot className="left-[14.2%] top-[68.2%]" />
+    <GlowDot className="left-[40.4%] top-[72.2%]" />
+    <GlowDot className="left-[51.6%] top-[53.2%]" />
+    <GlowDot className="left-[81.2%] top-[63.5%]" />
 
-    <header className="absolute inset-x-[4%] top-[4%] z-20 flex items-start justify-between gap-3">
-      <div className="flex min-w-0 items-start gap-2.5">
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-[8px] border sm:h-12 sm:w-12" style={{ borderColor: "hsl(var(--deed-gold))", background: "hsl(var(--deed-ink) / 0.55)" }}>
-          <FileText className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: "hsl(var(--deed-gold-soft))" }} />
-        </div>
-        <div className="min-w-0 pt-0.5">
-          <h2 className="break-words text-[18px] font-black leading-tight sm:text-[26px] md:text-[34px]" style={{ color: "hsl(var(--deed-gold-soft))" }}>
-            نتيجة تحليل الصك العقاري
-          </h2>
-          <p className="mt-1 break-words text-[10px] font-black leading-relaxed sm:text-[13px] md:text-[15px]" style={{ color: "hsl(var(--deed-muted))" }}>
-            عُتيبي ذكي Ai — عرض البيانات المستخرجة بوضوح
-          </p>
-        </div>
-      </div>
-      <div
-        className="shrink-0 rounded-[8px] border px-2.5 py-2 text-[10px] font-black leading-tight sm:px-3 sm:text-[12px] md:text-[14px]"
-        style={{ borderColor: "hsl(var(--deed-gold))", background: "hsl(var(--deed-ink) / 0.82)", color: "hsl(var(--deed-gold-soft))" }}
-      >
-        حالة الصك: محدّث وساري
-      </div>
+    <header className="absolute right-[4.2%] top-[5.1%] z-40 flex max-w-[47%] items-center gap-[2.5%]">
+      <ShieldCheck className="h-4 w-4 shrink-0 sm:h-6 sm:w-6" style={{ color: gold, filter: "drop-shadow(0 0 8px hsl(var(--deed-gold) / 0.68))" }} />
+      <h2 className="truncate text-[9px] font-black leading-tight sm:text-[17px] md:text-[22px]" style={{ color: goldSoft, textShadow: "0 0 12px hsl(var(--deed-gold) / 0.45)", letterSpacing: "0.03em" }}>عُتيبي ذكي Ai: تحليل صك عقاري</h2>
     </header>
 
-    <div className="absolute left-1/2 top-[24%] z-10 h-[46%] w-[76%] max-w-[620px] -translate-x-1/2 sm:top-[21%] sm:h-[58%] sm:w-[47%]">
-      <DeedPaper deed={deed} />
+    <div className="absolute left-[38.5%] top-[7.6%] z-50 flex items-center gap-1.5 rounded-[6px] border px-[2.4%] py-[1.4%] text-[7px] font-black leading-tight sm:text-[12px] md:text-[15px]" style={{ color: text, borderColor: line, background: "hsl(var(--deed-bg) / 0.86)", boxShadow: "0 0 16px hsl(var(--deed-gold) / 0.27)", letterSpacing: "0.04em" }}>
+      <CheckCircle2 className="h-3 w-3 sm:h-5 sm:w-5" style={{ color: mint }} />
+      حالة الصك: محدّث وساري
     </div>
 
     <PhonePreview deed={deed} />
-    <MapPanel />
+    <CenterDeed deed={deed} />
+    <MapPanel deed={deed} />
 
-    <div className="absolute inset-x-[4%] bottom-[5%] z-20 grid grid-cols-2 gap-2 sm:left-auto sm:right-[28%] sm:w-[38%] md:right-[35%] md:w-[30%]">
-      <Metric icon={User} label="اسم المالك" value={value(deed.owner)} />
-      <Metric icon={FileText} label="رقم الصك" value={value(deed.deedNumber)} />
-      <Metric icon={Ruler} label="المساحة" value={deed.area ? `${deed.area} م²` : "—"} />
-      <Metric icon={MapPin} label="الموقع" value={locationValue(deed)} />
+    <div className="absolute bottom-[14%] left-[31%] right-[2.4%] z-40 grid grid-cols-4 gap-[1.3%]">
+      <Metric icon={FileText} label="رقم الصك" value={compact(deed.deedNumber, 13)} />
+      <Metric icon={User} label="المالك" value={compact(deed.owner, 13)} />
+      <Metric icon={Ruler} label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "... م²"} />
+      <Metric icon={MapPin} label="الموقع" value={compact(locationOf(deed), 14)} />
     </div>
+
+    <div className="absolute bottom-[3.2%] left-[30%] right-[30%] z-40 rounded-t-[12px] border-t px-2 pt-[1.6%] text-center text-[7px] font-black leading-tight sm:text-[11px] md:text-[13px]" style={{ color: goldSoft, borderColor: "hsl(var(--deed-gold) / 0.28)", textShadow: "0 0 10px hsl(var(--deed-gold) / 0.45)", letterSpacing: "0.06em" }}>
+      عُتيبي ذكي Ai · نحلل بالرؤية والصوت
+    </div>
+
+    <div className="absolute bottom-[3.5%] right-[3.8%] z-40 text-[18px] leading-none sm:text-[30px]" style={{ color: gold, textShadow: "0 0 14px hsl(var(--deed-gold) / 0.45)" }}>✦</div>
   </section>
 );
 
