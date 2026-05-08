@@ -8,7 +8,7 @@ const RefundPolicy = () => (
     </Link>
     <h1 className="text-2xl font-bold text-foreground mb-4">سياسة الاسترداد</h1>
     <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
-      <p>نسعى في "عُتيبي ذكي Ai" لتقديم أفضل تجربة. فيما يلي سياسة الاسترداد الخاصة بنا.</p>
+      <p>نسعى في "عُتيبي ذكي" لتقديم أفضل تجربة. فيما يلي سياسة الاسترداد الخاصة بنا.</p>
       <h2 className="text-lg font-semibold text-foreground">شروط الاسترداد</h2>
       <p>يمكن طلب استرداد كامل المبلغ خلال 7 أيام من تاريخ الاشتراك، بشرط عدم استخدام أكثر من خدمتين من الباقة.</p>
       <h2 className="text-lg font-semibold text-foreground">كيفية طلب الاسترداد</h2>

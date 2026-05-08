@@ -201,7 +201,7 @@ const AdminDashboard = () => {
 
       <footer className="text-center pb-6 px-4 mt-8">
         <p className="text-[9px] text-muted-foreground">
-          عُتيبي ذكي Ai 🤖 – لوحة تحكم المدير
+          عُتيبي ذكي 🤖 – لوحة تحكم المدير
         </p>
       </footer>
     </div>

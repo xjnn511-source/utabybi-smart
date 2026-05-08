@@ -52,7 +52,7 @@ const ContentCard = () => {
         <Sparkles className="w-3.5 h-3.5" strokeWidth={2} />
         {isCreating ? "جاري التوليد..." : "توليد حلول برمجية احترافية"}
       </button>
-      <span className="watermark">عُتيبي ذكي Ai 🤖</span>
+      <span className="watermark">عُتيبي ذكي 🤖</span>
     </div>
   );
 };

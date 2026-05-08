@@ -62,7 +62,7 @@ const AppSidebar = () => {
             <img src={logo} alt="عتيبي ذكي" className="w-full h-full rounded-lg object-cover" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-sidebar-foreground">عُتيبي ذكي Ai 🤖</h2>
+            <h2 className="text-sm font-bold text-sidebar-foreground">عُتيبي ذكي 🤖</h2>
             <p className="text-[10px] text-sidebar-foreground/60">القائمة الرئيسية</p>
           </div>
         </div>

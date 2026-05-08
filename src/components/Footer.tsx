@@ -29,23 +29,23 @@ const Footer = () => {
               <svg className="w-3 h-3 text-foreground" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
               </svg>
-              <span className="text-[9px] font-bold text-foreground">Pay</span>
+              <span className="text-[9px] font-bold text-foreground">دفع</span>
             </div>
             <div className="border-2 border-primary/40 rounded-md px-3 py-1.5">
-              <span className="text-[11px] font-black tracking-tight text-primary">mada</span>
+              <span className="text-[11px] font-black tracking-tight text-primary">مدى</span>
             </div>
             <div className="border border-border rounded-md px-2.5 py-1 flex items-center gap-0.5">
               <div className="w-3.5 h-3.5 rounded-full bg-red-500 -mr-1 opacity-90" />
               <div className="w-3.5 h-3.5 rounded-full bg-amber-400 opacity-90" />
             </div>
             <div className="rounded-md px-3 py-1.5 border border-border bg-purple-600/20">
-              <span className="text-[9px] font-bold text-purple-300 tracking-tight">STC Pay</span>
+              <span className="text-[9px] font-bold text-purple-300 tracking-tight">STC دفع</span>
             </div>
           </div>
         </div>
 
         <p className="text-[9px] text-muted-foreground text-center">
-          عُتيبي ذكي Ai 🤖 – نحلل بالرؤية والصوت | FL-822675484
+          عُتيبي ذكي 🤖 – نعالج بالرؤية والصوت | FL-822675484
         </p>
         <p className="text-[8px] text-muted-foreground/40 text-center">
           🇸🇦 🇦🇪 🇶🇦 🇧🇭 🇰🇼 🇴🇲 متاح لجميع دول الخليج العربي

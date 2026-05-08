@@ -8,7 +8,7 @@ import type { Tables } from "@/integrations/supabase/types";
 const planLabels: Record<string, string> = {
   elite: "باقة النخبة",
   leadership: "باقة الأعمال",
-  office: "باقة المكتب Pro",
+  office: "باقة المكتب الاحترافية",
 };
 
 const planQuotas: Record<string, { chars: number; services: number }> = {

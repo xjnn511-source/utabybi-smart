@@ -38,10 +38,10 @@ const Index = () => {
           {/* News Ticker */}
           <div className="bg-card/80 border-b border-border overflow-hidden py-2.5">
             <div className="animate-marquee whitespace-nowrap flex gap-10 text-[11px] font-bold text-primary">
-              <span>✨ تم تحديث دقة محرك OCR إلى 99.8%</span>
+              <span>✨ تم تحديث دقة محرك قراءة الوثائق إلى 99.8%</span>
               <span>🚀 تسريع عمليات معالجة الصكوك التقنية</span>
               <span>📊 معالجة 10,000 نقطة بيانات لتحديث السوق</span>
-              <span>✨ تم تحديث دقة محرك OCR إلى 99.8%</span>
+              <span>✨ تم تحديث دقة محرك قراءة الوثائق إلى 99.8%</span>
               <span>🚀 تسريع عمليات معالجة الصكوك التقنية</span>
             </div>
           </div>
@@ -50,19 +50,19 @@ const Index = () => {
             {/* Quick Access Grid */}
             <ServiceQuickGrid />
 
-            {/* Deed Analyzer - Hero Feature */}
+            {/* نظام معالجة الوثائق */}
             <DeedAnalyzer />
 
-            {/* AI Engine Portal */}
+            {/* بوابة المحركات البرمجية */}
             <AiEnginePortal />
 
             {/* Digital Compliance Section */}
             <ComplianceSection />
 
-            {/* AI Engines Section Header */}
+            {/* عنوان محركات المعالجة */}
             <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
               <LayoutGrid className="w-4 h-4 text-primary" />
-              محركات المعالجة والذكاء الاصطناعي
+              محركات المعالجة والأنظمة البرمجية المؤتمتة
             </h2>
 
             <SmartRadar />
@@ -85,7 +85,7 @@ const Index = () => {
           {/* Legal Disclaimer */}
           <div className="mx-4 mt-4 p-3 rounded-lg bg-secondary/50 border border-border">
             <p className="text-[8px] text-muted-foreground leading-relaxed text-center">
-              ⚖️ إخلاء مسؤولية قانوني: هذا التطبيق منصة برمجية مساعدة تعمل بالذكاء الاصطناعي لمعالجة البيانات وإنشاء المحتوى، ولا يُعدّ بديلاً عن الاستشارة المتخصصة.
+              ⚖️ إخلاء مسؤولية قانوني: هذا التطبيق منصة برمجية مساعدة تعمل بأنظمة برمجية مؤتمتة لمعالجة البيانات وتوليد الحلول، ولا يُعدّ بديلاً عن الاستشارة المتخصصة.
               المسؤولية النهائية عن دقة البيانات تقع على عاتق المستخدم وحده.
             </p>
             <p className="text-[8px] text-muted-foreground/50 text-center mt-1">
