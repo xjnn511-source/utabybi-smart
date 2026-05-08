@@ -123,6 +123,37 @@ const DeedAnalyzer = () => {
     setDeedData({ ...deedData, [key]: value });
   };
 
+  // === Auto-sanitization for Arabic text & numbers (pre-export) ===
+  const sanitizeArabic = (raw: string): string => {
+    if (!raw) return "";
+    let s = String(raw);
+    // Convert Arabic-Indic & Persian digits to ASCII
+    s = s.replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)));
+    s = s.replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)));
+    // Normalize Alef forms & Yeh/Kaf variants
+    s = s.replace(/[إأآا]/g, "ا").replace(/ى/g, "ي").replace(/ك/g, "ك");
+    // Remove Tatweel and Arabic diacritics (tashkeel)
+    s = s.replace(/\u0640/g, "").replace(/[\u064B-\u065F\u0670]/g, "");
+    // Collapse whitespace
+    s = s.replace(/\s+/g, " ").trim();
+    return s;
+  };
+
+  const formatNumber = (raw: string): string => {
+    const s = sanitizeArabic(raw).replace(/[^\d.,]/g, "").replace(/,/g, "");
+    if (!s) return "";
+    const n = Number(s);
+    return Number.isFinite(n) ? n.toLocaleString("en-US") : s;
+  };
+
+  const sanitizeDeedForExport = (d: DeedData): DeedData => ({
+    deedNumber: sanitizeArabic(d.deedNumber).replace(/[^\d/-]/g, "").slice(0, 30),
+    area: formatNumber(d.area).slice(0, 20),
+    owner: sanitizeArabic(d.owner).slice(0, 80),
+    city: sanitizeArabic(d.city).slice(0, 50),
+    district: sanitizeArabic(d.district).slice(0, 60),
+  });
+
   const handleDownload = async () => {
     if (!deedPanelRef.current) return;
     try {
