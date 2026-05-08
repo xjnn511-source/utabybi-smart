@@ -276,8 +276,8 @@ const DeedAnalyzer = () => {
       className="relative overflow-hidden rounded-2xl p-5"
       style={{
         background: "linear-gradient(160deg, hsl(var(--deed-bg)) 0%, hsl(var(--deed-navy)) 55%, hsl(var(--deed-bg)) 100%)",
-        border: `1px solid ${NEON_PINK}40`,
-        boxShadow: `0 0 40px -8px ${NEON_PINK}40, inset 0 0 30px -10px ${NEON_PURPLE}20`,
+        border: `1px solid ${cyanA(0.25)}`,
+        boxShadow: `0 0 40px -8px ${cyanA(0.25)}, inset 0 0 30px -10px ${blueA(0.13)}`,
       }}
     >
       {/* Grid pattern overlay */}
@@ -296,8 +296,8 @@ const DeedAnalyzer = () => {
           className="w-11 h-11 rounded-xl flex items-center justify-center"
           style={{
             background: cyanA(0.06),
-            border: `1px solid ${NEON_PINK}80`,
-            boxShadow: `0 0 18px ${NEON_PINK}70`,
+            border: `1px solid ${cyanA(0.5)}`,
+            boxShadow: `0 0 18px ${cyanA(0.44)}`,
           }}
         >
           <FileSearch className="w-5 h-5" style={{ color: NEON_PINK, filter: `drop-shadow(0 0 6px ${NEON_PINK})` }} strokeWidth={2} />
@@ -317,7 +317,7 @@ const DeedAnalyzer = () => {
           className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-bold"
           style={{
             background: blueA(0.13),
-            border: `1px solid ${NEON_PURPLE}80`,
+            border: `1px solid ${blueA(0.5)}`,
             color: NEON_PURPLE,
           }}
         >
@@ -342,10 +342,10 @@ const DeedAnalyzer = () => {
               className="w-full h-36 mb-4 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all"
               style={{
                 background: "hsl(var(--deed-bg) / 0.72)",
-                border: file ? `2px dashed ${NEON_PURPLE}80` : `2px dashed ${NEON_PINK}60`,
+                border: file ? `2px dashed ${blueA(0.5)}` : `2px dashed ${cyanA(0.38)}`,
                 boxShadow: file
-                  ? `inset 0 0 25px ${NEON_PURPLE}25`
-                  : `inset 0 0 25px ${NEON_PINK}15`,
+                  ? `inset 0 0 25px ${blueA(0.15)}`
+                  : `inset 0 0 25px ${cyanA(0.09)}`,
               }}
             >
               {file ? (
@@ -371,7 +371,7 @@ const DeedAnalyzer = () => {
               style={{
                 background: `linear-gradient(135deg, ${NEON_PINK} 0%, ${NEON_VIOLET} 100%)`,
                 color: "hsl(var(--deed-bg))",
-                boxShadow: `0 0 30px ${NEON_PINK}80, 0 0 60px ${NEON_PURPLE}40`,
+                boxShadow: `0 0 30px ${cyanA(0.5)}, 0 0 60px ${blueA(0.25)}`,
               }}
             >
               <Zap className="w-4 h-4" strokeWidth={2.5} />
