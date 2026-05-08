@@ -127,7 +127,7 @@ const DeedAnalyzer = () => {
       const dataUrl = await toPng(deedPanelRef.current, {
         cacheBust: true,
         pixelRatio: 2,
-        backgroundColor: "#0a0014",
+        backgroundColor: "#000814",
       });
       const link = document.createElement("a");
       link.download = `deed-${deedData?.deedNumber || "document"}.png`;
@@ -209,7 +209,7 @@ const DeedAnalyzer = () => {
               onClick={() => fileInputRef.current?.click()}
               className="w-full h-36 mb-4 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all"
               style={{
-                background: "rgba(10,0,20,0.6)",
+                background: "rgba(0,8,20,0.6)",
                 border: file ? `2px dashed ${NEON_PURPLE}80` : `2px dashed ${NEON_PINK}60`,
                 boxShadow: file
                   ? `inset 0 0 25px ${NEON_PURPLE}25`
@@ -256,7 +256,7 @@ const DeedAnalyzer = () => {
             exit={{ opacity: 0 }}
             className="relative rounded-xl p-6 overflow-hidden"
             style={{
-              background: "rgba(10,0,20,0.7)",
+              background: "rgba(0,8,20,0.7)",
               border: `1px solid ${NEON_PINK}60`,
               boxShadow: `inset 0 0 40px ${NEON_PINK}15`,
             }}
@@ -359,7 +359,7 @@ const DeedAnalyzer = () => {
               ref={deedPanelRef}
               className="relative rounded-2xl p-5 overflow-hidden"
               style={{
-                background: "linear-gradient(145deg, rgba(26,0,48,0.95) 0%, rgba(10,0,20,0.95) 100%)",
+                background: "linear-gradient(145deg, rgba(0,20,40,0.95) 0%, rgba(0,8,20,0.95) 100%)",
                 border: `1.5px solid ${NEON_PINK}90`,
                 boxShadow: `0 0 35px ${NEON_PINK}50, inset 0 0 40px ${NEON_PURPLE}20`,
                 backdropFilter: "blur(14px)",
@@ -382,13 +382,13 @@ const DeedAnalyzer = () => {
               {/* Deed Header */}
               <div className="text-center mb-4 pb-3" style={{ borderBottom: `1px dashed ${NEON_PINK}50` }}>
                 <p className="text-[10px] font-bold tracking-widest" style={{ color: NEON_PURPLE }}>
-                  UTAYBI SMART AI · DIGITAL DEED
+                  UTAYBI SMART AI · DIGITAL DEED CARD
                 </p>
                 <h3
                   className="text-base font-extrabold mt-1"
                   style={{ color: "#fff", textShadow: `0 0 10px ${NEON_PINK}` }}
                 >
-                  الوثيقة الرقمية المؤتمتة
+                  وثيقة مبايعة رقمية مؤتمتة
                 </h3>
                 <p className="text-[9px] mt-0.5" style={{ color: `${NEON_PINK}cc` }}>
                   معالجة برمجية مؤتمتة
@@ -408,7 +408,7 @@ const DeedAnalyzer = () => {
                     key={key}
                     className="rounded-lg p-2.5 transition-all"
                     style={{
-                      background: "rgba(10,0,20,0.6)",
+                      background: "rgba(0,8,20,0.6)",
                       border: `1px solid ${NEON_PINK}50`,
                       boxShadow: `inset 0 0 12px ${NEON_PINK}15, 0 0 6px ${NEON_PINK}25`,
                     }}
@@ -482,7 +482,7 @@ const DeedAnalyzer = () => {
                   onClick={handleReset}
                   className="h-10 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
                   style={{
-                    background: "rgba(10,0,20,0.7)",
+                    background: "rgba(0,8,20,0.7)",
                     border: `1px solid ${NEON_PURPLE}60`,
                     color: NEON_PURPLE,
                   }}
