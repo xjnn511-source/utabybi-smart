@@ -389,8 +389,8 @@ const DeedAnalyzer = () => {
             className="relative rounded-xl p-6 overflow-hidden"
             style={{
               background: "hsl(var(--deed-bg) / 0.74)",
-              border: `1px solid ${NEON_PINK}60`,
-              boxShadow: `inset 0 0 40px ${NEON_PINK}15`,
+              border: `1px solid ${cyanA(0.38)}`,
+              boxShadow: `inset 0 0 40px ${cyanA(0.09)}`,
             }}
           >
             <div className="absolute inset-0 overflow-hidden">
@@ -408,8 +408,8 @@ const DeedAnalyzer = () => {
                 className="w-16 h-16 mx-auto rounded-full flex items-center justify-center"
                 style={{
                   background: cyanA(0.09),
-                  border: `1px solid ${NEON_PINK}90`,
-                  boxShadow: `0 0 30px ${NEON_PINK}80`,
+                  border: `1px solid ${cyanA(0.56)}`,
+                  boxShadow: `0 0 30px ${cyanA(0.5)}`,
                 }}
               >
                 <Loader2 className="w-8 h-8 animate-spin" style={{ color: NEON_PINK }} />
@@ -471,8 +471,8 @@ const DeedAnalyzer = () => {
               className="rounded-xl p-3 flex items-center justify-between"
               style={{
                 background: cyanA(0.06),
-                border: `1px solid ${NEON_PINK}70`,
-                boxShadow: `0 0 20px ${NEON_PINK}30`,
+                border: `1px solid ${cyanA(0.44)}`,
+                boxShadow: `0 0 20px ${cyanA(0.19)}`,
               }}
             >
               <div className="flex items-center gap-2">
