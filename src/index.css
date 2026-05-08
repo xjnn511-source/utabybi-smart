@@ -47,6 +47,15 @@
     --sidebar-accent-foreground: 195 100% 75%;
     --sidebar-border: 260 30% 15%;
     --sidebar-ring: 292 84% 61%;
+
+    --deed-bg: 230 100% 2%;
+    --deed-navy: 215 100% 6%;
+    --deed-surface: 206 100% 8%;
+    --deed-panel: 207 100% 10%;
+    --deed-cyan: 180 100% 50%;
+    --deed-blue: 217 91% 60%;
+    --deed-text: 190 100% 92%;
+    --deed-muted: 190 60% 70%;
   }
 }
 
