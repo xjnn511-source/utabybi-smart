@@ -379,6 +379,33 @@ const DeedAnalyzer = () => {
                 />
               ))}
 
+              {/* Saudi Emblem (neon blue glow) */}
+              <div className="flex justify-center mb-2">
+                <div
+                  className="w-14 h-14 rounded-full flex items-center justify-center"
+                  style={{
+                    background: `radial-gradient(circle, ${NEON_PINK}25 0%, transparent 70%)`,
+                    border: `1.5px solid ${NEON_PINK}`,
+                    boxShadow: `0 0 18px ${NEON_PINK}, inset 0 0 12px ${NEON_PURPLE}80`,
+                  }}
+                >
+                  <svg viewBox="0 0 64 64" className="w-9 h-9" fill="none" stroke={NEON_PINK} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 4px ${NEON_PINK})` }}>
+                    {/* Palm tree */}
+                    <path d="M32 50 L32 28" />
+                    <path d="M32 28 C 22 22, 16 24, 14 30" />
+                    <path d="M32 28 C 42 22, 48 24, 50 30" />
+                    <path d="M32 28 C 26 18, 22 16, 18 18" />
+                    <path d="M32 28 C 38 18, 42 16, 46 18" />
+                    <path d="M32 28 C 30 20, 32 14, 32 12" />
+                    {/* Crossed swords */}
+                    <path d="M14 54 L30 42" />
+                    <path d="M50 54 L34 42" />
+                    <path d="M12 56 L16 52" />
+                    <path d="M52 56 L48 52" />
+                  </svg>
+                </div>
+              </div>
+
               {/* Deed Header */}
               <div className="text-center mb-4 pb-3" style={{ borderBottom: `1px dashed ${NEON_PINK}50` }}>
                 <p className="text-[10px] font-bold tracking-widest" style={{ color: NEON_PURPLE }}>
