@@ -89,6 +89,7 @@ const DeedAnalyzer = () => {
       if (data?.success && data?.data) {
         setTimeout(() => {
           setDeedData(data.data);
+          try { localStorage.setItem("utaybi.deedData", JSON.stringify(data.data)); } catch {}
           setEditMode(true);
           setState("done");
         }, 400);
