@@ -74,7 +74,7 @@ const DigitalDeed = ({ deed, phone = false }: { deed: DeedVisualData; phone?: bo
       <MiniField label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "..."} />
       {!phone && <MiniField label="الموقع" value={compact(locationOf(deed), 15)} />}
     </div>
-    <div className="absolute bottom-[7%] left-[16%] right-[16%] h-px" style={{ background: "hsl(var(--deed-cyan) / 0.34)" }} />
+    <div className="absolute bottom-[5%] left-[16%] right-[16%] h-px" style={{ background: "hsl(var(--deed-cyan) / 0.34)" }} />
   </div>
 );
 
@@ -90,7 +90,7 @@ const PhonePreview = ({ deed }: { deed: DeedVisualData }) => (
       </div>
       <div className="absolute inset-x-[7%] bottom-[14%] rounded-[7px] border px-[7%] py-[4%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 12px hsl(var(--deed-gold) / 0.18)" }}>
         <p className="text-center text-[6px] font-black leading-none sm:text-[8px]" style={{ color: muted }}>رقم الصك</p>
-        <p className="mt-[4%] truncate text-center text-[7px] font-black leading-none sm:text-[11px] md:text-[13px]" style={{ color: text }}>{compact(deed.deedNumber, 12)}</p>
+        <p dir="ltr" className="mt-[4%] break-all text-center text-[6px] font-black leading-tight sm:text-[9px] md:text-[11px]" style={{ color: text }}>{compact(deed.deedNumber, 12)}</p>
       </div>
       <div className="absolute bottom-0 grid h-[11%] w-full grid-cols-4 border-t" style={{ borderColor: "hsl(var(--deed-gold) / 0.15)", background: "hsl(var(--deed-bg) / 0.92)" }}>
         {[Home, FileText, ShieldCheck, Smartphone].map((Icon, i) => (
@@ -134,7 +134,7 @@ const MapPanel = ({ deed }: { deed: DeedVisualData }) => (
       <motion.div className="absolute -inset-5 rounded-full" style={{ background: "hsl(var(--deed-gold) / 0.3)", filter: "blur(12px)" }} animate={{ scale: [1, 1.35, 1], opacity: [0.75, 0.18, 0.75] }} transition={{ duration: 1.8, repeat: Infinity }} />
       <MapPin className="relative h-8 w-8 sm:h-12 sm:w-12 md:h-14 md:w-14" style={{ color: gold, fill: gold, filter: "drop-shadow(0 0 12px hsl(var(--deed-gold)))" }} />
     </div>
-    <p className="absolute bottom-[7%] left-[8%] right-[8%] truncate rounded-[5px] border px-2 py-[3%] text-center text-[6px] font-black leading-none sm:text-[10px] md:text-[12px]" style={{ color: text, borderColor: "hsl(var(--deed-gold) / 0.42)", background: "hsl(var(--deed-bg) / 0.82)", textShadow: "0 0 8px hsl(var(--deed-gold) / 0.55)" }}>
+    <p className="absolute bottom-[7%] left-[8%] right-[8%] break-words rounded-[5px] border px-2 py-[2.5%] text-center text-[6px] font-black leading-tight sm:text-[9px] md:text-[11px]" style={{ color: text, borderColor: "hsl(var(--deed-gold) / 0.42)", background: "hsl(var(--deed-bg) / 0.82)", textShadow: "0 0 8px hsl(var(--deed-gold) / 0.55)" }}>
       {compact(locationOf(deed), 20)}
     </p>
   </div>
