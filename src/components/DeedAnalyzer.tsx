@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toPng } from "html-to-image";
+import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -137,6 +138,50 @@ const DeedAnalyzer = () => {
       toast({ title: "تم تحميل الوثيقة الرقمية" });
     } catch (err: any) {
       toast({ title: "فشل التحميل", description: err.message, variant: "destructive" });
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!deedPanelRef.current) return;
+    try {
+      const dataUrl = await toPng(deedPanelRef.current, {
+        cacheBust: true,
+        pixelRatio: 3,
+        backgroundColor: "#000814",
+      });
+      const img = new Image();
+      img.src = dataUrl;
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
+
+      const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4", compress: true });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const margin = 8;
+      pdf.setFillColor(0, 8, 20);
+      pdf.rect(0, 0, pageW, pageH, "F");
+
+      const maxW = pageW - margin * 2;
+      const maxH = pageH - margin * 2 - 12;
+      const ratio = img.width / img.height;
+      let w = maxW;
+      let h = w / ratio;
+      if (h > maxH) { h = maxH; w = h * ratio; }
+      const x = (pageW - w) / 2;
+      pdf.addImage(dataUrl, "PNG", x, margin, w, h, undefined, "FAST");
+
+      pdf.setTextColor(0, 255, 255);
+      pdf.setFontSize(9);
+      pdf.text("UTAYBI SMART AI HUB - DIGITAL DEED CARD", pageW / 2, pageH - 6, { align: "center" });
+      pdf.setTextColor(170, 170, 170);
+      pdf.setFontSize(7);
+      pdf.text(
+        `Deed: ${deedData?.deedNumber || "-"}   |   ${new Date().toLocaleString("en-GB")}`,
+        pageW / 2, pageH - 2, { align: "center" }
+      );
+      pdf.save(`utaybi-deed-${deedData?.deedNumber || "document"}.pdf`);
+      toast({ title: "تم تصدير الوثيقة كملف PDF", description: "جودة طباعة عالية" });
+    } catch (err: any) {
+      toast({ title: "فشل تصدير PDF", description: err.message, variant: "destructive" });
     }
   };
 
@@ -629,18 +674,33 @@ const DeedAnalyzer = () => {
 
             {/* Action Buttons */}
             <div className="space-y-2 pt-1">
-              <button
-                onClick={handleDownload}
-                className="w-full h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
-                style={{
-                  background: `linear-gradient(135deg, ${NEON_PINK} 0%, ${NEON_VIOLET} 100%)`,
-                  color: "#fff",
-                  boxShadow: `0 0 30px ${NEON_PINK}80, 0 0 60px ${NEON_PURPLE}40`,
-                }}
-              >
-                <Download className="w-4 h-4" strokeWidth={2.5} />
-                تحميل الوثيقة
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={handleDownload}
+                  className="h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                  style={{
+                    background: `linear-gradient(135deg, ${NEON_PINK} 0%, ${NEON_VIOLET} 100%)`,
+                    color: "#000814",
+                    boxShadow: `0 0 25px ${NEON_PINK}80`,
+                  }}
+                >
+                  <Download className="w-4 h-4" strokeWidth={2.5} />
+                  تحميل PNG
+                </button>
+                <button
+                  onClick={handleDownloadPdf}
+                  className="h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                  style={{
+                    background: "rgba(0,8,20,0.85)",
+                    color: NEON_PINK,
+                    border: `1.5px solid ${NEON_PINK}`,
+                    boxShadow: `0 0 25px ${NEON_PINK}55, inset 0 0 14px ${NEON_PINK}25`,
+                  }}
+                >
+                  <FileText className="w-4 h-4" strokeWidth={2.5} />
+                  تصدير PDF
+                </button>
+              </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <button
