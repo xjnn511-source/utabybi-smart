@@ -1,13 +1,14 @@
 import { useState, useRef } from "react";
 import {
-  FileSearch, ShieldCheck, MapPin, Ruler, FileText, User,
-  Loader2, Zap, CheckCircle, UploadCloud, Edit3, Sparkles, Radio, Download,
+  FileSearch, ShieldCheck, FileText,
+  Loader2, Zap, CheckCircle, UploadCloud, Edit3, Radio, Download,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import DeedVisualDashboard from "@/components/DeedVisualDashboard";
 
 type AnalysisState = "idle" | "scanning" | "done" | "error";
 
@@ -19,10 +20,14 @@ interface DeedData {
   district: string;
 }
 
-// Neon palette — strict Blue/Cyan tech theme (no green, no magenta)
-const NEON_PINK = "#00FFFF";   // cyan (kept name to minimize diff)
-const NEON_PURPLE = "#3b82f6"; // neon blue
-const NEON_VIOLET = "#1d4ed8"; // deep blue
+// Neon palette — strict app theme via semantic HSL tokens (cyan/black only)
+const NEON_PINK = "hsl(var(--deed-cyan))";   // cyan (kept name to minimize diff)
+const NEON_PURPLE = "hsl(var(--deed-blue))"; // neon blue
+const NEON_VIOLET = "hsl(var(--accent))"; // app blue accent
+const DEED_BG = "hsl(var(--deed-bg))";
+const DEED_TEXT = "hsl(var(--deed-text))";
+const cyanA = (alpha: number) => `hsl(var(--deed-cyan) / ${alpha})`;
+const blueA = (alpha: number) => `hsl(var(--deed-blue) / ${alpha})`;
 
 const DeedAnalyzer = () => {
   const [state, setState] = useState<AnalysisState>("idle");
@@ -209,7 +214,7 @@ const DeedAnalyzer = () => {
       const dataUrl = await toPng(deedPanelRef.current, {
         cacheBust: true,
         pixelRatio: 2,
-        backgroundColor: "#000814",
+        backgroundColor: DEED_BG,
       });
       const link = document.createElement("a");
       link.download = `deed-${deedData?.deedNumber || "document"}.png`;
@@ -228,7 +233,7 @@ const DeedAnalyzer = () => {
       const dataUrl = await toPng(deedPanelRef.current, {
         cacheBust: true,
         pixelRatio: 3,
-        backgroundColor: "#000814",
+        backgroundColor: DEED_BG,
       });
       const img = new Image();
       img.src = dataUrl;
@@ -270,9 +275,9 @@ const DeedAnalyzer = () => {
     <div
       className="relative overflow-hidden rounded-2xl p-5"
       style={{
-        background: "linear-gradient(160deg, #000010 0%, #001428 55%, #000008 100%)",
-        border: `1px solid ${NEON_PINK}40`,
-        boxShadow: `0 0 40px -8px ${NEON_PINK}40, inset 0 0 30px -10px ${NEON_PURPLE}20`,
+        background: "linear-gradient(160deg, hsl(var(--deed-bg)) 0%, hsl(var(--deed-navy)) 55%, hsl(var(--deed-bg)) 100%)",
+        border: `1px solid ${cyanA(0.25)}`,
+        boxShadow: `0 0 40px -8px ${cyanA(0.25)}, inset 0 0 30px -10px ${blueA(0.13)}`,
       }}
     >
       {/* Grid pattern overlay */}
@@ -280,7 +285,7 @@ const DeedAnalyzer = () => {
         className="absolute inset-0 pointer-events-none opacity-20"
         style={{
           backgroundImage:
-            `linear-gradient(${NEON_PINK}15 1px, transparent 1px), linear-gradient(90deg, ${NEON_PINK}15 1px, transparent 1px)`,
+            "linear-gradient(hsl(var(--deed-cyan) / 0.09) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--deed-cyan) / 0.09) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
       />
@@ -290,9 +295,9 @@ const DeedAnalyzer = () => {
         <div
           className="w-11 h-11 rounded-xl flex items-center justify-center"
           style={{
-            background: `${NEON_PINK}10`,
-            border: `1px solid ${NEON_PINK}80`,
-            boxShadow: `0 0 18px ${NEON_PINK}70`,
+            background: cyanA(0.06),
+            border: `1px solid ${cyanA(0.5)}`,
+            boxShadow: `0 0 18px ${cyanA(0.44)}`,
           }}
         >
           <FileSearch className="w-5 h-5" style={{ color: NEON_PINK, filter: `drop-shadow(0 0 6px ${NEON_PINK})` }} strokeWidth={2} />
@@ -304,15 +309,15 @@ const DeedAnalyzer = () => {
           >
             معالجة برمجية مؤتمتة
           </h2>
-          <p className="text-[10px]" style={{ color: `${NEON_PURPLE}cc` }}>
+          <p className="text-[10px]" style={{ color: blueA(0.8) }}>
             منصة الأتمتة البرمجية للوثائق العقارية — Utaybi Smart AI
           </p>
         </div>
         <div
           className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-bold"
           style={{
-            background: `${NEON_PURPLE}20`,
-            border: `1px solid ${NEON_PURPLE}80`,
+            background: blueA(0.13),
+            border: `1px solid ${blueA(0.5)}`,
             color: NEON_PURPLE,
           }}
         >
@@ -336,18 +341,18 @@ const DeedAnalyzer = () => {
               onClick={() => fileInputRef.current?.click()}
               className="w-full h-36 mb-4 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all"
               style={{
-                background: "rgba(0,8,20,0.6)",
-                border: file ? `2px dashed ${NEON_PURPLE}80` : `2px dashed ${NEON_PINK}60`,
+                background: "hsl(var(--deed-bg) / 0.72)",
+                border: file ? `2px dashed ${blueA(0.5)}` : `2px dashed ${cyanA(0.38)}`,
                 boxShadow: file
-                  ? `inset 0 0 25px ${NEON_PURPLE}25`
-                  : `inset 0 0 25px ${NEON_PINK}15`,
+                  ? `inset 0 0 25px ${blueA(0.15)}`
+                  : `inset 0 0 25px ${cyanA(0.09)}`,
               }}
             >
               {file ? (
                 <div className="text-center">
                   <CheckCircle className="w-9 h-9 mx-auto mb-2" style={{ color: NEON_PURPLE, filter: `drop-shadow(0 0 8px ${NEON_PURPLE})` }} />
-                  <p className="text-xs font-bold" style={{ color: "#f5d0fe" }}>{file.name}</p>
-                  <p className="text-[9px] mt-1" style={{ color: `${NEON_PURPLE}99` }}>
+                  <p className="text-xs font-bold" style={{ color: DEED_TEXT }}>{file.name}</p>
+                  <p className="text-[9px] mt-1" style={{ color: blueA(0.6) }}>
                     {(file.size / 1024).toFixed(0)} كيلوبايت — اضغط لتغيير الملف
                   </p>
                 </div>
@@ -355,7 +360,7 @@ const DeedAnalyzer = () => {
                 <div className="text-center">
                   <UploadCloud className="w-9 h-9 mx-auto mb-2 animate-pulse" style={{ color: NEON_PINK, filter: `drop-shadow(0 0 8px ${NEON_PINK})` }} />
                   <p className="text-xs font-bold" style={{ color: NEON_PINK }}>ارفع صورة الوثيقة العقارية</p>
-                  <p className="text-[9px] mt-1" style={{ color: `${NEON_PINK}99` }}>صور فقط — حد أقصى 10 ميجابايت</p>
+                  <p className="text-[9px] mt-1" style={{ color: cyanA(0.6) }}>صور فقط — حد أقصى 10 ميجابايت</p>
                 </div>
               )}
             </div>
@@ -365,8 +370,8 @@ const DeedAnalyzer = () => {
               className="w-full h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-3 transition-all hover:scale-[1.01]"
               style={{
                 background: `linear-gradient(135deg, ${NEON_PINK} 0%, ${NEON_VIOLET} 100%)`,
-                color: "#fff",
-                boxShadow: `0 0 30px ${NEON_PINK}80, 0 0 60px ${NEON_PURPLE}40`,
+                color: "hsl(var(--deed-bg))",
+                boxShadow: `0 0 30px ${cyanA(0.5)}, 0 0 60px ${blueA(0.25)}`,
               }}
             >
               <Zap className="w-4 h-4" strokeWidth={2.5} />
@@ -383,9 +388,9 @@ const DeedAnalyzer = () => {
             exit={{ opacity: 0 }}
             className="relative rounded-xl p-6 overflow-hidden"
             style={{
-              background: "rgba(0,8,20,0.7)",
-              border: `1px solid ${NEON_PINK}60`,
-              boxShadow: `inset 0 0 40px ${NEON_PINK}15`,
+              background: "hsl(var(--deed-bg) / 0.74)",
+              border: `1px solid ${cyanA(0.38)}`,
+              boxShadow: `inset 0 0 40px ${cyanA(0.09)}`,
             }}
           >
             <div className="absolute inset-0 overflow-hidden">
@@ -402,9 +407,9 @@ const DeedAnalyzer = () => {
               <div
                 className="w-16 h-16 mx-auto rounded-full flex items-center justify-center"
                 style={{
-                  background: `${NEON_PINK}15`,
-                  border: `1px solid ${NEON_PINK}90`,
-                  boxShadow: `0 0 30px ${NEON_PINK}80`,
+                  background: cyanA(0.09),
+                  border: `1px solid ${cyanA(0.56)}`,
+                  boxShadow: `0 0 30px ${cyanA(0.5)}`,
                 }}
               >
                 <Loader2 className="w-8 h-8 animate-spin" style={{ color: NEON_PINK }} />
@@ -431,12 +436,12 @@ const DeedAnalyzer = () => {
                     ) : (
                       <Zap className="w-3.5 h-3.5 animate-pulse" style={{ color: NEON_PINK }} />
                     )}
-                    <span className="text-[11px]" style={{ color: "#f5d0fe" }}>{step}</span>
+                    <span className="text-[11px]" style={{ color: DEED_TEXT }}>{step}</span>
                   </motion.div>
                 ))}
               </div>
 
-              <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: `${NEON_PINK}15` }}>
+              <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: cyanA(0.09) }}>
                 <motion.div
                   className="h-full rounded-full"
                   style={{
@@ -465,9 +470,9 @@ const DeedAnalyzer = () => {
             <div
               className="rounded-xl p-3 flex items-center justify-between"
               style={{
-                background: `${NEON_PINK}10`,
-                border: `1px solid ${NEON_PINK}70`,
-                boxShadow: `0 0 20px ${NEON_PINK}30`,
+                background: cyanA(0.06),
+                border: `1px solid ${cyanA(0.44)}`,
+                boxShadow: `0 0 20px ${cyanA(0.19)}`,
               }}
             >
               <div className="flex items-center gap-2">
@@ -481,251 +486,19 @@ const DeedAnalyzer = () => {
               </span>
             </div>
 
-            {/* 3-Panel Tactical Dashboard */}
-            <div
-              ref={deedPanelRef}
-              className="relative rounded-2xl p-3 sm:p-4 overflow-hidden"
-              style={{
-                background: "linear-gradient(145deg, #000814 0%, #001428 60%, #000008 100%)",
-                border: `1.5px solid ${NEON_PINK}80`,
-                boxShadow: `0 0 35px ${NEON_PINK}40, inset 0 0 50px ${NEON_PINK}10`,
-              }}
-            >
-              {/* grid background */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-20"
-                style={{
-                  backgroundImage: `linear-gradient(${NEON_PINK}30 1px, transparent 1px), linear-gradient(90deg, ${NEON_PINK}30 1px, transparent 1px)`,
-                  backgroundSize: "24px 24px",
-                }}
-              />
-
-              {/* corner ornaments */}
-              {[
-                { top: 6, left: 6, b: "border-t-2 border-l-2" },
-                { top: 6, right: 6, b: "border-t-2 border-r-2" },
-                { bottom: 6, left: 6, b: "border-b-2 border-l-2" },
-                { bottom: 6, right: 6, b: "border-b-2 border-r-2" },
-              ].map((c, i) => (
-                <div key={i} className={`absolute w-5 h-5 ${c.b}`} style={{ ...c, borderColor: NEON_PINK, boxShadow: `0 0 8px ${NEON_PINK}` }} />
-              ))}
-
-              {/* Title bar */}
-              <div className="relative text-center mb-3 pb-2" style={{ borderBottom: `1px dashed ${NEON_PINK}50` }}>
-                <p className="text-[10px] font-bold tracking-[0.3em]" style={{ color: `${NEON_PINK}cc` }}>
-                  TACTICAL REAL-ESTATE INTERFACE
-                </p>
-                <h3 className="text-base font-extrabold mt-0.5" style={{ color: "#fff", textShadow: `0 0 10px ${NEON_PINK}` }}>
-                  وثيقة مبايعة رقمية مؤتمتة
-                </h3>
-              </div>
-
-              {/* 3 panels */}
-              <div className="relative grid grid-cols-1 md:grid-cols-3 gap-3">
-                {/* LEFT: Digital Deed */}
-                <div
-                  className="rounded-xl p-3 relative"
-                  style={{
-                    background: "rgba(0,8,20,0.7)",
-                    border: `1px solid ${NEON_PINK}60`,
-                    boxShadow: `inset 0 0 18px ${NEON_PINK}15, 0 0 14px ${NEON_PINK}25`,
-                  }}
-                >
-                  <p className="text-[9px] font-bold tracking-widest mb-2" style={{ color: `${NEON_PINK}aa` }}>
-                    01 · DIGITAL DEED
-                  </p>
-                  <div className="flex justify-center mb-2">
-                    <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center"
-                      style={{
-                        background: `radial-gradient(circle, ${NEON_PINK}25 0%, transparent 70%)`,
-                        border: `1.5px solid ${NEON_PINK}`,
-                        boxShadow: `0 0 14px ${NEON_PINK}`,
-                      }}
-                    >
-                      <svg viewBox="0 0 64 64" className="w-8 h-8" fill="none" stroke={NEON_PINK} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 4px ${NEON_PINK})` }}>
-                        <path d="M32 50 L32 28" />
-                        <path d="M32 28 C 22 22, 16 24, 14 30" />
-                        <path d="M32 28 C 42 22, 48 24, 50 30" />
-                        <path d="M32 28 C 26 18, 22 16, 18 18" />
-                        <path d="M32 28 C 38 18, 42 16, 46 18" />
-                        <path d="M32 28 C 30 20, 32 14, 32 12" />
-                        <path d="M14 54 L30 42" />
-                        <path d="M50 54 L34 42" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="space-y-1.5 text-center">
-                    <p className="text-[9px]" style={{ color: `${NEON_PINK}99` }}>المالك</p>
-                    <p className="text-sm font-extrabold" style={{ color: "#fff", textShadow: `0 0 8px ${NEON_PINK}` }}>{deedData.owner || "—"}</p>
-                    <p className="text-[9px] mt-2" style={{ color: `${NEON_PINK}99` }}>رقم الوثيقة</p>
-                    <p className="text-xs font-bold font-mono" style={{ color: NEON_PINK, textShadow: `0 0 6px ${NEON_PINK}` }}>{deedData.deedNumber || "—"}</p>
-                    <p className="text-[9px] mt-2" style={{ color: `${NEON_PINK}99` }}>المساحة</p>
-                    <p className="text-xs font-bold" style={{ color: "#fff", textShadow: `0 0 6px ${NEON_PINK}` }}>{deedData.area || "—"} م²</p>
-                  </div>
-                </div>
-
-                {/* MIDDLE: Pulse / Radar */}
-                <div
-                  className="rounded-xl p-3 relative flex flex-col items-center justify-center"
-                  style={{
-                    background: "rgba(0,8,20,0.7)",
-                    border: `1px solid ${NEON_PINK}60`,
-                    boxShadow: `inset 0 0 18px ${NEON_PINK}15, 0 0 14px ${NEON_PINK}25`,
-                  }}
-                >
-                  <p className="text-[9px] font-bold tracking-widest mb-2 self-start" style={{ color: `${NEON_PINK}aa` }}>
-                    02 · PULSE MATCH
-                  </p>
-                  <div className="relative w-40 h-40 my-1">
-                    {/* pulse rings */}
-                    {[0, 1, 2].map((i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute inset-0 rounded-full"
-                        style={{ border: `1.5px solid ${NEON_PINK}`, boxShadow: `0 0 12px ${NEON_PINK}` }}
-                        initial={{ scale: 0.4, opacity: 0.8 }}
-                        animate={{ scale: 1, opacity: 0 }}
-                        transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.8, ease: "easeOut" }}
-                      />
-                    ))}
-                    {/* radar sweep */}
-                    <motion.div
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: `conic-gradient(from 0deg, transparent 0deg, ${NEON_PINK}55 30deg, transparent 60deg)`,
-                        maskImage: "radial-gradient(circle, black 60%, transparent 100%)",
-                      }}
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    />
-                    {/* center disk */}
-                    <div
-                      className="absolute inset-6 rounded-full flex flex-col items-center justify-center"
-                      style={{
-                        background: `radial-gradient(circle, ${NEON_PINK}25 0%, rgba(0,8,20,0.95) 70%)`,
-                        border: `1.5px solid ${NEON_PINK}`,
-                        boxShadow: `0 0 18px ${NEON_PINK}, inset 0 0 18px ${NEON_PINK}40`,
-                      }}
-                    >
-                      <p className="text-2xl font-black" style={{ color: "#fff", textShadow: `0 0 10px ${NEON_PINK}` }}>100%</p>
-                      <p className="text-[9px] font-bold mt-0.5" style={{ color: NEON_PINK }}>MATCH</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <Radio className="w-3 h-3 animate-pulse" style={{ color: NEON_PINK }} />
-                    <span className="text-[10px] font-bold" style={{ color: NEON_PINK }}>تطابق رقمي مكتمل</span>
-                  </div>
-                </div>
-
-                {/* RIGHT: Stylized Map */}
-                <div
-                  className="rounded-xl p-3 relative overflow-hidden"
-                  style={{
-                    background: "rgba(0,8,20,0.7)",
-                    border: `1px solid ${NEON_PINK}60`,
-                    boxShadow: `inset 0 0 18px ${NEON_PINK}15, 0 0 14px ${NEON_PINK}25`,
-                  }}
-                >
-                  <p className="text-[9px] font-bold tracking-widest mb-2" style={{ color: `${NEON_PINK}aa` }}>
-                    03 · GEO LOCATOR
-                  </p>
-                  <div
-                    className="relative h-44 rounded-lg overflow-hidden"
-                    style={{
-                      background: "radial-gradient(ellipse at center, #002a4a 0%, #000814 80%)",
-                      border: `1px solid ${NEON_PINK}40`,
-                    }}
-                  >
-                    {/* map grid */}
-                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 180" preserveAspectRatio="none">
-                      <defs>
-                        <pattern id="mapgrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                          <path d="M 20 0 L 0 0 0 20" fill="none" stroke={`${NEON_PINK}30`} strokeWidth="0.5" />
-                        </pattern>
-                      </defs>
-                      <rect width="200" height="180" fill="url(#mapgrid)" />
-                      {/* roads */}
-                      <path d="M 0 90 Q 80 70 200 100" stroke={`${NEON_PINK}80`} strokeWidth="1" fill="none" />
-                      <path d="M 100 0 Q 90 80 110 180" stroke={`${NEON_PINK}60`} strokeWidth="1" fill="none" />
-                      <path d="M 30 30 L 170 150" stroke={`${NEON_PINK}40`} strokeWidth="0.6" fill="none" strokeDasharray="3 3" />
-                      {/* district blobs */}
-                      <path d="M 60 60 Q 80 50 95 70 Q 90 95 70 90 Z" fill={`${NEON_PINK}15`} stroke={`${NEON_PINK}50`} strokeWidth="0.6" />
-                      <path d="M 120 100 Q 145 95 150 120 Q 130 135 115 125 Z" fill={`${NEON_PINK}10`} stroke={`${NEON_PINK}40`} strokeWidth="0.6" />
-                    </svg>
-
-                    {/* glowing pin */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full">
-                      <motion.div
-                        animate={{ scale: [1, 1.3, 1] }}
-                        transition={{ duration: 1.8, repeat: Infinity }}
-                        className="absolute -inset-3 rounded-full"
-                        style={{ background: `${NEON_PINK}40`, filter: "blur(8px)" }}
-                      />
-                      <MapPin className="w-7 h-7 relative" style={{ color: NEON_PINK, fill: NEON_PINK, filter: `drop-shadow(0 0 10px ${NEON_PINK})` }} />
-                    </div>
-
-                    {/* coordinates label */}
-                    <div
-                      className="absolute bottom-2 left-2 right-2 px-2 py-1 rounded text-center"
-                      style={{
-                        background: "rgba(0,8,20,0.85)",
-                        border: `1px solid ${NEON_PINK}50`,
-                      }}
-                    >
-                      <p className="text-[10px] font-extrabold" style={{ color: "#fff", textShadow: `0 0 6px ${NEON_PINK}` }}>
-                        {deedData.district || "—"} · {deedData.city || "—"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom 4 icon summary */}
-              <div className="relative grid grid-cols-4 gap-2 mt-4">
-                {[
-                  { key: "deedNumber" as const, label: "رقم الوثيقة", icon: FileText },
-                  { key: "owner" as const, label: "المالك", icon: User },
-                  { key: "area" as const, label: "المساحة", icon: Ruler },
-                  { key: "district" as const, label: "الموقع", icon: MapPin },
-                ].map(({ key, label, icon: Icon }) => (
-                  <div
-                    key={key}
-                    className="rounded-lg p-2 text-center"
-                    style={{
-                      background: "rgba(0,8,20,0.8)",
-                      border: `1px solid ${NEON_PINK}60`,
-                      boxShadow: `inset 0 0 10px ${NEON_PINK}15, 0 0 8px ${NEON_PINK}20`,
-                    }}
-                  >
-                    <Icon className="w-4 h-4 mx-auto mb-1" style={{ color: NEON_PINK, filter: `drop-shadow(0 0 4px ${NEON_PINK})` }} />
-                    <p className="text-[9px]" style={{ color: `${NEON_PINK}aa` }}>{label}</p>
-                    <p className="text-[10px] font-bold truncate mt-0.5" style={{ color: "#fff", textShadow: `0 0 4px ${NEON_PINK}` }}>
-                      {deedData[key] || "—"}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Footer */}
-              <div className="relative mt-3 pt-2 flex items-center justify-between" style={{ borderTop: `1px dashed ${NEON_PINK}50` }}>
-                <p className="text-[9px]" style={{ color: `${NEON_PINK}aa` }}>© عُتيبي ذكي Hub — منصة برمجية مرخصة</p>
-                <div className="flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" style={{ color: NEON_PINK, filter: `drop-shadow(0 0 4px ${NEON_PINK})` }} />
-                  <span className="text-[9px] font-bold" style={{ color: NEON_PINK }}>VERIFIED</span>
-                </div>
-              </div>
+            <div ref={deedPanelRef}>
+              <DeedVisualDashboard deed={deedData} />
             </div>
 
             {/* Inline editable correction row (dynamic, not table) */}
             <div
               className="rounded-xl p-3"
               style={{
-                background: "rgba(0,8,20,0.7)",
-                border: `1px solid ${NEON_PINK}40`,
+                background: "hsl(var(--deed-bg) / 0.74)",
+                border: `1px solid ${cyanA(0.25)}`,
               }}
             >
-              <p className="text-[10px] font-bold mb-2" style={{ color: `${NEON_PINK}cc` }}>
+              <p className="text-[10px] font-bold mb-2" style={{ color: cyanA(0.8) }}>
                 تعديل البيانات المستخرجة (اختياري)
               </p>
               <div className="grid grid-cols-2 gap-2">
@@ -744,8 +517,8 @@ const DeedAnalyzer = () => {
                     onChange={(e) => updateField(key, e.target.value)}
                     className="bg-transparent outline-none text-xs font-bold font-cairo rounded px-2 py-1.5"
                     style={{
-                      color: "#fff",
-                      border: `1px solid ${NEON_PINK}50`,
+                      color: DEED_TEXT,
+                      border: `1px solid ${cyanA(0.31)}`,
                       textShadow: `0 0 6px ${NEON_PINK}`,
                     }}
                   />
@@ -761,8 +534,8 @@ const DeedAnalyzer = () => {
                   className="h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
                   style={{
                     background: `linear-gradient(135deg, ${NEON_PINK} 0%, ${NEON_VIOLET} 100%)`,
-                    color: "#000814",
-                    boxShadow: `0 0 25px ${NEON_PINK}80`,
+                    color: DEED_BG,
+                    boxShadow: `0 0 25px ${cyanA(0.5)}`,
                   }}
                 >
                   <Download className="w-4 h-4" strokeWidth={2.5} />
@@ -772,10 +545,10 @@ const DeedAnalyzer = () => {
                   onClick={handleDownloadPdf}
                   className="h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
                   style={{
-                    background: "rgba(0,8,20,0.85)",
+                    background: "hsl(var(--deed-bg) / 0.85)",
                     color: NEON_PINK,
                     border: `1.5px solid ${NEON_PINK}`,
-                    boxShadow: `0 0 25px ${NEON_PINK}55, inset 0 0 14px ${NEON_PINK}25`,
+                    boxShadow: `0 0 25px ${cyanA(0.33)}, inset 0 0 14px ${cyanA(0.15)}`,
                   }}
                 >
                   <FileText className="w-4 h-4" strokeWidth={2.5} />
@@ -788,10 +561,10 @@ const DeedAnalyzer = () => {
                   onClick={() => toast({ title: "تم تأكيد البيانات", description: "تم حفظ المدخلات النهائية للمعالجة البرمجية" })}
                   className="h-10 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
                   style={{
-                    background: `${NEON_PINK}15`,
-                    border: `1px solid ${NEON_PINK}70`,
+                    background: cyanA(0.09),
+                    border: `1px solid ${cyanA(0.44)}`,
                     color: NEON_PINK,
-                    boxShadow: `0 0 12px ${NEON_PINK}30`,
+                    boxShadow: `0 0 12px ${cyanA(0.19)}`,
                   }}
                 >
                   <Edit3 className="w-3.5 h-3.5" />
@@ -801,8 +574,8 @@ const DeedAnalyzer = () => {
                   onClick={handleReset}
                   className="h-10 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
                   style={{
-                    background: "rgba(0,8,20,0.7)",
-                    border: `1px solid ${NEON_PURPLE}60`,
+                    background: "hsl(var(--deed-bg) / 0.74)",
+                    border: `1px solid ${blueA(0.38)}`,
                     color: NEON_PURPLE,
                   }}
                 >
@@ -814,7 +587,7 @@ const DeedAnalyzer = () => {
         )}
       </AnimatePresence>
 
-      <span className="watermark" style={{ color: `${NEON_PINK}66` }}>عُتيبي ذكي 🤖</span>
+      <span className="watermark" style={{ color: cyanA(0.4) }}>عُتيبي ذكي 🤖</span>
     </div>
   );
 };

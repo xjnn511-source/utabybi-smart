@@ -51,6 +51,16 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         "text-dim": "hsl(var(--text-dim))",
+        deed: {
+          bg: "hsl(var(--deed-bg))",
+          navy: "hsl(var(--deed-navy))",
+          surface: "hsl(var(--deed-surface))",
+          panel: "hsl(var(--deed-panel))",
+          cyan: "hsl(var(--deed-cyan))",
+          blue: "hsl(var(--deed-blue))",
+          text: "hsl(var(--deed-text))",
+          muted: "hsl(var(--deed-muted))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
