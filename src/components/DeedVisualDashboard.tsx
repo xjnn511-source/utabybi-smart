@@ -67,7 +67,7 @@ const DigitalDeed = ({ deed, phone = false }: { deed: DeedVisualData; phone?: bo
     <div className="relative z-10 mx-auto mt-[5%] flex aspect-square h-[18%] items-center justify-center rounded-full border" style={{ color: mint, borderColor: "hsl(var(--deed-cyan) / 0.55)", background: "hsl(var(--deed-cyan) / 0.12)", boxShadow: "0 0 14px hsl(var(--deed-cyan) / 0.45)" }}>
       <Award className="h-[62%] w-[62%]" />
     </div>
-    <p className="relative z-10 mt-[2.5%] text-center text-[7px] font-black leading-none sm:text-[10px] md:text-[12px]" style={{ color: mint, textShadow: "0 0 8px hsl(var(--deed-cyan) / 0.5)" }}>صك عقاري رقمي</p>
+    <p className="relative z-10 mt-[3%] text-center text-[8px] font-black leading-tight sm:text-[11px] md:text-[14px]" style={{ color: mint, textShadow: "0 0 8px hsl(var(--deed-cyan) / 0.5)", letterSpacing: "0.06em" }}>صك عقاري رقمي</p>
     <div className="relative z-10 mx-auto mt-[4%] w-[72%]">
       <MiniField label="رقم الصك" value={compact(deed.deedNumber, phone ? 10 : 16)} />
       <MiniField label="المالك" value={compact(deed.owner, phone ? 9 : 15)} />
