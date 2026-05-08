@@ -121,6 +121,7 @@ const DeedAnalyzer = () => {
     setFile(null);
     setDeedData(null);
     setEditMode(false);
+    autoExportedRef.current = null;
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
