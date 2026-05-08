@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, MapPin, User, Ruler, FileText, CheckCircle2, Radio } from "lucide-react";
+import { ArrowRight, MapPin, User, Ruler, FileText, CheckCircle2, Radio, ShieldCheck, Smartphone, ScanLine } from "lucide-react";
 
-const CYAN = "#00FFFF";
+const CYAN = "hsl(var(--deed-cyan))";
+const CYAN_SOFT = "hsl(var(--deed-cyan) / 0.65)";
+const PANEL_BG = "hsl(var(--deed-surface) / 0.82)";
+const NAVY_BG = "hsl(var(--deed-bg))";
 
 interface DeedData {
   deedNumber: string;
@@ -35,15 +38,15 @@ const DigitalIndicators = () => {
       className="min-h-screen w-full relative overflow-hidden font-cairo notranslate"
       dir="rtl"
       style={{
-        background: "radial-gradient(ellipse at center, #00131f 0%, #000508 60%, #000 100%)",
-        color: "#e2e8f0",
+        background: "radial-gradient(ellipse at center, hsl(var(--deed-surface)) 0%, hsl(var(--deed-navy)) 48%, hsl(var(--deed-bg)) 100%)",
+        color: "hsl(var(--deed-text))",
       }}
     >
       {/* grid overlay */}
       <div
         className="absolute inset-0 pointer-events-none opacity-25"
         style={{
-          backgroundImage: `linear-gradient(${CYAN}10 1px, transparent 1px), linear-gradient(90deg, ${CYAN}10 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(hsl(var(--deed-cyan) / 0.08) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--deed-cyan) / 0.08) 1px, transparent 1px)`,
           backgroundSize: "30px 30px",
         }}
       />
@@ -51,12 +54,12 @@ const DigitalIndicators = () => {
       {/* Header */}
       <header
         className="relative px-4 py-4 flex items-center justify-between border-b"
-        style={{ borderColor: `${CYAN}30`, background: "rgba(0,8,20,0.7)", backdropFilter: "blur(8px)" }}
+        style={{ borderColor: "hsl(var(--deed-cyan) / 0.24)", background: "hsl(var(--deed-bg) / 0.78)", backdropFilter: "blur(8px)" }}
       >
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold"
-          style={{ background: `${CYAN}10`, border: `1px solid ${CYAN}50`, color: CYAN }}
+          style={{ background: "hsl(var(--deed-cyan) / 0.08)", border: "1px solid hsl(var(--deed-cyan) / 0.35)", color: CYAN }}
         >
           <ArrowRight className="w-4 h-4" />
           رجوع
@@ -65,13 +68,13 @@ const DigitalIndicators = () => {
           <h1 className="text-base md:text-lg font-extrabold" style={{ color: CYAN, textShadow: `0 0 12px ${CYAN}` }}>
             عُتيبي ذكي Ai: تحليل صك عقاري
           </h1>
-          <p className="text-[10px] mt-0.5" style={{ color: `${CYAN}aa` }}>
+          <p className="text-[10px] mt-0.5" style={{ color: CYAN_SOFT }}>
             نظام برمجي مؤتمت — Tactical Real-Estate Interface
           </p>
         </div>
         <div
           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px] font-bold"
-          style={{ background: `${CYAN}10`, border: `1px solid ${CYAN}60`, color: CYAN, boxShadow: `0 0 12px ${CYAN}40` }}
+          style={{ background: "hsl(var(--deed-cyan) / 0.08)", border: "1px solid hsl(var(--deed-cyan) / 0.45)", color: CYAN, boxShadow: "0 0 12px hsl(var(--deed-cyan) / 0.28)" }}
         >
           <Radio className="w-3 h-3 animate-pulse" />
           LIVE
@@ -81,11 +84,11 @@ const DigitalIndicators = () => {
       <main className="relative max-w-7xl mx-auto px-3 py-5 space-y-4">
         {/* Status banner */}
         <div
-          className="mx-auto w-fit px-5 py-2 rounded-full flex items-center gap-2"
+          className="mx-auto w-fit px-5 py-2 rounded-lg flex items-center gap-2"
           style={{
-            background: "rgba(0,8,20,0.8)",
-            border: `1.5px solid ${CYAN}`,
-            boxShadow: `0 0 25px ${CYAN}55, inset 0 0 12px ${CYAN}30`,
+            background: "hsl(var(--deed-bg) / 0.82)",
+            border: "1.5px solid hsl(var(--deed-cyan))",
+            boxShadow: "0 0 25px hsl(var(--deed-cyan) / 0.34), inset 0 0 12px hsl(var(--deed-cyan) / 0.18)",
           }}
         >
           <CheckCircle2 className="w-4 h-4" style={{ color: CYAN, filter: `drop-shadow(0 0 4px ${CYAN})` }} />
