@@ -123,18 +123,40 @@ const DeedAnalyzer = () => {
     setDeedData({ ...deedData, [key]: value });
   };
 
-  // === Auto-sanitization for Arabic text & numbers (pre-export) ===
+  // === Strong Arabic normalization layer (pre-export) ===
+  // Reduces encoding/glyph mismatches across PDF/PNG renderers by unifying
+  // letter variants, stripping invisible marks, and converting digits.
   const sanitizeArabic = (raw: string): string => {
     if (!raw) return "";
     let s = String(raw);
+    // Unicode canonical composition (joins decomposed marks)
+    try { s = s.normalize("NFKC"); } catch {}
+    // Strip BOM, zero-width, bidi controls, and replacement char
+    s = s.replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF\uFFFC\uFFFD]/g, "");
     // Convert Arabic-Indic & Persian digits to ASCII
-    s = s.replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)));
-    s = s.replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)));
-    // Normalize Alef forms & Yeh/Kaf variants
-    s = s.replace(/[إأآا]/g, "ا").replace(/ى/g, "ي").replace(/ك/g, "ك");
-    // Remove Tatweel and Arabic diacritics (tashkeel)
-    s = s.replace(/\u0640/g, "").replace(/[\u064B-\u065F\u0670]/g, "");
-    // Collapse whitespace
+    s = s.replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x0660));
+    s = s.replace(/[\u06F0-\u06F9]/g, (d) => String(d.charCodeAt(0) - 0x06F0));
+    // Alef forms (incl. Wasla / superscript) -> bare Alef
+    s = s.replace(/[\u0622\u0623\u0625\u0671\u0672\u0673]/g, "\u0627");
+    // Alef Maksura -> Yeh; Persian/Urdu Yeh & alt forms -> Arabic Yeh
+    s = s.replace(/[\u0649\u06CC\u064A\u06D2\u0626]/g, "\u064A");
+    // Persian/Urdu Kaf variants -> Arabic Kaf
+    s = s.replace(/[\u06A9\u06AA\u06AB\u0762\u0763\u0764]/g, "\u0643");
+    // Heh variants -> standard Heh
+    s = s.replace(/[\u06C1\u06BE\u06D5]/g, "\u0647");
+    // Taa Marbouta -> Heh (common normalization to reduce variance)
+    s = s.replace(/\u0629/g, "\u0647");
+    // Waw with Hamza -> Waw
+    s = s.replace(/\u0624/g, "\u0648");
+    // Standalone Hamza removal
+    s = s.replace(/\u0621/g, "");
+    // Remove Tatweel & all Arabic diacritics (tashkeel) incl. Quranic marks
+    s = s.replace(/\u0640/g, "");
+    s = s.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "");
+    // Normalize punctuation: Arabic comma/semicolon/question -> ASCII
+    s = s.replace(/\u060C/g, ",").replace(/\u061B/g, ";").replace(/\u061F/g, "?");
+    // Collapse whitespace (incl. NBSP / thin spaces)
+    s = s.replace(/[\u00A0\u2000-\u200A\u202F\u205F\u3000]/g, " ");
     s = s.replace(/\s+/g, " ").trim();
     return s;
   };
