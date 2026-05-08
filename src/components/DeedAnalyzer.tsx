@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import {
-  FileSearch, ShieldCheck, MapPin, Ruler, FileText, User,
-  Loader2, Zap, CheckCircle, UploadCloud, Edit3, Sparkles, Radio, Download,
+  FileSearch, ShieldCheck, FileText,
+  Loader2, Zap, CheckCircle, UploadCloud, Edit3, Radio, Download,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toPng } from "html-to-image";
