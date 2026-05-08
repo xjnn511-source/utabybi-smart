@@ -18,10 +18,10 @@ interface DeedData {
   district: string;
 }
 
-// Neon palette aligned with app branding
-const NEON_PINK = "#ff00ff";
-const NEON_PURPLE = "#bf5af2";
-const NEON_VIOLET = "#7c3aed";
+// Neon palette — strict Blue/Cyan tech theme (no green, no magenta)
+const NEON_PINK = "#00FFFF";   // cyan (kept name to minimize diff)
+const NEON_PURPLE = "#3b82f6"; // neon blue
+const NEON_VIOLET = "#1d4ed8"; // deep blue
 
 const DeedAnalyzer = () => {
   const [state, setState] = useState<AnalysisState>("idle");
@@ -127,7 +127,7 @@ const DeedAnalyzer = () => {
       const dataUrl = await toPng(deedPanelRef.current, {
         cacheBust: true,
         pixelRatio: 2,
-        backgroundColor: "#0a0014",
+        backgroundColor: "#000814",
       });
       const link = document.createElement("a");
       link.download = `deed-${deedData?.deedNumber || "document"}.png`;
@@ -143,7 +143,7 @@ const DeedAnalyzer = () => {
     <div
       className="relative overflow-hidden rounded-2xl p-5"
       style={{
-        background: "linear-gradient(160deg, #0a0014 0%, #1a0030 55%, #05000f 100%)",
+        background: "linear-gradient(160deg, #000010 0%, #001428 55%, #000008 100%)",
         border: `1px solid ${NEON_PINK}40`,
         boxShadow: `0 0 40px -8px ${NEON_PINK}40, inset 0 0 30px -10px ${NEON_PURPLE}20`,
       }}
@@ -209,7 +209,7 @@ const DeedAnalyzer = () => {
               onClick={() => fileInputRef.current?.click()}
               className="w-full h-36 mb-4 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all"
               style={{
-                background: "rgba(10,0,20,0.6)",
+                background: "rgba(0,8,20,0.6)",
                 border: file ? `2px dashed ${NEON_PURPLE}80` : `2px dashed ${NEON_PINK}60`,
                 boxShadow: file
                   ? `inset 0 0 25px ${NEON_PURPLE}25`
@@ -256,7 +256,7 @@ const DeedAnalyzer = () => {
             exit={{ opacity: 0 }}
             className="relative rounded-xl p-6 overflow-hidden"
             style={{
-              background: "rgba(10,0,20,0.7)",
+              background: "rgba(0,8,20,0.7)",
               border: `1px solid ${NEON_PINK}60`,
               boxShadow: `inset 0 0 40px ${NEON_PINK}15`,
             }}
@@ -359,7 +359,7 @@ const DeedAnalyzer = () => {
               ref={deedPanelRef}
               className="relative rounded-2xl p-5 overflow-hidden"
               style={{
-                background: "linear-gradient(145deg, rgba(26,0,48,0.95) 0%, rgba(10,0,20,0.95) 100%)",
+                background: "linear-gradient(145deg, rgba(0,20,40,0.95) 0%, rgba(0,8,20,0.95) 100%)",
                 border: `1.5px solid ${NEON_PINK}90`,
                 boxShadow: `0 0 35px ${NEON_PINK}50, inset 0 0 40px ${NEON_PURPLE}20`,
                 backdropFilter: "blur(14px)",
@@ -379,16 +379,43 @@ const DeedAnalyzer = () => {
                 />
               ))}
 
+              {/* Saudi Emblem (neon blue glow) */}
+              <div className="flex justify-center mb-2">
+                <div
+                  className="w-14 h-14 rounded-full flex items-center justify-center"
+                  style={{
+                    background: `radial-gradient(circle, ${NEON_PINK}25 0%, transparent 70%)`,
+                    border: `1.5px solid ${NEON_PINK}`,
+                    boxShadow: `0 0 18px ${NEON_PINK}, inset 0 0 12px ${NEON_PURPLE}80`,
+                  }}
+                >
+                  <svg viewBox="0 0 64 64" className="w-9 h-9" fill="none" stroke={NEON_PINK} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 4px ${NEON_PINK})` }}>
+                    {/* Palm tree */}
+                    <path d="M32 50 L32 28" />
+                    <path d="M32 28 C 22 22, 16 24, 14 30" />
+                    <path d="M32 28 C 42 22, 48 24, 50 30" />
+                    <path d="M32 28 C 26 18, 22 16, 18 18" />
+                    <path d="M32 28 C 38 18, 42 16, 46 18" />
+                    <path d="M32 28 C 30 20, 32 14, 32 12" />
+                    {/* Crossed swords */}
+                    <path d="M14 54 L30 42" />
+                    <path d="M50 54 L34 42" />
+                    <path d="M12 56 L16 52" />
+                    <path d="M52 56 L48 52" />
+                  </svg>
+                </div>
+              </div>
+
               {/* Deed Header */}
               <div className="text-center mb-4 pb-3" style={{ borderBottom: `1px dashed ${NEON_PINK}50` }}>
                 <p className="text-[10px] font-bold tracking-widest" style={{ color: NEON_PURPLE }}>
-                  UTAYBI SMART AI · DIGITAL DEED
+                  UTAYBI SMART AI · DIGITAL DEED CARD
                 </p>
                 <h3
                   className="text-base font-extrabold mt-1"
                   style={{ color: "#fff", textShadow: `0 0 10px ${NEON_PINK}` }}
                 >
-                  الوثيقة الرقمية المؤتمتة
+                  وثيقة مبايعة رقمية مؤتمتة
                 </h3>
                 <p className="text-[9px] mt-0.5" style={{ color: `${NEON_PINK}cc` }}>
                   معالجة برمجية مؤتمتة
@@ -408,7 +435,7 @@ const DeedAnalyzer = () => {
                     key={key}
                     className="rounded-lg p-2.5 transition-all"
                     style={{
-                      background: "rgba(10,0,20,0.6)",
+                      background: "rgba(0,8,20,0.6)",
                       border: `1px solid ${NEON_PINK}50`,
                       boxShadow: `inset 0 0 12px ${NEON_PINK}15, 0 0 6px ${NEON_PINK}25`,
                     }}
@@ -482,7 +509,7 @@ const DeedAnalyzer = () => {
                   onClick={handleReset}
                   className="h-10 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
                   style={{
-                    background: "rgba(10,0,20,0.7)",
+                    background: "rgba(0,8,20,0.7)",
                     border: `1px solid ${NEON_PURPLE}60`,
                     color: NEON_PURPLE,
                   }}
