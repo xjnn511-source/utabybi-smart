@@ -11,14 +11,14 @@ import { Progress } from "@/components/ui/progress";
 
 const engines = [
   { id: "OCR", title: "Document OCR", icon: FileSearch },
-  { id: "Analyst", title: "Smart Data Analyst", icon: BarChart3 },
+  { id: "Analyst", title: "Logic Data Processing", icon: BarChart3 },
   { id: "Silencer", title: "The Silencer", icon: VolumeX },
   { id: "Content", title: "Creative Content", icon: PenTool },
-  { id: "Video", title: "Video Montage", icon: Video },
+  { id: "Video", title: "Media Processing", icon: Video },
 ];
 
 const mockResults: Record<string, string> = {
-  Analyst: "تحليل البيانات: نمو بنسبة 15% متوقع",
+  Analyst: "معالجة البيانات: نمو بنسبة 15% متوقع",
   Silencer: "تم تنقية الصوت وحذف الصمت بنجاح",
   Content: "تم توليد المحتوى الذكي",
   Video: "تم إنشاء مونتاج الفيديو بنجاح",
@@ -92,13 +92,13 @@ const AiEnginePortal = () => {
         setScanProgress(100);
 
         if (error || !data?.success) {
-          throw new Error(data?.error || "فشل في تحليل الصورة");
+          throw new Error(data?.error || "فشل في معالجة الصورة");
         }
 
         setDeedData(data.data);
         toast({ title: "✅ تم استخراج بيانات الصك بنجاح" });
       } catch (err: any) {
-        toast({ title: err.message || "خطأ في التحليل", variant: "destructive" });
+        toast({ title: err.message || "خطأ في المعالجة", variant: "destructive" });
       } finally {
         setLoading(false);
       }
