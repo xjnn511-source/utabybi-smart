@@ -495,7 +495,7 @@ const DeedAnalyzer = () => {
               className="rounded-xl p-3"
               style={{
                 background: "hsl(var(--deed-bg) / 0.74)",
-                border: `1px solid ${NEON_PINK}40`,
+                border: `1px solid ${cyanA(0.25)}`,
               }}
             >
               <p className="text-[10px] font-bold mb-2" style={{ color: cyanA(0.8) }}>
@@ -518,7 +518,7 @@ const DeedAnalyzer = () => {
                     className="bg-transparent outline-none text-xs font-bold font-cairo rounded px-2 py-1.5"
                     style={{
                       color: DEED_TEXT,
-                      border: `1px solid ${NEON_PINK}50`,
+                      border: `1px solid ${cyanA(0.31)}`,
                       textShadow: `0 0 6px ${NEON_PINK}`,
                     }}
                   />
@@ -535,7 +535,7 @@ const DeedAnalyzer = () => {
                   style={{
                     background: `linear-gradient(135deg, ${NEON_PINK} 0%, ${NEON_VIOLET} 100%)`,
                     color: DEED_BG,
-                    boxShadow: `0 0 25px ${NEON_PINK}80`,
+                    boxShadow: `0 0 25px ${cyanA(0.5)}`,
                   }}
                 >
                   <Download className="w-4 h-4" strokeWidth={2.5} />
@@ -548,7 +548,7 @@ const DeedAnalyzer = () => {
                     background: "hsl(var(--deed-bg) / 0.85)",
                     color: NEON_PINK,
                     border: `1.5px solid ${NEON_PINK}`,
-                    boxShadow: `0 0 25px ${NEON_PINK}55, inset 0 0 14px ${NEON_PINK}25`,
+                    boxShadow: `0 0 25px ${cyanA(0.33)}, inset 0 0 14px ${cyanA(0.15)}`,
                   }}
                 >
                   <FileText className="w-4 h-4" strokeWidth={2.5} />
@@ -562,9 +562,9 @@ const DeedAnalyzer = () => {
                   className="h-10 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
                   style={{
                     background: cyanA(0.09),
-                    border: `1px solid ${NEON_PINK}70`,
+                    border: `1px solid ${cyanA(0.44)}`,
                     color: NEON_PINK,
-                    boxShadow: `0 0 12px ${NEON_PINK}30`,
+                    boxShadow: `0 0 12px ${cyanA(0.19)}`,
                   }}
                 >
                   <Edit3 className="w-3.5 h-3.5" />
@@ -575,7 +575,7 @@ const DeedAnalyzer = () => {
                   className="h-10 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
                   style={{
                     background: "hsl(var(--deed-bg) / 0.74)",
-                    border: `1px solid ${NEON_PURPLE}60`,
+                    border: `1px solid ${blueA(0.38)}`,
                     color: NEON_PURPLE,
                   }}
                 >
