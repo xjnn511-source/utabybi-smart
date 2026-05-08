@@ -18,7 +18,7 @@ const panel = "hsl(var(--deed-panel) / 0.78)";
 const line = "hsl(var(--deed-gold) / 0.68)";
 
 const valueOf = (v?: string) => v?.trim() || "—";
-const compact = (v?: string, _max = 16, fallback = "...") => {
+const compact = (v?: string, _max = 16, fallback = "غير واضح") => {
   const value = valueOf(v);
   if (value === "—") return fallback;
   return value;
@@ -71,7 +71,7 @@ const DigitalDeed = ({ deed, phone = false }: { deed: DeedVisualData; phone?: bo
     <div className="relative z-10 mx-auto mt-[4%] w-[72%]">
       <MiniField label="رقم الصك" value={compact(deed.deedNumber, phone ? 10 : 16)} />
       <MiniField label="المالك" value={compact(deed.owner, phone ? 9 : 15)} />
-      <MiniField label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "..."} />
+      <MiniField label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "غير واضح"} />
       {!phone && <MiniField label="الموقع" value={compact(locationOf(deed), 15)} />}
     </div>
     <div className="absolute bottom-[5%] left-[16%] right-[16%] h-px" style={{ background: "hsl(var(--deed-cyan) / 0.34)" }} />
@@ -185,7 +185,7 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
     <div className="absolute bottom-[13.2%] left-[31%] right-[2.4%] z-40 grid grid-cols-4 gap-[1.3%]">
       <Metric icon={FileText} label="رقم الصك" value={compact(deed.deedNumber, 13)} />
       <Metric icon={User} label="المالك" value={compact(deed.owner, 13)} />
-      <Metric icon={Ruler} label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "... م²"} />
+      <Metric icon={Ruler} label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "غير واضح"} />
       <Metric icon={MapPin} label="الموقع" value={compact(locationOf(deed), 14)} />
     </div>
 
