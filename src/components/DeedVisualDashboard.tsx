@@ -124,10 +124,10 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
     <OuterFrame className="right-[1.8%] top-[14%] h-[68%] w-[31%]" />
 
     <header className="absolute left-[17%] right-[17%] top-[5.5%] z-40 text-center">
-      <h2 className="truncate text-[28px] font-black leading-none" style={{ color: text, textShadow: "0 0 12px hsl(var(--deed-cyan) / 0.72)" }}>عُتيبي ذكي Ai: تحليل صك عقاري</h2>
+      <h2 className="truncate text-[11px] font-black leading-none sm:text-[20px] md:text-[28px]" style={{ color: text, textShadow: "0 0 12px hsl(var(--deed-cyan) / 0.72)" }}>عُتيبي ذكي Ai: تحليل صك عقاري</h2>
     </header>
-    <div className="absolute left-[43%] top-[13.5%] z-50 flex -translate-x-1/2 items-center gap-1 rounded-[8px] border px-3 py-1 text-[13px] font-black" style={{ color: text, borderColor: line, background: "hsl(var(--deed-bg) / 0.92)", boxShadow: "0 0 16px hsl(var(--deed-cyan) / 0.28)" }}>
-      <CheckCircle2 className="h-4 w-4" style={{ color: cyan }} />
+    <div className="absolute left-[43%] top-[13.5%] z-50 flex -translate-x-1/2 items-center gap-1 rounded-[8px] border px-2 py-0.5 text-[8px] font-black sm:px-3 sm:py-1 sm:text-[13px]" style={{ color: text, borderColor: line, background: "hsl(var(--deed-bg) / 0.92)", boxShadow: "0 0 16px hsl(var(--deed-cyan) / 0.28)" }}>
+      <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4" style={{ color: cyan }} />
       حالة الصك: محدّث وساري
     </div>
 
