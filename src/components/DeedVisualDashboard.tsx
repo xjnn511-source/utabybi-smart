@@ -95,7 +95,7 @@ const PhonePreview = ({ deed }: { deed: DeedVisualData }) => (
       <div className="absolute bottom-0 grid h-[11%] w-full grid-cols-4 border-t" style={{ borderColor: "hsl(var(--deed-gold) / 0.15)", background: "hsl(var(--deed-bg) / 0.92)" }}>
         {[Home, FileText, ShieldCheck, Smartphone].map((Icon, i) => (
           <div key={i} className="flex items-center justify-center">
-            <Icon className="h-[38%] w-[38%]" style={{ color: i === 0 ? mint : "hsl(var(--deed-muted) / 0.55)" }} />
+            <Icon className="h-[38%] w-[38%]" style={{ color: mint }} />
           </div>
         ))}
       </div>
