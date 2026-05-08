@@ -66,18 +66,18 @@ const DeedPaper = ({ deed, mini = false }: { deed: DeedVisualData; mini?: boolea
     </div>
 
     {/* deed body lines */}
-    <div className={`relative z-10 mx-auto mt-[4%] w-[82%] space-y-[3%] text-right ${mini ? "text-[6px] sm:text-[8px]" : "text-[8px] sm:text-[11px] md:text-[13px]"}`}>
-      <p style={{ color: ink, fontWeight: 800 }}>
-        رقم الصك: <span style={{ color: ink }}>{v(deed.deedNumber)}</span>
+    <div className={`relative z-10 mx-auto mt-[4%] w-[86%] space-y-[3%] text-right leading-tight ${mini ? "text-[5.5px] sm:text-[7px]" : "text-[7px] sm:text-[10px] md:text-[12px]"}`}>
+      <p className="flex items-center justify-between gap-1 whitespace-nowrap" style={{ color: ink, fontWeight: 800 }}>
+        <span>رقم الصك:</span> <span className="min-w-0 text-left" style={{ color: ink }}>{v(deed.deedNumber)}</span>
       </p>
-      <p style={{ color: ink, fontWeight: 800 }}>
-        رقم المالك: <span>تام</span>
+      <p className="flex items-center justify-between gap-1 whitespace-nowrap" style={{ color: ink, fontWeight: 800 }}>
+        <span>حالة الصك:</span> <span>ساري</span>
       </p>
-      <p style={{ color: ink, fontWeight: 800 }}>
-        المالك: <span>{v(deed.owner)}</span>
+      <p className="flex items-center justify-between gap-1 whitespace-nowrap" style={{ color: ink, fontWeight: 800 }}>
+        <span>المالك:</span> <span className="min-w-0 text-left">{v(deed.owner)}</span>
       </p>
-      <p style={{ color: ink, fontWeight: 800 }}>
-        المساحة: <span>{deed.area ? `${deed.area} م²` : "—"}</span>
+      <p className="flex items-center justify-between gap-1 whitespace-nowrap" style={{ color: ink, fontWeight: 800 }}>
+        <span>المساحة:</span> <span>{deed.area ? `${deed.area} م²` : "—"}</span>
       </p>
       {!mini && (
         <>
@@ -144,7 +144,7 @@ const PhonePreview = ({ deed }: { deed: DeedVisualData }) => (
 
 /* === Center deed (large) with waveform === */
 const CenterDeed = ({ deed }: { deed: DeedVisualData }) => (
-  <div className="absolute left-[31%] top-[14%] z-20 h-[58%] w-[37%]">
+  <div className="absolute left-[31%] top-[20%] z-20 h-[52%] w-[37%]">
     {/* match score pill */}
     <div
       className="absolute -top-[7%] left-1/2 z-30 -translate-x-1/2 rounded-[6px] border px-3 py-[1.4%] text-center text-[7px] font-black sm:text-[11px] md:text-[13px]"
@@ -206,13 +206,13 @@ const MapPanel = ({ deed }: { deed: DeedVisualData }) => (
 /* === Bottom metric chip === */
 const Metric = ({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) => (
   <div
-    className="flex min-w-0 items-center justify-between gap-2 rounded-[6px] border-2 px-[5%] py-[7%]"
+    className="flex min-w-0 items-center justify-between gap-2 rounded-[6px] border-2 px-[4%] py-[5%]"
     style={{ borderColor: gold, background: "hsl(var(--deed-ink) / 0.85)", boxShadow: `0 0 12px ${gold}33` }}
   >
     <Icon className="h-4 w-4 shrink-0 sm:h-6 sm:w-6" style={{ color: gold }} />
     <div className="min-w-0 flex-1 text-right leading-tight">
-      <p className="truncate text-[7px] font-black sm:text-[10px] md:text-[12px]" style={{ color: muted }}>{label}</p>
-      <p className="mt-[6%] truncate text-[8px] font-black sm:text-[12px] md:text-[14px]" style={{ color: goldSoft }}>{value}</p>
+      <p className="text-[6px] font-black sm:text-[9px] md:text-[11px]" style={{ color: muted }}>{label}</p>
+      <p className="mt-[4%] break-words text-[7px] font-black leading-tight sm:text-[10px] md:text-[12px]" style={{ color: goldSoft }}>{value}</p>
     </div>
   </div>
 );
@@ -239,8 +239,8 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
     <div className="absolute inset-[1.8%] rounded-[8px] border" style={{ borderColor: `${gold}66` }} />
 
     {/* Header (top right) */}
-    <header className="absolute right-[3%] top-[4%] z-40 flex items-center gap-2">
-      <h2 className="truncate text-[9px] font-black sm:text-[15px] md:text-[20px]" style={{ color: goldSoft, textShadow: `0 0 10px ${gold}88` }}>
+    <header className="absolute right-[3%] top-[4%] z-40 flex max-w-[58%] items-center gap-2">
+      <h2 className="whitespace-nowrap text-[8px] font-black sm:text-[14px] md:text-[18px]" style={{ color: goldSoft, textShadow: `0 0 10px ${gold}88` }}>
         عُتيبي ذكي Ai: تحليل صك عقاري
       </h2>
       <svg viewBox="0 0 30 30" className="h-4 w-4 sm:h-6 sm:w-6" aria-hidden="true">
@@ -249,9 +249,9 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
       </svg>
     </header>
 
-    {/* Status pill (top center) */}
+    {/* Status pill (below header, without covering brand) */}
     <div
-      className="absolute left-1/2 top-[5.5%] z-50 flex -translate-x-1/2 items-center gap-1.5 rounded-[8px] border-2 px-3 py-[1%] text-[8px] font-black sm:text-[12px] md:text-[15px]"
+      className="absolute right-[3%] top-[14%] z-50 flex items-center gap-1.5 rounded-[8px] border-2 px-3 py-[1%] text-[7px] font-black sm:text-[11px] md:text-[13px]"
       style={{ color: goldSoft, borderColor: gold, background: "hsl(var(--deed-ink) / 0.92)", boxShadow: `0 0 14px ${gold}55` }}
     >
       حالة الصك: محدّث وساري
