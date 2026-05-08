@@ -4,7 +4,7 @@ import {
   Loader2, Zap, CheckCircle, UploadCloud, Edit3, Radio, Download, Copy,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { toPng } from "html-to-image";
+import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
