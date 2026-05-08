@@ -141,6 +141,50 @@ const DeedAnalyzer = () => {
     }
   };
 
+  const handleDownloadPdf = async () => {
+    if (!deedPanelRef.current) return;
+    try {
+      const dataUrl = await toPng(deedPanelRef.current, {
+        cacheBust: true,
+        pixelRatio: 3,
+        backgroundColor: "#000814",
+      });
+      const img = new Image();
+      img.src = dataUrl;
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
+
+      const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4", compress: true });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const margin = 8;
+      pdf.setFillColor(0, 8, 20);
+      pdf.rect(0, 0, pageW, pageH, "F");
+
+      const maxW = pageW - margin * 2;
+      const maxH = pageH - margin * 2 - 12;
+      const ratio = img.width / img.height;
+      let w = maxW;
+      let h = w / ratio;
+      if (h > maxH) { h = maxH; w = h * ratio; }
+      const x = (pageW - w) / 2;
+      pdf.addImage(dataUrl, "PNG", x, margin, w, h, undefined, "FAST");
+
+      pdf.setTextColor(0, 255, 255);
+      pdf.setFontSize(9);
+      pdf.text("UTAYBI SMART AI HUB - DIGITAL DEED CARD", pageW / 2, pageH - 6, { align: "center" });
+      pdf.setTextColor(170, 170, 170);
+      pdf.setFontSize(7);
+      pdf.text(
+        `Deed: ${deedData?.deedNumber || "-"}   |   ${new Date().toLocaleString("en-GB")}`,
+        pageW / 2, pageH - 2, { align: "center" }
+      );
+      pdf.save(`utaybi-deed-${deedData?.deedNumber || "document"}.pdf`);
+      toast({ title: "تم تصدير الوثيقة كملف PDF", description: "جودة طباعة عالية" });
+    } catch (err: any) {
+      toast({ title: "فشل تصدير PDF", description: err.message, variant: "destructive" });
+    }
+  };
+
   return (
     <div
       className="relative overflow-hidden rounded-2xl p-5"
