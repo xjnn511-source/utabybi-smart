@@ -20,10 +20,12 @@ interface DeedData {
   district: string;
 }
 
-// Neon palette — strict Blue/Cyan tech theme (no green, no magenta)
-const NEON_PINK = "#00FFFF";   // cyan (kept name to minimize diff)
-const NEON_PURPLE = "#3b82f6"; // neon blue
-const NEON_VIOLET = "#1d4ed8"; // deep blue
+// Neon palette — strict app theme via semantic HSL tokens (cyan/black only)
+const NEON_PINK = "hsl(var(--deed-cyan))";   // cyan (kept name to minimize diff)
+const NEON_PURPLE = "hsl(var(--deed-blue))"; // neon blue
+const NEON_VIOLET = "hsl(var(--accent))"; // app blue accent
+const DEED_BG = "hsl(var(--deed-bg))";
+const DEED_TEXT = "hsl(var(--deed-text))";
 
 const DeedAnalyzer = () => {
   const [state, setState] = useState<AnalysisState>("idle");
