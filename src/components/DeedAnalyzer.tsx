@@ -674,18 +674,33 @@ const DeedAnalyzer = () => {
 
             {/* Action Buttons */}
             <div className="space-y-2 pt-1">
-              <button
-                onClick={handleDownload}
-                className="w-full h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
-                style={{
-                  background: `linear-gradient(135deg, ${NEON_PINK} 0%, ${NEON_VIOLET} 100%)`,
-                  color: "#fff",
-                  boxShadow: `0 0 30px ${NEON_PINK}80, 0 0 60px ${NEON_PURPLE}40`,
-                }}
-              >
-                <Download className="w-4 h-4" strokeWidth={2.5} />
-                تحميل الوثيقة
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={handleDownload}
+                  className="h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                  style={{
+                    background: `linear-gradient(135deg, ${NEON_PINK} 0%, ${NEON_VIOLET} 100%)`,
+                    color: "#000814",
+                    boxShadow: `0 0 25px ${NEON_PINK}80`,
+                  }}
+                >
+                  <Download className="w-4 h-4" strokeWidth={2.5} />
+                  تحميل PNG
+                </button>
+                <button
+                  onClick={handleDownloadPdf}
+                  className="h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                  style={{
+                    background: "rgba(0,8,20,0.85)",
+                    color: NEON_PINK,
+                    border: `1.5px solid ${NEON_PINK}`,
+                    boxShadow: `0 0 25px ${NEON_PINK}55, inset 0 0 14px ${NEON_PINK}25`,
+                  }}
+                >
+                  <FileText className="w-4 h-4" strokeWidth={2.5} />
+                  تصدير PDF
+                </button>
+              </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <button
