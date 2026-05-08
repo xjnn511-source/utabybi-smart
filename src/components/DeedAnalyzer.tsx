@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   FileSearch, ShieldCheck, FileText,
   Loader2, Zap, CheckCircle, UploadCloud, Edit3, Radio, Download, Copy,
