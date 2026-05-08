@@ -386,7 +386,7 @@ const DeedAnalyzer = () => {
             exit={{ opacity: 0 }}
             className="relative rounded-xl p-6 overflow-hidden"
             style={{
-              background: "rgba(0,8,20,0.7)",
+              background: "hsl(var(--deed-bg) / 0.74)",
               border: `1px solid ${NEON_PINK}60`,
               boxShadow: `inset 0 0 40px ${NEON_PINK}15`,
             }}
@@ -434,7 +434,7 @@ const DeedAnalyzer = () => {
                     ) : (
                       <Zap className="w-3.5 h-3.5 animate-pulse" style={{ color: NEON_PINK }} />
                     )}
-                    <span className="text-[11px]" style={{ color: "#f5d0fe" }}>{step}</span>
+                    <span className="text-[11px]" style={{ color: DEED_TEXT }}>{step}</span>
                   </motion.div>
                 ))}
               </div>
@@ -492,7 +492,7 @@ const DeedAnalyzer = () => {
             <div
               className="rounded-xl p-3"
               style={{
-                background: "rgba(0,8,20,0.7)",
+                background: "hsl(var(--deed-bg) / 0.74)",
                 border: `1px solid ${NEON_PINK}40`,
               }}
             >
@@ -515,7 +515,7 @@ const DeedAnalyzer = () => {
                     onChange={(e) => updateField(key, e.target.value)}
                     className="bg-transparent outline-none text-xs font-bold font-cairo rounded px-2 py-1.5"
                     style={{
-                      color: "#fff",
+                      color: DEED_TEXT,
                       border: `1px solid ${NEON_PINK}50`,
                       textShadow: `0 0 6px ${NEON_PINK}`,
                     }}
@@ -532,7 +532,7 @@ const DeedAnalyzer = () => {
                   className="h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
                   style={{
                     background: `linear-gradient(135deg, ${NEON_PINK} 0%, ${NEON_VIOLET} 100%)`,
-                    color: "#000814",
+                    color: DEED_BG,
                     boxShadow: `0 0 25px ${NEON_PINK}80`,
                   }}
                 >
@@ -543,7 +543,7 @@ const DeedAnalyzer = () => {
                   onClick={handleDownloadPdf}
                   className="h-12 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
                   style={{
-                    background: "rgba(0,8,20,0.85)",
+                    background: "hsl(var(--deed-bg) / 0.85)",
                     color: NEON_PINK,
                     border: `1.5px solid ${NEON_PINK}`,
                     boxShadow: `0 0 25px ${NEON_PINK}55, inset 0 0 14px ${NEON_PINK}25`,
@@ -572,7 +572,7 @@ const DeedAnalyzer = () => {
                   onClick={handleReset}
                   className="h-10 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
                   style={{
-                    background: "rgba(0,8,20,0.7)",
+                    background: "hsl(var(--deed-bg) / 0.74)",
                     border: `1px solid ${NEON_PURPLE}60`,
                     color: NEON_PURPLE,
                   }}
