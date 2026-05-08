@@ -10,18 +10,18 @@ import { toast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
 
 const engines = [
-  { id: "OCR", title: "معالج الوثائق", icon: FileSearch },
-  { id: "Analyst", title: "معالجة البيانات البرمجية", icon: BarChart3 },
-  { id: "Silencer", title: "محرك الأتمتة الصامتة", icon: VolumeX },
-  { id: "Content", title: "توليد الحلول البرمجية", icon: PenTool },
-  { id: "Video", title: "معالجة الوسائط الرقمية", icon: Video },
+  { id: "معالج الوثائق", title: "معالج الوثائق", icon: FileSearch },
+  { id: "معالجة البيانات", title: "معالجة البيانات البرمجية", icon: BarChart3 },
+  { id: "الأتمتة الصامتة", title: "محرك الأتمتة الصامتة", icon: VolumeX },
+  { id: "توليد الحلول", title: "توليد الحلول البرمجية", icon: PenTool },
+  { id: "معالجة الوسائط", title: "معالجة الوسائط الرقمية", icon: Video },
 ];
 
 const mockResults: Record<string, string> = {
-  Analyst: "معالجة البيانات: نمو بنسبة 15% متوقع",
-  Silencer: "تم تنقية الصوت وحذف الصمت بنجاح",
-  Content: "تم توليد الحلول البرمجية",
-  Video: "تمت معالجة الوسائط الرقمية بنجاح",
+  "معالجة البيانات": "معالجة البيانات: نمو بنسبة 15% متوقع",
+  "الأتمتة الصامتة": "تم تنقية الصوت وحذف الصمت بنجاح",
+  "توليد الحلول": "تم توليد الحلول البرمجية",
+  "معالجة الوسائط": "تمت معالجة الوسائط الرقمية بنجاح",
 };
 
 interface DeedData {
@@ -34,7 +34,7 @@ interface DeedData {
 
 const AiEnginePortal = () => {
   const [loading, setLoading] = useState(false);
-  const [activeEngine, setActiveEngine] = useState("OCR");
+  const [activeEngine, setActiveEngine] = useState("معالج الوثائق");
   const [file, setFile] = useState<File | null>(null);
   const [scanProgress, setScanProgress] = useState(0);
   const [deedData, setDeedData] = useState<DeedData | null>(null);
@@ -53,7 +53,7 @@ const AiEnginePortal = () => {
     const selected = e.target.files?.[0];
     if (!selected) return;
     if (selected.size > 10 * 1024 * 1024) {
-      toast({ title: "حجم الملف كبير جداً (الحد: 10MB)", variant: "destructive" });
+      toast({ title: "حجم الملف كبير جداً (الحد: 10 ميجابايت)", variant: "destructive" });
       return;
     }
     setFile(selected);
@@ -72,8 +72,8 @@ const AiEnginePortal = () => {
     setGenericResult(null);
     setScanProgress(0);
 
-    // OCR engine → real Vision AI
-    if (activeEngine === "OCR") {
+    // محرك الوثائق عبر نظام الرؤية البرمجية
+    if (activeEngine === "معالج الوثائق") {
       try {
         // Scanning animation
         const interval = setInterval(() => {
@@ -105,7 +105,7 @@ const AiEnginePortal = () => {
       return;
     }
 
-    // Other engines → mock
+    // بقية المحركات
     setTimeout(() => {
       setLoading(false);
       setGenericResult({
@@ -188,7 +188,7 @@ const AiEnginePortal = () => {
         </div>
 
         {/* Scan progress */}
-        {loading && activeEngine === "OCR" && (
+        {loading && activeEngine === "معالج الوثائق" && (
           <div className="mb-4 relative z-10">
             <Progress value={scanProgress} className="h-2 bg-secondary" />
             <p className="text-[9px] text-primary font-mono text-center mt-1">
@@ -207,7 +207,7 @@ const AiEnginePortal = () => {
         </button>
       </div>
 
-      {/* OCR Results - Deed Data */}
+      {/* نتائج معالجة الوثيقة */}
       <AnimatePresence>
         {deedData && (
           <motion.div

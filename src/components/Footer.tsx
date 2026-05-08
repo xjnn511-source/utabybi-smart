@@ -32,7 +32,7 @@ const Footer = () => {
               <span className="text-[9px] font-bold text-foreground">دفع</span>
             </div>
             <div className="border-2 border-primary/40 rounded-md px-3 py-1.5">
-              <span className="text-[11px] font-black tracking-tight text-primary">mada</span>
+              <span className="text-[11px] font-black tracking-tight text-primary">مدى</span>
             </div>
             <div className="border border-border rounded-md px-2.5 py-1 flex items-center gap-0.5">
               <div className="w-3.5 h-3.5 rounded-full bg-red-500 -mr-1 opacity-90" />

@@ -38,10 +38,10 @@ const Index = () => {
           {/* News Ticker */}
           <div className="bg-card/80 border-b border-border overflow-hidden py-2.5">
             <div className="animate-marquee whitespace-nowrap flex gap-10 text-[11px] font-bold text-primary">
-              <span>✨ تم تحديث دقة محرك OCR إلى 99.8%</span>
+              <span>✨ تم تحديث دقة محرك قراءة الوثائق إلى 99.8%</span>
               <span>🚀 تسريع عمليات معالجة الصكوك التقنية</span>
               <span>📊 معالجة 10,000 نقطة بيانات لتحديث السوق</span>
-              <span>✨ تم تحديث دقة محرك OCR إلى 99.8%</span>
+              <span>✨ تم تحديث دقة محرك قراءة الوثائق إلى 99.8%</span>
               <span>🚀 تسريع عمليات معالجة الصكوك التقنية</span>
             </div>
           </div>
@@ -50,16 +50,16 @@ const Index = () => {
             {/* Quick Access Grid */}
             <ServiceQuickGrid />
 
-            {/* Deed Analyzer - Hero Feature */}
+            {/* نظام معالجة الوثائق */}
             <DeedAnalyzer />
 
-            {/* AI Engine Portal */}
+            {/* بوابة المحركات البرمجية */}
             <AiEnginePortal />
 
             {/* Digital Compliance Section */}
             <ComplianceSection />
 
-            {/* AI Engines Section Header */}
+            {/* عنوان محركات المعالجة */}
             <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
               <LayoutGrid className="w-4 h-4 text-primary" />
               محركات المعالجة والأنظمة البرمجية المؤتمتة
