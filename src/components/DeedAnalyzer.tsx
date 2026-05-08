@@ -97,7 +97,7 @@ const DeedAnalyzer = () => {
       setScanProgress(0);
       setState("error");
       toast({
-        title: "فشل التحليل",
+        title: "فشل المعالجة",
         description: err.message || "يرجى المحاولة مرة أخرى",
         variant: "destructive",
       });
