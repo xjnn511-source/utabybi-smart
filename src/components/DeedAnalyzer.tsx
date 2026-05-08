@@ -37,6 +37,7 @@ const DeedAnalyzer = () => {
   const [, setEditMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const deedPanelRef = useRef<HTMLDivElement>(null);
+  const autoExportedRef = useRef<string | null>(null);
 
   const fileToBase64 = (f: File): Promise<string> =>
     new Promise((resolve, reject) => {
