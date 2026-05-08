@@ -189,8 +189,8 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
       <Metric icon={MapPin} label="الموقع" value={compact(locationOf(deed), 14)} />
     </div>
 
-    <div className="absolute bottom-[3.2%] left-[34%] right-[34%] z-40 rounded-t-[12px] border-t px-2 pt-[1.4%] text-center text-[6px] font-black leading-none sm:text-[10px] md:text-[12px]" style={{ color: goldSoft, borderColor: "hsl(var(--deed-gold) / 0.28)", textShadow: "0 0 10px hsl(var(--deed-gold) / 0.45)" }}>
-      عُتيبي ذكي Ai: نحلل بالرؤية والصوت
+    <div className="absolute bottom-[3.2%] left-[30%] right-[30%] z-40 rounded-t-[12px] border-t px-2 pt-[1.6%] text-center text-[7px] font-black leading-tight sm:text-[11px] md:text-[13px]" style={{ color: goldSoft, borderColor: "hsl(var(--deed-gold) / 0.28)", textShadow: "0 0 10px hsl(var(--deed-gold) / 0.45)", letterSpacing: "0.06em" }}>
+      عُتيبي ذكي Ai · نحلل بالرؤية والصوت
     </div>
 
     <div className="absolute bottom-[3.5%] right-[3.8%] z-40 text-[18px] leading-none sm:text-[30px]" style={{ color: gold, textShadow: "0 0 14px hsl(var(--deed-gold) / 0.45)" }}>✦</div>
