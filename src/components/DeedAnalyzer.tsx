@@ -272,6 +272,19 @@ const DeedAnalyzer = () => {
     }
   };
 
+  // Auto-export PDF once when analysis completes successfully
+  useEffect(() => {
+    if (state !== "done" || !deedData) return;
+    const key = `${deedData.deedNumber}|${deedData.owner}`;
+    if (autoExportedRef.current === key) return;
+    autoExportedRef.current = key;
+    const t = setTimeout(() => {
+      handleDownloadPdf();
+    }, 900);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, deedData]);
+
   const handleCopyData = async () => {
     if (!deedData) return;
     const lines = [
