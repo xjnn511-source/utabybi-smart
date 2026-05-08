@@ -48,14 +48,19 @@
     --sidebar-border: 260 30% 15%;
     --sidebar-ring: 292 84% 61%;
 
-    --deed-bg: 230 100% 2%;
-    --deed-navy: 215 100% 6%;
-    --deed-surface: 206 100% 8%;
-    --deed-panel: 207 100% 10%;
-    --deed-cyan: 180 100% 50%;
-    --deed-blue: 217 91% 60%;
-    --deed-text: 190 100% 92%;
-    --deed-muted: 190 60% 70%;
+    --deed-bg: 155 45% 6%;
+    --deed-navy: 155 50% 9%;
+    --deed-surface: 155 40% 12%;
+    --deed-panel: 155 45% 10%;
+    --deed-cyan: 158 70% 45%;
+    --deed-blue: 155 60% 35%;
+    --deed-text: 45 70% 88%;
+    --deed-muted: 155 35% 65%;
+    --deed-gold: 42 75% 62%;
+    --deed-gold-soft: 42 60% 78%;
+    --deed-parchment: 38 55% 86%;
+    --deed-parchment-deep: 36 45% 72%;
+    --deed-ink: 155 70% 14%;
   }
 }
 
