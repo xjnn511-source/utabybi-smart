@@ -111,7 +111,7 @@ const Metric = ({ icon: Icon, label, value }: { icon: LucideIcon; label: string;
 export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
   <section
     dir="rtl"
-    className="relative mx-auto aspect-[1.618/1] w-full min-w-[760px] max-w-[980px] overflow-hidden rounded-[18px] border font-cairo notranslate"
+    className="relative mx-auto aspect-[1.618/1] w-full max-w-[980px] overflow-hidden rounded-[18px] border font-cairo notranslate"
     style={{
       background: "radial-gradient(circle at 19% 40%, hsl(var(--deed-cyan) / 0.18), transparent 20%), radial-gradient(circle at 50% 42%, hsl(var(--deed-cyan) / 0.1), transparent 30%), linear-gradient(90deg, hsl(var(--deed-bg)), hsl(var(--deed-surface) / 0.92), hsl(var(--deed-bg)))",
       borderColor: "hsl(var(--deed-cyan) / 0.62)",
