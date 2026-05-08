@@ -142,7 +142,7 @@ const MapPanel = ({ deed }: { deed: DeedVisualData }) => (
 
 const Metric = ({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) => (
   <div className="flex min-w-0 items-center justify-between gap-[4%] rounded-[6px] border px-[5%] py-[5%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 14px hsl(var(--deed-gold) / 0.16)" }}>
-    <Icon className="h-4 w-4 shrink-0 sm:h-6 sm:w-6 md:h-7 md:w-7" style={{ color: gold }} />
+    <Icon className="h-4 w-4 shrink-0 sm:h-6 sm:w-6 md:h-7 md:w-7" style={{ color: mint }} />
     <div className="min-w-0 flex-1 text-right leading-none">
       <p className="truncate text-[6px] font-black sm:text-[9px] md:text-[11px]" style={{ color: muted }}>{label}</p>
       <p className="mt-[5%] truncate text-[7px] font-black sm:text-[11px] md:text-[13px]" style={{ color: text }}>{value}</p>
