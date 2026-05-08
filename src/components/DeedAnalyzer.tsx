@@ -4,7 +4,7 @@ import {
   Loader2, Zap, CheckCircle, UploadCloud, Edit3, Radio, Download, Copy,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -211,16 +211,20 @@ const DeedAnalyzer = () => {
 
   const captureDeed = async (): Promise<string> => {
     const node = deedPanelRef.current!;
-    const canvas = await html2canvas(node, {
+    // Wait for fonts (Cairo) to load before capturing — fixes Arabic ligature breaks
+    try { await (document as any).fonts?.ready; } catch {}
+    // html-to-image uses SVG foreignObject which preserves native Arabic shaping
+    // (unlike html2canvas which re-implements text layout and breaks ligatures)
+    const dataUrl = await toPng(node, {
       backgroundColor: "#000814",
-      scale: 3,
-      useCORS: true,
-      allowTaint: true,
-      logging: false,
-      windowWidth: node.scrollWidth,
-      windowHeight: node.scrollHeight,
+      pixelRatio: 3,
+      cacheBust: true,
+      skipFonts: false,
+      style: {
+        fontFamily: "'Cairo', system-ui, sans-serif",
+      },
     });
-    return canvas.toDataURL("image/png");
+    return dataUrl;
   };
 
   const handleDownload = async () => {
