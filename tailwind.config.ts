@@ -60,6 +60,11 @@ export default {
           blue: "hsl(var(--deed-blue))",
           text: "hsl(var(--deed-text))",
           muted: "hsl(var(--deed-muted))",
+          gold: "hsl(var(--deed-gold))",
+          "gold-soft": "hsl(var(--deed-gold-soft))",
+          parchment: "hsl(var(--deed-parchment))",
+          "parchment-deep": "hsl(var(--deed-parchment-deep))",
+          ink: "hsl(var(--deed-ink))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import {
   FileSearch, ShieldCheck, FileText,
-  Loader2, Zap, CheckCircle, UploadCloud, Edit3, Radio, Download,
+  Loader2, Zap, CheckCircle, UploadCloud, Edit3, Radio, Download, Copy,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toPng } from "html-to-image";
@@ -268,6 +268,24 @@ const DeedAnalyzer = () => {
       toast({ title: "تم تصدير الوثيقة كملف PDF", description: "جودة طباعة عالية" });
     } catch (err: any) {
       toast({ title: "فشل تصدير PDF", description: err.message, variant: "destructive" });
+    }
+  };
+
+  const handleCopyData = async () => {
+    if (!deedData) return;
+    const lines = [
+      `صك عقاري رقمي - عُتيبي ذكي Ai`,
+      `رقم الصك: ${deedData.deedNumber || "—"}`,
+      `المالك: ${deedData.owner || "—"}`,
+      `المساحة: ${deedData.area ? `${deedData.area} م²` : "—"}`,
+      `المدينة: ${deedData.city || "—"}`,
+      `الحي: ${deedData.district || "—"}`,
+    ].join("\n");
+    try {
+      await navigator.clipboard.writeText(lines);
+      toast({ title: "تم نسخ بيانات الصك", description: "يمكنك لصقها في أي مكان" });
+    } catch (err: any) {
+      toast({ title: "فشل النسخ", description: err.message, variant: "destructive" });
     }
   };
 
@@ -555,6 +573,20 @@ const DeedAnalyzer = () => {
                   تصدير PDF
                 </button>
               </div>
+
+              <button
+                onClick={handleCopyData}
+                className="w-full h-11 text-sm font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                style={{
+                  background: "hsl(var(--deed-ink) / 0.78)",
+                  color: "hsl(var(--deed-gold-soft))",
+                  border: `1.5px solid hsl(var(--deed-gold) / 0.6)`,
+                  boxShadow: `0 0 18px hsl(var(--deed-gold) / 0.28)`,
+                }}
+              >
+                <Copy className="w-4 h-4" strokeWidth={2.5} />
+                نسخ بيانات الصك
+              </button>
 
               <div className="grid grid-cols-2 gap-2">
                 <button
