@@ -18,10 +18,10 @@ const panel = "hsl(var(--deed-panel) / 0.78)";
 const line = "hsl(var(--deed-gold) / 0.68)";
 
 const valueOf = (v?: string) => v?.trim() || "—";
-const compact = (v?: string, max = 16, fallback = "...") => {
+const compact = (v?: string, _max = 16, fallback = "غير واضح") => {
   const value = valueOf(v);
   if (value === "—") return fallback;
-  return value.length > max ? `...${value.slice(-(max - 3))}` : value;
+  return value;
 };
 const locationOf = (d: DeedVisualData) => [d.city, d.district].filter(Boolean).join(" - ") || "—";
 
@@ -47,9 +47,9 @@ const ConnectorLines = () => (
 );
 
 const MiniField = ({ label, value }: { label: string; value: string }) => (
-  <div className="grid grid-cols-[1fr_0.78fr] items-center gap-[10%] border-b py-[4.5%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.28)" }}>
-    <span className="truncate text-left text-[8px] font-black leading-tight sm:text-[12px] md:text-[14px]" style={{ color: text, letterSpacing: "0.05em" }}>{value}</span>
-    <span className="text-right text-[7px] font-black leading-tight sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: "0.08em" }}>{label}</span>
+  <div className="grid grid-cols-[minmax(0,1fr)_0.7fr] items-center gap-[7%] border-b py-[3.6%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.28)" }}>
+    <span dir="auto" className="min-w-0 break-words text-left text-[7px] font-black leading-[1.15] sm:text-[10px] md:text-[12px]" style={{ color: text, letterSpacing: 0 }}>{value}</span>
+    <span className="text-right text-[7px] font-black leading-tight sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: 0 }}>{label}</span>
   </div>
 );
 
@@ -71,10 +71,10 @@ const DigitalDeed = ({ deed, phone = false }: { deed: DeedVisualData; phone?: bo
     <div className="relative z-10 mx-auto mt-[4%] w-[72%]">
       <MiniField label="رقم الصك" value={compact(deed.deedNumber, phone ? 10 : 16)} />
       <MiniField label="المالك" value={compact(deed.owner, phone ? 9 : 15)} />
-      <MiniField label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "..."} />
+      <MiniField label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "غير واضح"} />
       {!phone && <MiniField label="الموقع" value={compact(locationOf(deed), 15)} />}
     </div>
-    <div className="absolute bottom-[7%] left-[16%] right-[16%] h-px" style={{ background: "hsl(var(--deed-cyan) / 0.34)" }} />
+    <div className="absolute bottom-[5%] left-[16%] right-[16%] h-px" style={{ background: "hsl(var(--deed-cyan) / 0.34)" }} />
   </div>
 );
 
@@ -90,7 +90,7 @@ const PhonePreview = ({ deed }: { deed: DeedVisualData }) => (
       </div>
       <div className="absolute inset-x-[7%] bottom-[14%] rounded-[7px] border px-[7%] py-[4%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 12px hsl(var(--deed-gold) / 0.18)" }}>
         <p className="text-center text-[6px] font-black leading-none sm:text-[8px]" style={{ color: muted }}>رقم الصك</p>
-        <p className="mt-[4%] truncate text-center text-[7px] font-black leading-none sm:text-[11px] md:text-[13px]" style={{ color: text }}>{compact(deed.deedNumber, 12)}</p>
+        <p dir="ltr" className="mt-[4%] break-all text-center text-[6px] font-black leading-tight sm:text-[9px] md:text-[11px]" style={{ color: text }}>{compact(deed.deedNumber, 12)}</p>
       </div>
       <div className="absolute bottom-0 grid h-[11%] w-full grid-cols-4 border-t" style={{ borderColor: "hsl(var(--deed-gold) / 0.15)", background: "hsl(var(--deed-bg) / 0.92)" }}>
         {[Home, FileText, ShieldCheck, Smartphone].map((Icon, i) => (
@@ -134,18 +134,18 @@ const MapPanel = ({ deed }: { deed: DeedVisualData }) => (
       <motion.div className="absolute -inset-5 rounded-full" style={{ background: "hsl(var(--deed-gold) / 0.3)", filter: "blur(12px)" }} animate={{ scale: [1, 1.35, 1], opacity: [0.75, 0.18, 0.75] }} transition={{ duration: 1.8, repeat: Infinity }} />
       <MapPin className="relative h-8 w-8 sm:h-12 sm:w-12 md:h-14 md:w-14" style={{ color: gold, fill: gold, filter: "drop-shadow(0 0 12px hsl(var(--deed-gold)))" }} />
     </div>
-    <p className="absolute bottom-[7%] left-[8%] right-[8%] truncate rounded-[5px] border px-2 py-[3%] text-center text-[6px] font-black leading-none sm:text-[10px] md:text-[12px]" style={{ color: text, borderColor: "hsl(var(--deed-gold) / 0.42)", background: "hsl(var(--deed-bg) / 0.82)", textShadow: "0 0 8px hsl(var(--deed-gold) / 0.55)" }}>
+    <p className="absolute bottom-[7%] left-[8%] right-[8%] break-words rounded-[5px] border px-2 py-[2.5%] text-center text-[6px] font-black leading-tight sm:text-[9px] md:text-[11px]" style={{ color: text, borderColor: "hsl(var(--deed-gold) / 0.42)", background: "hsl(var(--deed-bg) / 0.82)", textShadow: "0 0 8px hsl(var(--deed-gold) / 0.55)" }}>
       {compact(locationOf(deed), 20)}
     </p>
   </div>
 );
 
 const Metric = ({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) => (
-  <div className="flex min-w-0 items-center justify-between gap-[5%] rounded-[6px] border px-[5%] py-[6%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 14px hsl(var(--deed-gold) / 0.16)" }}>
+  <div className="flex min-w-0 items-center justify-between gap-[5%] rounded-[6px] border px-[5%] py-[4.5%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 14px hsl(var(--deed-gold) / 0.16)" }}>
     <Icon className="h-4 w-4 shrink-0 sm:h-6 sm:w-6 md:h-7 md:w-7" style={{ color: mint }} />
     <div className="min-w-0 flex-1 text-right leading-tight">
-      <p className="truncate text-[7px] font-black sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: "0.06em" }}>{label}</p>
-      <p className="mt-[8%] truncate text-[8px] font-black sm:text-[12px] md:text-[14px]" style={{ color: text, letterSpacing: "0.05em" }}>{value}</p>
+      <p className="text-[7px] font-black sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: 0 }}>{label}</p>
+      <p dir="auto" className="mt-[5%] break-words text-[7px] font-black leading-[1.15] sm:text-[10px] md:text-[12px]" style={{ color: text, letterSpacing: 0 }}>{value}</p>
     </div>
   </div>
 );
@@ -182,10 +182,10 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
     <CenterDeed deed={deed} />
     <MapPanel deed={deed} />
 
-    <div className="absolute bottom-[14%] left-[31%] right-[2.4%] z-40 grid grid-cols-4 gap-[1.3%]">
+    <div className="absolute bottom-[13.2%] left-[31%] right-[2.4%] z-40 grid grid-cols-4 gap-[1.3%]">
       <Metric icon={FileText} label="رقم الصك" value={compact(deed.deedNumber, 13)} />
       <Metric icon={User} label="المالك" value={compact(deed.owner, 13)} />
-      <Metric icon={Ruler} label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "... م²"} />
+      <Metric icon={Ruler} label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "غير واضح"} />
       <Metric icon={MapPin} label="الموقع" value={compact(locationOf(deed), 14)} />
     </div>
 
