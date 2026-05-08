@@ -144,7 +144,7 @@ const PhonePreview = ({ deed }: { deed: DeedVisualData }) => (
 
 /* === Center deed (large) with waveform === */
 const CenterDeed = ({ deed }: { deed: DeedVisualData }) => (
-  <div className="absolute left-[31%] top-[14%] z-20 h-[58%] w-[37%]">
+  <div className="absolute left-[31%] top-[20%] z-20 h-[52%] w-[37%]">
     {/* match score pill */}
     <div
       className="absolute -top-[7%] left-1/2 z-30 -translate-x-1/2 rounded-[6px] border px-3 py-[1.4%] text-center text-[7px] font-black sm:text-[11px] md:text-[13px]"
@@ -206,13 +206,13 @@ const MapPanel = ({ deed }: { deed: DeedVisualData }) => (
 /* === Bottom metric chip === */
 const Metric = ({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) => (
   <div
-    className="flex min-w-0 items-center justify-between gap-2 rounded-[6px] border-2 px-[5%] py-[7%]"
+    className="flex min-w-0 items-center justify-between gap-2 rounded-[6px] border-2 px-[4%] py-[5%]"
     style={{ borderColor: gold, background: "hsl(var(--deed-ink) / 0.85)", boxShadow: `0 0 12px ${gold}33` }}
   >
     <Icon className="h-4 w-4 shrink-0 sm:h-6 sm:w-6" style={{ color: gold }} />
     <div className="min-w-0 flex-1 text-right leading-tight">
-      <p className="truncate text-[7px] font-black sm:text-[10px] md:text-[12px]" style={{ color: muted }}>{label}</p>
-      <p className="mt-[6%] truncate text-[8px] font-black sm:text-[12px] md:text-[14px]" style={{ color: goldSoft }}>{value}</p>
+      <p className="text-[6px] font-black sm:text-[9px] md:text-[11px]" style={{ color: muted }}>{label}</p>
+      <p className="mt-[4%] break-words text-[7px] font-black leading-tight sm:text-[10px] md:text-[12px]" style={{ color: goldSoft }}>{value}</p>
     </div>
   </div>
 );
