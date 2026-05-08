@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowRight, MapPin, User, Ruler, FileText, CheckCircle2, Radio, ShieldCheck, Smartphone, ScanLine } from "lucide-react";
+import { ArrowRight, Radio } from "lucide-react";
+import DeedVisualDashboard from "@/components/DeedVisualDashboard";
 
 const CYAN = "hsl(var(--deed-cyan))";
 const CYAN_SOFT = "hsl(var(--deed-cyan) / 0.65)";
-const PANEL_BG = "hsl(var(--deed-surface) / 0.82)";
-const NAVY_BG = "hsl(var(--deed-bg))";
 
 interface DeedData {
   deedNumber: string;
@@ -81,82 +79,13 @@ const DigitalIndicators = () => {
         </div>
       </header>
 
-      <main className="relative max-w-7xl mx-auto px-3 py-5 space-y-4">
-        {/* Status banner */}
-        <div
-          className="mx-auto w-fit px-5 py-2 rounded-lg flex items-center gap-2"
-          style={{
-            background: "hsl(var(--deed-bg) / 0.82)",
-            border: "1.5px solid hsl(var(--deed-cyan))",
-            boxShadow: "0 0 25px hsl(var(--deed-cyan) / 0.34), inset 0 0 12px hsl(var(--deed-cyan) / 0.18)",
-          }}
-        >
-          <CheckCircle2 className="w-4 h-4" style={{ color: CYAN, filter: `drop-shadow(0 0 4px ${CYAN})` }} />
-          <span className="text-xs font-extrabold" style={{ color: "#fff", textShadow: `0 0 6px ${CYAN}` }}>
-            حالة الصك: محدّث وساري
-          </span>
-          <span className="text-[10px] font-bold mr-2" style={{ color: CYAN }}>100% Match Score</span>
-        </div>
-
-        {/* Three Panel Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* LEFT: Leather-framed deed */}
-          <Panel label="01 · DIGITAL DEED">
-            <LeatherDeed deed={deed} />
-          </Panel>
-
-          {/* CENTER: Pulse waveform deed-like card */}
-          <Panel label="02 · PULSE MATCH">
-            <PulseCard deed={deed} />
-          </Panel>
-
-          {/* RIGHT: Map */}
-          <Panel label="03 · GEO LOCATOR">
-            <MapCard deed={deed} />
-          </Panel>
-        </div>
-
-        {/* Bottom 4 icon summary */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-1">
-          {[
-            { icon: FileText, label: "رقم الصك", value: deed.deedNumber || "—" },
-            { icon: User, label: "المالك", value: deed.owner || "—" },
-            { icon: Ruler, label: "المساحة", value: deed.area ? `${deed.area} m²` : "—" },
-            {
-              icon: MapPin,
-              label: "الموقع",
-              value: [deed.city, deed.district].filter(Boolean).join(" - ") || "—",
-            },
-          ].map(({ icon: Icon, label, value }) => (
-            <div
-              key={label}
-              className="rounded-xl p-3 flex items-center gap-3"
-              style={{
-                background: "rgba(0,8,20,0.85)",
-                border: `1px solid ${CYAN}60`,
-                boxShadow: `inset 0 0 14px ${CYAN}15, 0 0 12px ${CYAN}25`,
-              }}
-            >
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: `${CYAN}15`, border: `1px solid ${CYAN}80`, boxShadow: `0 0 10px ${CYAN}50` }}
-              >
-                <Icon className="w-4 h-4" style={{ color: CYAN, filter: `drop-shadow(0 0 4px ${CYAN})` }} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px]" style={{ color: `${CYAN}aa` }}>{label}</p>
-                <p className="text-xs font-extrabold truncate" style={{ color: "#fff", textShadow: `0 0 6px ${CYAN}` }}>
-                  {value}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+      <main className="relative mx-auto max-w-7xl px-3 py-5 space-y-4">
+        <DeedVisualDashboard deed={deed} />
 
         {/* Footer */}
         <div
           className="rounded-xl p-3 flex items-center justify-center text-[10px] mt-2"
-          style={{ background: "rgba(0,8,20,0.6)", border: `1px solid ${CYAN}25` }}
+          style={{ background: "hsl(var(--deed-bg) / 0.62)", border: "1px solid hsl(var(--deed-cyan) / 0.18)" }}
         >
           <span style={{ color: `${CYAN}aa` }}>
             عُتيبي ذكي Ai: نحلل بالرؤية والصوت — معالجة برمجية مؤتمتة
