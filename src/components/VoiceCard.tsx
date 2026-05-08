@@ -16,7 +16,7 @@ const VoiceCard = () => {
           <Mic className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">صوت عُتيبي ذكي Ai</h2>
+          <h2 className="text-sm font-bold text-foreground">صوت عُتيبي ذكي</h2>
           <p className="text-[10px] text-muted-foreground">توليد صوتي احترافي باللهجة السعودية</p>
         </div>
       </div>
@@ -45,7 +45,7 @@ const VoiceCard = () => {
       </button>
       <p className="text-[8px] text-muted-foreground/50 text-center mt-2 leading-relaxed">
         ⚠️ صوت "عُتيبي ذكي" محمي بعلامة مائية رقمية. الاستخدام غير المصرح به يعرّض صاحبه للمساءلة القانونية.
-        <br />عُتيبي ذكي Ai 🤖
+        <br />عُتيبي ذكي 🤖
       </p>
     </div>
   );

@@ -79,8 +79,8 @@ const BrainCard = () => {
           <Brain className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">Code & Document AI Analyzer</h2>
-          <p className="text-[10px] text-muted-foreground">معالجة مستندات وأكواد بالذكاء الاصطناعي</p>
+          <h2 className="text-sm font-bold text-foreground">محلل الأكواد والوثائق البرمجية</h2>
+          <p className="text-[10px] text-muted-foreground">معالجة مستندات وأكواد بأنظمة برمجية مؤتمتة</p>
         </div>
         {analysisCount === 0 && !hasSubscription && (
           <span className="mr-auto text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
@@ -128,7 +128,7 @@ const BrainCard = () => {
         <div className="border border-dashed border-primary/30 rounded-lg p-6 flex flex-col items-center justify-center gap-3 bg-primary/5">
           <Lock className="w-8 h-8 text-primary" />
           <p className="text-xs text-foreground font-bold text-center">انتهت التجربة المجانية!</p>
-          <p className="text-[10px] text-muted-foreground text-center">اشترك للحصول على معالجات غير محدودة</p>
+          <p className="text-[10px] text-muted-foreground text-center">اشترك للحصول على عمليات برمجية غير محدودة</p>
           <button
             onClick={() => {
               const el = document.getElementById("subscription-section");
@@ -149,7 +149,7 @@ const BrainCard = () => {
           </div>
         </div>
       )}
-      <span className="watermark">عُتيبي ذكي Ai 🤖</span>
+      <span className="watermark">عُتيبي ذكي 🤖</span>
     </div>
   );
 };

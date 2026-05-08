@@ -39,7 +39,7 @@ const DeedAnalyzer = () => {
     const selected = e.target.files?.[0];
     if (!selected) return;
     if (!selected.type.startsWith("image/")) {
-      toast({ title: "يرجى رفع صورة فقط (JPG, PNG)", variant: "destructive" });
+      toast({ title: "يرجى رفع صورة فقط", variant: "destructive" });
       return;
     }
     if (selected.size > 10 * 1024 * 1024) {
@@ -119,7 +119,7 @@ const DeedAnalyzer = () => {
           <FileSearch className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">نظام معالجة البيانات المنطقي Ai</h2>
+          <h2 className="text-sm font-bold text-foreground">نظام معالجة البيانات البرمجية</h2>
           <p className="text-[10px] text-muted-foreground">معالجة بيانات تقنية فورية بأنظمة الأتمتة البرمجية</p>
         </div>
       </div>
@@ -154,14 +154,14 @@ const DeedAnalyzer = () => {
                   <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
                   <p className="text-xs font-bold text-foreground">{file.name}</p>
                   <p className="text-[9px] text-muted-foreground mt-1">
-                    {(file.size / 1024).toFixed(0)} KB — اضغط لتغيير الملف
+                    {(file.size / 1024).toFixed(0)} كيلوبايت — اضغط لتغيير الملف
                   </p>
                 </div>
               ) : (
                 <div className="text-center">
                   <UploadCloud className="w-8 h-8 text-primary mx-auto mb-2 animate-pulse" />
                   <p className="text-xs font-bold text-foreground">ارفع صورة الصك هنا</p>
-                  <p className="text-[9px] text-muted-foreground mt-1">JPG, PNG — حد أقصى 10MB</p>
+                  <p className="text-[9px] text-muted-foreground mt-1">صور فقط — حد أقصى 10 ميجابايت</p>
                 </div>
               )}
             </div>
@@ -178,7 +178,7 @@ const DeedAnalyzer = () => {
               className="w-full h-12 btn-neon text-sm flex items-center justify-center gap-3 rounded-xl"
             >
               <Zap className="w-4 h-4" strokeWidth={2} />
-              تشغيل المحرك الذكي (Launch)
+              تشغيل المحرك البرمجي
             </button>
           </motion.div>
         )}
@@ -252,7 +252,7 @@ const DeedAnalyzer = () => {
                 <ShieldCheck className="w-6 h-6 text-green-500" />
                 <span className="text-sm font-bold text-green-400">تم استخراج البيانات بنجاح ✅</span>
               </div>
-              <span className="text-xs font-black text-primary">Vision AI</span>
+              <span className="text-xs font-black text-primary">نظام الرؤية البرمجية</span>
             </div>
 
             {/* Data Grid */}
@@ -291,7 +291,7 @@ const DeedAnalyzer = () => {
         )}
       </AnimatePresence>
 
-      <span className="watermark">عُتيبي ذكي Ai 🤖</span>
+      <span className="watermark">عُتيبي ذكي 🤖</span>
     </div>
   );
 };

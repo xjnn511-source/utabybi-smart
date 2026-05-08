@@ -100,7 +100,7 @@ const AiVideoEditor = () => {
             <Scissors className="w-5 h-5 text-primary" strokeWidth={2} />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-foreground">المُحرر الذكي (The Silencer) 🎬</h2>
+            <h2 className="text-sm font-bold text-foreground">المُحرر البرمجي الصامت 🎬</h2>
             <p className="text-[10px] text-muted-foreground">جاري التحميل...</p>
           </div>
         </div>
@@ -117,8 +117,8 @@ const AiVideoEditor = () => {
             <Scissors className="w-5 h-5 text-primary" strokeWidth={2} />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-foreground">المُحرر الذكي (The Silencer) 🎬</h2>
-            <p className="text-[10px] text-muted-foreground">حذف الصمت + صوت احترافي بالذكاء الاصطناعي</p>
+            <h2 className="text-sm font-bold text-foreground">المُحرر البرمجي الصامت 🎬</h2>
+            <p className="text-[10px] text-muted-foreground">حذف الصمت + صوت احترافي بأنظمة برمجية مؤتمتة</p>
           </div>
         </div>
         <div className="border border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center gap-2">
@@ -126,7 +126,7 @@ const AiVideoEditor = () => {
           <p className="text-xs text-muted-foreground font-bold">خاصية حصرية للمدير</p>
           <p className="text-[10px] text-muted-foreground">هذه الأداة متاحة فقط لمالك المنصة</p>
         </div>
-        <span className="watermark">عُتيبي ذكي Ai 🤖</span>
+        <span className="watermark">عُتيبي ذكي 🤖</span>
       </div>
     );
   }
@@ -138,11 +138,11 @@ const AiVideoEditor = () => {
           <Scissors className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">المُحرر الذكي (The Silencer) 🎬</h2>
-          <p className="text-[10px] text-muted-foreground">حذف الصمت + صوت احترافي بالذكاء الاصطناعي</p>
+          <h2 className="text-sm font-bold text-foreground">المُحرر البرمجي الصامت 🎬</h2>
+          <p className="text-[10px] text-muted-foreground">حذف الصمت + صوت احترافي بأنظمة برمجية مؤتمتة</p>
         </div>
         <span className="mr-auto text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
-          Admin ✓
+          مدير ✓
         </span>
       </div>
 
@@ -161,7 +161,7 @@ const AiVideoEditor = () => {
             className="absolute inset-0 flex flex-col items-center justify-center gap-2 hover:bg-primary/5 transition-colors"
           >
             <Upload className="w-6 h-6 text-muted-foreground" />
-            <p className="text-[10px] text-muted-foreground">ارفع فيديو لتحريره بالذكاء الاصطناعي</p>
+            <p className="text-[10px] text-muted-foreground">ارفع فيديو لتحريره بأنظمة برمجية مؤتمتة</p>
           </button>
         )}
 
@@ -227,7 +227,7 @@ const AiVideoEditor = () => {
             className="w-full h-10 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <Scissors className="w-3.5 h-3.5" strokeWidth={2} />
-            {status === "idle" ? "ارفع فيديو وحرّره بالذكاء الاصطناعي" : "جاري المعالجة..."}
+            {status === "idle" ? "ارفع فيديو وحرّره بأنظمة برمجية مؤتمتة" : "جاري المعالجة..."}
           </button>
         )}
       </div>
@@ -235,10 +235,10 @@ const AiVideoEditor = () => {
       {/* Voice Brand Protection Notice */}
       <p className="text-[8px] text-muted-foreground/50 text-center mt-2 leading-relaxed">
         ⚠️ صوت "عُتيبي ذكي" محمي بعلامة مائية رقمية. الاستخدام غير المصرح به يعرّض صاحبه للمساءلة القانونية.
-        <br />عُتيبي ذكي Ai 🤖
+        <br />عُتيبي ذكي 🤖
       </p>
 
-      <span className="watermark">عُتيبي ذكي Ai 🤖</span>
+      <span className="watermark">عُتيبي ذكي 🤖</span>
     </div>
   );
 };

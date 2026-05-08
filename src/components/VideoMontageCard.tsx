@@ -21,7 +21,7 @@ const VideoMontageCard = () => {
           <Video className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">صانع فيديوهات المونتاج Ai</h2>
+          <h2 className="text-sm font-bold text-foreground">معالج الوسائط الرقمية</h2>
           <p className="text-[10px] text-muted-foreground">معالجة الوسائط التقنية</p>
         </div>
       </div>
@@ -30,18 +30,18 @@ const VideoMontageCard = () => {
         {isProcessing ? (
           <div className="absolute inset-0 flex flex-col gap-2 items-center justify-center">
             <div className="w-7 h-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-[10px] text-muted-foreground">جاري إنشاء الفيديو...</p>
+            <p className="text-[10px] text-muted-foreground">جاري معالجة الفيديو...</p>
           </div>
         ) : result ? (
           <div className="absolute inset-0 bg-primary/5 flex flex-col items-center justify-center p-3">
             <Sparkles className="w-7 h-7 text-primary mb-2" />
-            <p className="text-xs text-primary font-bold text-center">فيديو المونتاج جاهز</p>
+            <p className="text-xs text-primary font-bold text-center">ملف الوسائط جاهز</p>
             <p className="text-[10px] text-muted-foreground mt-1">جاهز للتحميل والمشاركة</p>
           </div>
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
             <Upload className="w-5 h-5 text-muted-foreground" />
-            <p className="text-[10px] text-muted-foreground">ارفع ملفاتك لإنشاء فيديو احترافي</p>
+            <p className="text-[10px] text-muted-foreground">ارفع ملفاتك لمعالجة وسائط احترافية</p>
           </div>
         )}
       </div>
@@ -52,11 +52,11 @@ const VideoMontageCard = () => {
         className="w-full h-10 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-50"
       >
         <Video className="w-3.5 h-3.5" strokeWidth={2} />
-        {isProcessing ? "جاري المونتاج..." : "إنشاء فيديو مونتاج Ai"}
+        {isProcessing ? "جاري المونتاج..." : "معالجة وسائط رقمية"}
       </button>
       <p className="text-[8px] text-muted-foreground/50 text-center mt-2 leading-relaxed">
         ⚠️ صوت "عُتيبي ذكي" محمي بعلامة مائية رقمية. الاستخدام غير المصرح به يعرّض صاحبه للمساءلة القانونية.
-        <br />عُتيبي ذكي Ai 🤖
+        <br />عُتيبي ذكي 🤖
       </p>
     </div>
   );

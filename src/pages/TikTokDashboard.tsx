@@ -35,7 +35,7 @@ const TikTokDashboard = () => {
 
   const handleAdd = () => {
     if (!form.name || !form.spend) {
-      toast({ title: "أدخل اسم الإعلان والمبلغ", variant: "destructive" });
+      toast({ title: "أدخل اسم المؤشر والمبلغ", variant: "destructive" });
       return;
     }
     const spend = Number(form.spend);
@@ -56,7 +56,7 @@ const TikTokDashboard = () => {
     ]);
     setForm({ name: "", spend: "", clicks: "", reach: "" });
     setShowForm(false);
-    toast({ title: "تم إضافة الإعلان ✓" });
+    toast({ title: "تمت إضافة المؤشر ✓" });
   };
 
   const handleDelete = (id: string) => {
@@ -67,7 +67,7 @@ const TikTokDashboard = () => {
     <div className="min-h-screen bg-background">
       <header className="bg-card border-b border-border px-4 py-4 flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-bold text-foreground">لوحة إعلانات TikTok 📱</h1>
+          <h1 className="text-lg font-bold text-foreground">لوحة المؤشرات الرقمية 📱</h1>
           <p className="text-xs text-muted-foreground">تتبع الإنفاق والنقرات والوصول</p>
         </div>
         <button onClick={() => navigate("/")} className="text-xs text-primary flex items-center gap-1 hover:underline">
@@ -124,14 +124,14 @@ const TikTokDashboard = () => {
           className="w-full h-10 btn-neon text-xs flex items-center justify-center gap-2"
         >
           <Plus className="w-3.5 h-3.5" />
-          إضافة إعلان جديد
+          إضافة مؤشر جديد
         </button>
 
         {/* Form */}
         {showForm && (
           <div className="card-neon p-4 space-y-3">
             <input
-              placeholder="اسم الإعلان"
+              placeholder="اسم المؤشر"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               className="w-full bg-input border border-border rounded-lg py-2.5 px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
@@ -160,7 +160,7 @@ const TikTokDashboard = () => {
               />
             </div>
             <button onClick={handleAdd} className="w-full h-9 btn-neon text-xs">
-              حفظ الإعلان
+              حفظ المؤشر
             </button>
           </div>
         )}
@@ -168,7 +168,7 @@ const TikTokDashboard = () => {
         {/* Ads Table */}
         <div className="card-neon overflow-hidden">
           <div className="px-4 py-3 border-b border-border bg-secondary">
-            <h2 className="text-sm font-bold text-foreground">الإعلانات ({ads.length})</h2>
+            <h2 className="text-sm font-bold text-foreground">المؤشرات ({ads.length})</h2>
           </div>
           {ads.length > 0 ? (
             <div className="overflow-x-auto">
@@ -200,13 +200,13 @@ const TikTokDashboard = () => {
               </table>
             </div>
           ) : (
-            <p className="text-center py-8 text-xs text-muted-foreground">لا توجد إعلانات بعد</p>
+            <p className="text-center py-8 text-xs text-muted-foreground">لا توجد مؤشرات بعد</p>
           )}
         </div>
       </main>
 
       <footer className="text-center pb-6 px-4 mt-8">
-        <p className="text-[9px] text-muted-foreground">عُتيبي ذكي Ai 🤖 – تتبع إعلانات TikTok</p>
+        <p className="text-[9px] text-muted-foreground">عُتيبي ذكي 🤖 – تتبع المؤشرات الرقمية</p>
       </footer>
     </div>
   );

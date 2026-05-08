@@ -108,7 +108,7 @@ const Auth = () => {
       redirect_uri: window.location.origin,
     });
     if (error) {
-      setError(error.message || "حدث خطأ أثناء تسجيل الدخول بـ Google");
+      setError(error.message || "حدث خطأ أثناء تسجيل الدخول عبر الحساب");
     }
     setGoogleLoading(false);
   };
@@ -123,8 +123,8 @@ const Auth = () => {
           <div className="w-24 h-24 rounded-2xl bg-card border border-border p-1 mb-5 shadow-sm">
             <img src={logo} alt="عتيبي ذكي" className="w-full h-full rounded-xl object-cover" />
           </div>
-          <h1 className="text-2xl font-bold text-primary">عُتيبي ذكي Ai 🤖</h1>
-          <p className="text-xs text-muted-foreground mt-2">منصة SaaS للحلول البرمجية والذكاء الاصطناعي</p>
+          <h1 className="text-2xl font-bold text-primary">عُتيبي ذكي 🤖</h1>
+          <p className="text-xs text-muted-foreground mt-2">منصة برمجية للحلول المؤتمتة</p>
           <p className="text-[9px] text-muted-foreground mt-1">🇸🇦 🇦🇪 🇶🇦 🇧🇭 🇰🇼 🇴🇲 دول الخليج العربي</p>
         </div>
 
@@ -158,7 +158,7 @@ const Auth = () => {
                 className="w-full flex items-center justify-center gap-2 py-2 mb-5 rounded-lg border border-border bg-secondary/50 text-xs text-muted-foreground hover:border-primary hover:text-primary transition-all"
               >
                 <Phone className="w-3.5 h-3.5" />
-                دخول برقم الجوال (OTP)
+                دخول برقم الجوال
               </button>
 
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -243,7 +243,7 @@ const Auth = () => {
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                 </svg>
-                {googleLoading ? "جاري التحميل..." : "المتابعة مع Google"}
+                {googleLoading ? "جاري التحميل..." : "المتابعة عبر الحساب"}
               </button>
             </>
           ) : (
@@ -267,7 +267,7 @@ const Auth = () => {
                       <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <input
                         type="tel"
-                        placeholder="05XXXXXXXX أو +966XXXXXXXXX"
+                        placeholder="رقم الجوال الخليجي"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         className="w-full bg-input border border-border rounded-lg py-3.5 pr-10 pl-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
@@ -303,7 +303,7 @@ const Auth = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="XXXXXX"
+                      placeholder="رمز التحقق"
                       value={otpCode}
                       onChange={(e) => setOtpCode(e.target.value)}
                       className="w-full bg-input border border-border rounded-lg py-3.5 px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-center tracking-[0.5em]"
@@ -350,7 +350,7 @@ const Auth = () => {
         </div>
 
         <p className="text-center text-[9px] text-muted-foreground mt-4">
-          عُتيبي ذكي Ai 🤖 — منصة SaaS للحلول البرمجية والذكاء الاصطناعي
+          عُتيبي ذكي 🤖 — منصة برمجية للحلول المؤتمتة
         </p>
       </div>
     </div>

@@ -26,7 +26,7 @@ const SmartRadar = () => {
           <BarChart3 className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">Logic Data Processing System</h2>
+          <h2 className="text-sm font-bold text-foreground">نظام معالجة البيانات البرمجية</h2>
           <p className="text-[10px] text-muted-foreground">معالجة بيانات وأنظمة أتمتة منطقية</p>
         </div>
       </div>
@@ -38,7 +38,7 @@ const SmartRadar = () => {
             type="text"
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
-            placeholder="مثال: ملف CSV، قاعدة بيانات، API"
+            placeholder="مثال: ملف بيانات، قاعدة بيانات، واجهة برمجية"
             className="w-full h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
@@ -72,7 +72,7 @@ const SmartRadar = () => {
           className="flex-1 h-10 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-50"
         >
           <Search className="w-3.5 h-3.5" strokeWidth={2} />
-          {isSearching ? "جاري المعالجة..." : "أطلق المحلل الذكي"}
+          {isSearching ? "جاري المعالجة..." : "أطلق المعالج البرمجي"}
         </button>
       </div>
 

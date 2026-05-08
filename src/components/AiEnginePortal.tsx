@@ -10,18 +10,18 @@ import { toast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
 
 const engines = [
-  { id: "OCR", title: "Document OCR", icon: FileSearch },
-  { id: "Analyst", title: "Logic Data Processing", icon: BarChart3 },
-  { id: "Silencer", title: "The Silencer", icon: VolumeX },
-  { id: "Content", title: "Creative Content", icon: PenTool },
-  { id: "Video", title: "Media Processing", icon: Video },
+  { id: "OCR", title: "معالج الوثائق", icon: FileSearch },
+  { id: "Analyst", title: "معالجة البيانات البرمجية", icon: BarChart3 },
+  { id: "Silencer", title: "محرك الأتمتة الصامتة", icon: VolumeX },
+  { id: "Content", title: "توليد الحلول البرمجية", icon: PenTool },
+  { id: "Video", title: "معالجة الوسائط الرقمية", icon: Video },
 ];
 
 const mockResults: Record<string, string> = {
   Analyst: "معالجة البيانات: نمو بنسبة 15% متوقع",
   Silencer: "تم تنقية الصوت وحذف الصمت بنجاح",
-  Content: "تم توليد المحتوى الذكي",
-  Video: "تم إنشاء مونتاج الفيديو بنجاح",
+  Content: "تم توليد الحلول البرمجية",
+  Video: "تمت معالجة الوسائط الرقمية بنجاح",
 };
 
 interface DeedData {
@@ -175,13 +175,13 @@ const AiEnginePortal = () => {
               <motion.div key="ready" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
                 <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-2" />
                 <p className="text-xs font-bold text-foreground">{file.name}</p>
-                <p className="text-[9px] text-green-500/60 mt-1 font-mono">System Secured & Verified</p>
+                <p className="text-[9px] text-green-500/60 mt-1 font-mono">تم التحقق وتأمين الملف</p>
               </motion.div>
             ) : (
               <motion.div key="upload" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
                 <UploadCloud className="w-10 h-10 text-primary mx-auto mb-2 animate-pulse" />
                 <p className="text-xs font-bold text-foreground mb-1">اسحب البيانات هنا</p>
-                <p className="text-[9px] text-muted-foreground font-mono">JPG, PNG, CSV, MP4, MP3</p>
+                <p className="text-[9px] text-muted-foreground font-mono">صور، بيانات، فيديو، صوت</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -203,7 +203,7 @@ const AiEnginePortal = () => {
           className="w-full h-12 btn-neon text-sm flex items-center justify-center gap-3 rounded-xl disabled:opacity-40 relative z-10"
         >
           {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Zap className="w-4 h-4" />}
-          {loading ? "جاري المعالجة الرقمية..." : "تشغيل المحرك الذكي (LAUNCH)"}
+          {loading ? "جاري المعالجة الرقمية..." : "تشغيل المحرك البرمجي"}
         </button>
       </div>
 
@@ -221,7 +221,7 @@ const AiEnginePortal = () => {
                 <ShieldCheck className="w-5 h-5 text-primary" />
                 <h3 className="text-xs font-bold text-foreground">تقرير معالجة الوثيقة</h3>
               </div>
-              <span className="text-[9px] font-mono text-primary font-bold">100% Match</span>
+              <span className="text-[9px] font-mono text-primary font-bold">تطابق كامل</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
