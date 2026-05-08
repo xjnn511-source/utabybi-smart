@@ -17,14 +17,7 @@ interface DeedData {
   district: string;
 }
 
-// Hardcoded corrections — applied to override any extraction inaccuracies
-const CORRECTED_DATA: DeedData = {
-  deedNumber: "058",
-  area: "1220 متر مربع",
-  owner: "عمران وعمر المعيدي",
-  city: "جدة",
-  district: "حي المنتزهات الشرقية",
-};
+// No hardcoded data — extraction comes 100% from the uploaded image
 
 const DeedAnalyzer = () => {
   const [state, setState] = useState<AnalysisState>("idle");
@@ -79,25 +72,33 @@ const DeedAnalyzer = () => {
       const base64 = await fileToBase64(file);
       setScanProgress(85);
 
-      // Fire the edge call but enforce hardcoded corrected data on completion
-      await supabase.functions.invoke("analyze-deed", {
+      const { data, error } = await supabase.functions.invoke("analyze-deed", {
         body: { imageBase64: base64, mimeType: file.type },
-      }).catch(() => null);
+      });
 
       setScanProgress(100);
 
-      setTimeout(() => {
-        setDeedData(CORRECTED_DATA);
-        setState("done");
-      }, 500);
+      if (error) throw new Error(error.message || "فشل الاتصال بالنظام");
+      if (data?.error) throw new Error(data.error);
+
+      if (data?.success && data?.data) {
+        setTimeout(() => {
+          setDeedData(data.data);
+          setEditMode(true); // open edit mode so user can correct any OCR mistake
+          setState("done");
+        }, 400);
+      } else {
+        throw new Error("لم يتمكن النظام من استخراج البيانات");
+      }
     } catch (err: any) {
       console.error("Deed processing error:", err);
-      // Even on error — show corrected data per spec
-      setScanProgress(100);
-      setTimeout(() => {
-        setDeedData(CORRECTED_DATA);
-        setState("done");
-      }, 400);
+      setScanProgress(0);
+      setState("error");
+      toast({
+        title: "فشل المعالجة البرمجية",
+        description: err.message || "يرجى المحاولة مرة أخرى",
+        variant: "destructive",
+      });
     }
   };
 

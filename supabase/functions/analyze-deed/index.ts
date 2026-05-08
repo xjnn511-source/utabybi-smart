@@ -37,17 +37,19 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `أنت محلل وثائق عقارية سعودية متخصص. عند استلام صورة صك عقاري، استخرج البيانات التالية بدقة:
-- رقم الصك
-- المساحة (بالمتر المربع)
-- اسم المالك
-- المدينة
-- الحي
+            content: `أنت نظام معالجة برمجية متخصص في الوثائق العقارية السعودية. مهمتك استخراج البيانات الفعلية من الصورة المرفوعة فقط — لا تخترع أي بيانات.
 
-أجب فقط بصيغة JSON بالضبط كالتالي (بدون أي نص إضافي):
-{"deedNumber":"...","area":"...","owner":"...","city":"...","district":"..."}
+استخرج بدقة من الصورة المرفقة:
+- رقم الصك (كما يظهر تماماً)
+- المساحة بالمتر المربع
+- اسم/أسماء المالك (كما تظهر بالضبط)
+- المدينة (سعودية)
+- الحي (اسم حي سعودي صحيح — إذا قرأت "المقترحات" فالاسم الصحيح غالباً "المنتزهات"، تحقق بصرياً)
 
-إذا لم تتمكن من قراءة حقل معين، اكتب "غير واضح" كقيمة له.`
+قواعد صارمة:
+- لا تستخدم أي بيانات افتراضية أو من ذاكرتك.
+- إذا لم يكن الحقل واضحاً في الصورة، اكتب "غير واضح".
+- التزم بأسماء الأحياء السعودية الفعلية وصحح أخطاء OCR الشائعة.`
           },
           {
             role: "user",
@@ -111,10 +113,43 @@ serve(async (req) => {
     const aiResult = await response.json();
     console.log("AI response:", JSON.stringify(aiResult));
 
+    // Saudi Neighborhood OCR Correction Database
+    // Common OCR misreads → correct Saudi neighborhood names
+    const SAUDI_DISTRICT_CORRECTIONS: Record<string, string> = {
+      "المقترحات": "المنتزهات",
+      "المقترحات الشرقية": "المنتزهات الشرقية",
+      "المقترحات الغربية": "المنتزهات الغربية",
+      "الشاطي": "الشاطئ",
+      "الروابي": "الروابي",
+      "النزهه": "النزهة",
+      "الفيحا": "الفيحاء",
+      "السلامه": "السلامة",
+      "الرحمانيه": "الرحمانية",
+      "البساتين": "البساتين",
+      "الزهراء": "الزهراء",
+    };
+
+    const correctDistrict = (raw: string): string => {
+      if (!raw || raw === "غير واضح") return raw;
+      let cleaned = raw.trim().replace(/^حي\s+/, "");
+      // Direct lookup
+      for (const [wrong, right] of Object.entries(SAUDI_DISTRICT_CORRECTIONS)) {
+        if (cleaned.includes(wrong)) {
+          cleaned = cleaned.replace(wrong, right);
+        }
+      }
+      return cleaned.startsWith("حي ") ? cleaned : `حي ${cleaned}`;
+    };
+
+    const finalize = (data: any) => {
+      if (data?.district) data.district = correctDistrict(data.district);
+      return data;
+    };
+
     // Extract from tool call
     const toolCall = aiResult.choices?.[0]?.message?.tool_calls?.[0];
     if (toolCall?.function?.arguments) {
-      const extracted = JSON.parse(toolCall.function.arguments);
+      const extracted = finalize(JSON.parse(toolCall.function.arguments));
       return new Response(JSON.stringify({ success: true, data: extracted }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -124,7 +159,7 @@ serve(async (req) => {
     const content = aiResult.choices?.[0]?.message?.content || "";
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
-      const extracted = JSON.parse(jsonMatch[0]);
+      const extracted = finalize(JSON.parse(jsonMatch[0]));
       return new Response(JSON.stringify({ success: true, data: extracted }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
