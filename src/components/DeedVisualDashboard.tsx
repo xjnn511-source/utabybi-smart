@@ -47,9 +47,9 @@ const ConnectorLines = () => (
 );
 
 const MiniField = ({ label, value }: { label: string; value: string }) => (
-  <div className="grid grid-cols-[1fr_0.82fr] items-center gap-[3%] border-b py-[2.2%]" style={{ borderColor: "hsl(var(--deed-ink) / 0.28)" }}>
-    <span className="truncate text-left text-[7px] font-black leading-none sm:text-[10px] md:text-[12px]" style={{ color: "hsl(var(--deed-ink))" }}>{value}</span>
-    <span className="text-right text-[6px] font-black leading-none sm:text-[8px] md:text-[10px]" style={{ color: "hsl(var(--deed-ink) / 0.78)" }}>{label}</span>
+  <div className="grid grid-cols-[1fr_0.82fr] items-center gap-[3%] border-b py-[2.2%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.28)" }}>
+    <span className="truncate text-left text-[7px] font-black leading-none sm:text-[10px] md:text-[12px]" style={{ color: text }}>{value}</span>
+    <span className="text-right text-[6px] font-black leading-none sm:text-[8px] md:text-[10px]" style={{ color: muted }}>{label}</span>
   </div>
 );
 
@@ -57,24 +57,24 @@ const DigitalDeed = ({ deed, phone = false }: { deed: DeedVisualData; phone?: bo
   <div
     className="relative h-full w-full overflow-hidden rounded-[3px] border"
     style={{
-      background: "linear-gradient(135deg, hsl(46 70% 88%), hsl(var(--deed-parchment)))",
-      borderColor: "hsl(var(--deed-gold) / 0.6)",
-      boxShadow: "inset 0 0 28px hsl(var(--deed-gold) / 0.18)",
+      background: "linear-gradient(135deg, hsl(var(--deed-panel)), hsl(var(--deed-bg)))",
+      borderColor: "hsl(var(--deed-cyan) / 0.5)",
+      boxShadow: "inset 0 0 28px hsl(var(--deed-cyan) / 0.15)",
     }}
   >
-    <div className="absolute inset-[4%] rotate-45 border" style={{ borderColor: "hsl(var(--deed-ink) / 0.18)" }} />
-    <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "radial-gradient(circle at 35% 30%, hsl(var(--deed-gold) / 0.35), transparent 22%)" }} />
-    <div className="relative z-10 mx-auto mt-[5%] flex aspect-square h-[18%] items-center justify-center rounded-full border" style={{ color: "hsl(var(--deed-ink))", borderColor: "hsl(var(--deed-ink) / 0.45)", background: "hsl(var(--deed-gold) / 0.4)", boxShadow: "0 0 14px hsl(var(--deed-gold) / 0.5)" }}>
+    <div className="absolute inset-[4%] rotate-45 border" style={{ borderColor: "hsl(var(--deed-cyan) / 0.18)" }} />
+    <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "radial-gradient(circle at 35% 30%, hsl(var(--deed-cyan) / 0.3), transparent 22%)" }} />
+    <div className="relative z-10 mx-auto mt-[5%] flex aspect-square h-[18%] items-center justify-center rounded-full border" style={{ color: mint, borderColor: "hsl(var(--deed-cyan) / 0.55)", background: "hsl(var(--deed-cyan) / 0.12)", boxShadow: "0 0 14px hsl(var(--deed-cyan) / 0.45)" }}>
       <Award className="h-[62%] w-[62%]" />
     </div>
-    <p className="relative z-10 mt-[2.5%] text-center text-[7px] font-black leading-none sm:text-[10px] md:text-[12px]" style={{ color: "hsl(var(--deed-ink))" }}>صك عقاري رقمي</p>
+    <p className="relative z-10 mt-[2.5%] text-center text-[7px] font-black leading-none sm:text-[10px] md:text-[12px]" style={{ color: mint, textShadow: "0 0 8px hsl(var(--deed-cyan) / 0.5)" }}>صك عقاري رقمي</p>
     <div className="relative z-10 mx-auto mt-[4%] w-[72%]">
       <MiniField label="رقم الصك" value={compact(deed.deedNumber, phone ? 10 : 16)} />
       <MiniField label="المالك" value={compact(deed.owner, phone ? 9 : 15)} />
       <MiniField label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "..."} />
       {!phone && <MiniField label="الموقع" value={compact(locationOf(deed), 15)} />}
     </div>
-    <div className="absolute bottom-[7%] left-[16%] right-[16%] h-px" style={{ background: "hsl(var(--deed-ink) / 0.34)" }} />
+    <div className="absolute bottom-[7%] left-[16%] right-[16%] h-px" style={{ background: "hsl(var(--deed-cyan) / 0.34)" }} />
   </div>
 );
 
