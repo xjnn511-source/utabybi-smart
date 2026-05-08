@@ -143,7 +143,7 @@ const DeedAnalyzer = () => {
     <div
       className="relative overflow-hidden rounded-2xl p-5"
       style={{
-        background: "linear-gradient(160deg, #0a0014 0%, #1a0030 55%, #05000f 100%)",
+        background: "linear-gradient(160deg, #000010 0%, #001428 55%, #000008 100%)",
         border: `1px solid ${NEON_PINK}40`,
         boxShadow: `0 0 40px -8px ${NEON_PINK}40, inset 0 0 30px -10px ${NEON_PURPLE}20`,
       }}
