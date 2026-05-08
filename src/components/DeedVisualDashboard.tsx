@@ -141,11 +141,11 @@ const MapPanel = ({ deed }: { deed: DeedVisualData }) => (
 );
 
 const Metric = ({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) => (
-  <div className="flex min-w-0 items-center justify-between gap-[5%] rounded-[6px] border px-[5%] py-[6%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 14px hsl(var(--deed-gold) / 0.16)" }}>
+  <div className="flex min-w-0 items-center justify-between gap-[5%] rounded-[6px] border px-[5%] py-[4.5%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 14px hsl(var(--deed-gold) / 0.16)" }}>
     <Icon className="h-4 w-4 shrink-0 sm:h-6 sm:w-6 md:h-7 md:w-7" style={{ color: mint }} />
     <div className="min-w-0 flex-1 text-right leading-tight">
-      <p className="truncate text-[7px] font-black sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: "0.06em" }}>{label}</p>
-      <p className="mt-[8%] truncate text-[8px] font-black sm:text-[12px] md:text-[14px]" style={{ color: text, letterSpacing: "0.05em" }}>{value}</p>
+      <p className="text-[7px] font-black sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: 0 }}>{label}</p>
+      <p dir="auto" className="mt-[5%] break-words text-[7px] font-black leading-[1.15] sm:text-[10px] md:text-[12px]" style={{ color: text, letterSpacing: 0 }}>{value}</p>
     </div>
   </div>
 );
@@ -182,7 +182,7 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
     <CenterDeed deed={deed} />
     <MapPanel deed={deed} />
 
-    <div className="absolute bottom-[14%] left-[31%] right-[2.4%] z-40 grid grid-cols-4 gap-[1.3%]">
+    <div className="absolute bottom-[13.2%] left-[31%] right-[2.4%] z-40 grid grid-cols-4 gap-[1.3%]">
       <Metric icon={FileText} label="رقم الصك" value={compact(deed.deedNumber, 13)} />
       <Metric icon={User} label="المالك" value={compact(deed.owner, 13)} />
       <Metric icon={Ruler} label="المساحة" value={deed.area ? `${compact(deed.area, 7)} م²` : "... م²"} />
