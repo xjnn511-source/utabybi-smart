@@ -24,7 +24,7 @@ const menuItems = [
   { title: "Text Automation Engine", icon: Megaphone, path: "/" },
   { title: "Digital Metrics System", icon: Radio, path: "/" },
   { title: "وحدة معالجة الوسائط المتعددة", icon: Video, path: "/" },
-  { title: "نظام تحليل المؤشرات الرقمية", icon: TrendingUp, path: "/tiktok" },
+  { title: "نظام تقييم المؤشرات الرقمية", icon: TrendingUp, path: "/tiktok" },
   { title: "الحاسبة الرقمية", icon: Calculator, path: "/" },
   { title: "الاشتراكات", icon: CreditCard, path: "/" },
 ];

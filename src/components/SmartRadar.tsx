@@ -26,8 +26,8 @@ const SmartRadar = () => {
           <BarChart3 className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-         <h2 className="text-sm font-bold text-foreground">Smart Data Analyst Ai</h2>
-          <p className="text-[10px] text-muted-foreground">تحليل بيانات وذكاء أعمال متقدم</p>
+          <h2 className="text-sm font-bold text-foreground">Logic Data Processing System</h2>
+          <p className="text-[10px] text-muted-foreground">معالجة بيانات وأنظمة أتمتة منطقية</p>
         </div>
       </div>
 
@@ -43,12 +43,12 @@ const SmartRadar = () => {
           />
         </div>
         <div>
-          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">نوع التحليل المطلوب</label>
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">نوع المعالجة المطلوبة</label>
           <input
             type="text"
             value={cities}
             onChange={(e) => setCities(e.target.value)}
-            placeholder="مثال: تحليل أداء، تقرير مالي، ذكاء أعمال"
+            placeholder="مثال: معالجة أداء، تقرير مالي، أنظمة أتمتة"
             className="w-full h-9 px-3 rounded-lg border border-border bg-input text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
@@ -72,13 +72,13 @@ const SmartRadar = () => {
           className="flex-1 h-10 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-50"
         >
           <Search className="w-3.5 h-3.5" strokeWidth={2} />
-          {isSearching ? "جاري التحليل..." : "أطلق المحلل الذكي"}
+          {isSearching ? "جاري المعالجة..." : "أطلق المحلل الذكي"}
         </button>
       </div>
 
       {isSearching && (
         <div className="mt-3 p-3 rounded-lg bg-primary/5 border border-primary/20 text-center">
-          <p className="text-xs text-primary">جاري تحليل البيانات...</p>
+          <p className="text-xs text-primary">جاري معالجة البيانات...</p>
         </div>
       )}
     </div>

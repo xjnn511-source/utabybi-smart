@@ -46,7 +46,7 @@ const BrainCard = () => {
       // Record the analysis
       await supabase.from("deed_analyses").insert({
         user_id: user.id,
-        file_name: "تحليل_مستند_" + Date.now(),
+        file_name: "معالجة_مستند_" + Date.now(),
         status: "completed",
         analysis_result: {
           fields: 7,
@@ -65,7 +65,7 @@ const BrainCard = () => {
       setIsProcessing(false);
       setResult("تم استخراج ٧ حقول بيانات من المستند بنجاح ✓");
       setAnalysisCount((c) => c + 1);
-      toast({ title: "تم تحليل المستند بنجاح! 📄" });
+      toast({ title: "تم معالجة المستند بنجاح! 📄" });
     } catch (err) {
       setIsProcessing(false);
       toast({ title: "حدث خطأ", variant: "destructive" });
@@ -80,7 +80,7 @@ const BrainCard = () => {
         </div>
         <div>
           <h2 className="text-sm font-bold text-foreground">Code & Document AI Analyzer</h2>
-          <p className="text-[10px] text-muted-foreground">تحليل مستندات وأكواد بالذكاء الاصطناعي</p>
+          <p className="text-[10px] text-muted-foreground">معالجة مستندات وأكواد بالذكاء الاصطناعي</p>
         </div>
         {analysisCount === 0 && !hasSubscription && (
           <span className="mr-auto text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
@@ -94,10 +94,10 @@ const BrainCard = () => {
         <div className="mb-3 rounded-lg bg-secondary border border-border p-4">
           <div className="flex items-center gap-2 mb-3">
             <FileSearch className="w-4 h-4 text-primary animate-pulse" />
-            <p className="text-[11px] text-primary font-bold">جاري تحليل المستند...</p>
+            <p className="text-[11px] text-primary font-bold">جاري معالجة المستند...</p>
           </div>
           <div className="space-y-2">
-            {["قراءة بيانات المستند...", "استخراج الحقول والجداول...", "التحقق من صحة البيانات...", "تحليل البنية والمحتوى..."].map((step, i) => (
+            {["قراءة بيانات المستند...", "استخراج الحقول والجداول...", "التحقق من صحة البيانات...", "معالجة البنية والمحتوى..."].map((step, i) => (
               <div key={i} className="flex items-center gap-2 animate-pulse" style={{ animationDelay: `${i * 0.8}s` }}>
                 <Zap className="w-3 h-3 text-primary" />
                 <span className="text-[10px] text-muted-foreground">{step}</span>
@@ -119,7 +119,7 @@ const BrainCard = () => {
             <Upload className="w-5 h-5 text-primary" strokeWidth={2} />
           </div>
           <p className="text-[11px] text-muted-foreground">
-            {analysisCount === 0 ? "أول تحليل مجاني! انقر للبدء" : "انقر لتحليل مستند جديد"}
+            {analysisCount === 0 ? "أول معالجة مجانية! انقر للبدء" : "انقر لمعالجة مستند جديد"}
           </p>
         </div>
       )}
@@ -128,7 +128,7 @@ const BrainCard = () => {
         <div className="border border-dashed border-primary/30 rounded-lg p-6 flex flex-col items-center justify-center gap-3 bg-primary/5">
           <Lock className="w-8 h-8 text-primary" />
           <p className="text-xs text-foreground font-bold text-center">انتهت التجربة المجانية!</p>
-          <p className="text-[10px] text-muted-foreground text-center">اشترك للحصول على تحليلات غير محدودة</p>
+          <p className="text-[10px] text-muted-foreground text-center">اشترك للحصول على معالجات غير محدودة</p>
           <button
             onClick={() => {
               const el = document.getElementById("subscription-section");
