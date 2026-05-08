@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CheckCircle2, FileText, MapPin, Ruler, ScanLine, ShieldCheck, Smartphone, User } from "lucide-react";
+import { FileText, MapPin, Ruler, ScanLine, ShieldCheck, Smartphone, User } from "lucide-react";
 
 export interface DeedVisualData {
   deedNumber: string;
