@@ -66,18 +66,18 @@ const DeedPaper = ({ deed, mini = false }: { deed: DeedVisualData; mini?: boolea
     </div>
 
     {/* deed body lines */}
-    <div className={`relative z-10 mx-auto mt-[4%] w-[82%] space-y-[3%] text-right ${mini ? "text-[6px] sm:text-[8px]" : "text-[8px] sm:text-[11px] md:text-[13px]"}`}>
-      <p style={{ color: ink, fontWeight: 800 }}>
-        رقم الصك: <span style={{ color: ink }}>{v(deed.deedNumber)}</span>
+    <div className={`relative z-10 mx-auto mt-[4%] w-[86%] space-y-[3%] text-right leading-tight ${mini ? "text-[5.5px] sm:text-[7px]" : "text-[7px] sm:text-[10px] md:text-[12px]"}`}>
+      <p className="flex items-center justify-between gap-1 whitespace-nowrap" style={{ color: ink, fontWeight: 800 }}>
+        <span>رقم الصك:</span> <span className="min-w-0 text-left" style={{ color: ink }}>{v(deed.deedNumber)}</span>
       </p>
-      <p style={{ color: ink, fontWeight: 800 }}>
-        رقم المالك: <span>تام</span>
+      <p className="flex items-center justify-between gap-1 whitespace-nowrap" style={{ color: ink, fontWeight: 800 }}>
+        <span>حالة الصك:</span> <span>ساري</span>
       </p>
-      <p style={{ color: ink, fontWeight: 800 }}>
-        المالك: <span>{v(deed.owner)}</span>
+      <p className="flex items-center justify-between gap-1 whitespace-nowrap" style={{ color: ink, fontWeight: 800 }}>
+        <span>المالك:</span> <span className="min-w-0 text-left">{v(deed.owner)}</span>
       </p>
-      <p style={{ color: ink, fontWeight: 800 }}>
-        المساحة: <span>{deed.area ? `${deed.area} م²` : "—"}</span>
+      <p className="flex items-center justify-between gap-1 whitespace-nowrap" style={{ color: ink, fontWeight: 800 }}>
+        <span>المساحة:</span> <span>{deed.area ? `${deed.area} م²` : "—"}</span>
       </p>
       {!mini && (
         <>
