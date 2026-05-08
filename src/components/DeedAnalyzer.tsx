@@ -18,10 +18,10 @@ interface DeedData {
   district: string;
 }
 
-// Neon palette aligned with app branding
-const NEON_PINK = "#ff00ff";
-const NEON_PURPLE = "#bf5af2";
-const NEON_VIOLET = "#7c3aed";
+// Neon palette — strict Blue/Cyan tech theme (no green, no magenta)
+const NEON_PINK = "#00FFFF";   // cyan (kept name to minimize diff)
+const NEON_PURPLE = "#3b82f6"; // neon blue
+const NEON_VIOLET = "#1d4ed8"; // deep blue
 
 const DeedAnalyzer = () => {
   const [state, setState] = useState<AnalysisState>("idle");
