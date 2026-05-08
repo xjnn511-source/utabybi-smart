@@ -17,14 +17,7 @@ interface DeedData {
   district: string;
 }
 
-// Hardcoded corrections — applied to override any extraction inaccuracies
-const CORRECTED_DATA: DeedData = {
-  deedNumber: "058",
-  area: "1220 متر مربع",
-  owner: "عمران وعمر المعيدي",
-  city: "جدة",
-  district: "حي المنتزهات الشرقية",
-};
+// No hardcoded data — extraction comes 100% from the uploaded image
 
 const DeedAnalyzer = () => {
   const [state, setState] = useState<AnalysisState>("idle");
