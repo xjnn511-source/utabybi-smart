@@ -47,9 +47,9 @@ const ConnectorLines = () => (
 );
 
 const MiniField = ({ label, value }: { label: string; value: string }) => (
-  <div className="grid grid-cols-[1fr_0.82fr] items-center gap-[3%] border-b py-[2.2%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.28)" }}>
-    <span className="truncate text-left text-[7px] font-black leading-none sm:text-[10px] md:text-[12px]" style={{ color: text }}>{value}</span>
-    <span className="text-right text-[6px] font-black leading-none sm:text-[8px] md:text-[10px]" style={{ color: muted }}>{label}</span>
+  <div className="grid grid-cols-[1fr_0.82fr] items-center gap-[8%] border-b py-[3.5%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.28)" }}>
+    <span className="truncate text-left text-[7px] font-black leading-tight sm:text-[10px] md:text-[12px]" style={{ color: text, letterSpacing: "0.04em" }}>{value}</span>
+    <span className="text-right text-[6px] font-black leading-tight sm:text-[8px] md:text-[10px]" style={{ color: muted, letterSpacing: "0.06em" }}>{label}</span>
   </div>
 );
 
@@ -141,11 +141,11 @@ const MapPanel = ({ deed }: { deed: DeedVisualData }) => (
 );
 
 const Metric = ({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) => (
-  <div className="flex min-w-0 items-center justify-between gap-[4%] rounded-[6px] border px-[5%] py-[5%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 14px hsl(var(--deed-gold) / 0.16)" }}>
+  <div className="flex min-w-0 items-center justify-between gap-[6%] rounded-[6px] border px-[6%] py-[6%]" style={{ borderColor: line, background: "hsl(var(--deed-bg) / 0.82)", boxShadow: "0 0 14px hsl(var(--deed-gold) / 0.16)" }}>
     <Icon className="h-4 w-4 shrink-0 sm:h-6 sm:w-6 md:h-7 md:w-7" style={{ color: mint }} />
-    <div className="min-w-0 flex-1 text-right leading-none">
-      <p className="truncate text-[6px] font-black sm:text-[9px] md:text-[11px]" style={{ color: muted }}>{label}</p>
-      <p className="mt-[5%] truncate text-[7px] font-black sm:text-[11px] md:text-[13px]" style={{ color: text }}>{value}</p>
+    <div className="min-w-0 flex-1 text-right leading-tight">
+      <p className="truncate text-[6px] font-black sm:text-[9px] md:text-[11px]" style={{ color: muted, letterSpacing: "0.05em" }}>{label}</p>
+      <p className="mt-[8%] truncate text-[7px] font-black sm:text-[11px] md:text-[13px]" style={{ color: text, letterSpacing: "0.04em" }}>{value}</p>
     </div>
   </div>
 );
@@ -168,12 +168,12 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
     <GlowDot className="left-[51.6%] top-[53.2%]" />
     <GlowDot className="left-[81.2%] top-[63.5%]" />
 
-    <header className="absolute right-[4.2%] top-[5.1%] z-40 flex max-w-[47%] items-center gap-[2%]">
+    <header className="absolute right-[4.2%] top-[5.1%] z-40 flex max-w-[47%] items-center gap-[2.5%]">
       <ShieldCheck className="h-4 w-4 shrink-0 sm:h-6 sm:w-6" style={{ color: gold, filter: "drop-shadow(0 0 8px hsl(var(--deed-gold) / 0.68))" }} />
-      <h2 className="truncate text-[9px] font-black leading-none sm:text-[17px] md:text-[22px]" style={{ color: goldSoft, textShadow: "0 0 12px hsl(var(--deed-gold) / 0.45)" }}>عُتيبي ذكي Ai: تحليل صك عقاري</h2>
+      <h2 className="truncate text-[9px] font-black leading-tight sm:text-[17px] md:text-[22px]" style={{ color: goldSoft, textShadow: "0 0 12px hsl(var(--deed-gold) / 0.45)", letterSpacing: "0.03em" }}>عُتيبي ذكي Ai: تحليل صك عقاري</h2>
     </header>
 
-    <div className="absolute left-[38.5%] top-[7.6%] z-50 flex items-center gap-1 rounded-[6px] border px-[2%] py-[1%] text-[7px] font-black leading-none sm:text-[12px] md:text-[15px]" style={{ color: text, borderColor: line, background: "hsl(var(--deed-bg) / 0.86)", boxShadow: "0 0 16px hsl(var(--deed-gold) / 0.27)" }}>
+    <div className="absolute left-[38.5%] top-[7.6%] z-50 flex items-center gap-1.5 rounded-[6px] border px-[2.4%] py-[1.4%] text-[7px] font-black leading-tight sm:text-[12px] md:text-[15px]" style={{ color: text, borderColor: line, background: "hsl(var(--deed-bg) / 0.86)", boxShadow: "0 0 16px hsl(var(--deed-gold) / 0.27)", letterSpacing: "0.04em" }}>
       <CheckCircle2 className="h-3 w-3 sm:h-5 sm:w-5" style={{ color: mint }} />
       حالة الصك: محدّث وساري
     </div>
