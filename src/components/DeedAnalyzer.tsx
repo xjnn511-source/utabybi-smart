@@ -154,8 +154,35 @@ const DeedAnalyzer = () => {
     district: sanitizeArabic(d.district).slice(0, 60),
   });
 
+  const runPreExportAudit = async (): Promise<void> => {
+    if (!deedData) return;
+    const cleaned = sanitizeDeedForExport(deedData);
+    const missing: string[] = [];
+    if (!cleaned.owner) missing.push("اسم المالك");
+    if (!cleaned.deedNumber) missing.push("رقم الصك");
+    if (!cleaned.area) missing.push("المساحة");
+    if (!cleaned.district && !cleaned.city) missing.push("الموقع");
+    const changed =
+      cleaned.owner !== deedData.owner ||
+      cleaned.deedNumber !== deedData.deedNumber ||
+      cleaned.area !== deedData.area ||
+      cleaned.district !== deedData.district ||
+      cleaned.city !== deedData.city;
+    if (changed) {
+      setDeedData(cleaned);
+      try { localStorage.setItem("utaybi.deedData", JSON.stringify(cleaned)); } catch {}
+      toast({ title: "تم التدقيق التلقائي", description: "تنسيق الأرقام والكتابة العربية" });
+      await new Promise((r) => requestAnimationFrame(() => r(null)));
+      await new Promise((r) => requestAnimationFrame(() => r(null)));
+    }
+    if (missing.length) {
+      toast({ title: "حقول ناقصة", description: `يُفضّل إكمال: ${missing.join("، ")}`, variant: "destructive" });
+    }
+  };
+
   const handleDownload = async () => {
     if (!deedPanelRef.current) return;
+    await runPreExportAudit();
     try {
       const dataUrl = await toPng(deedPanelRef.current, {
         cacheBust: true,
@@ -174,6 +201,7 @@ const DeedAnalyzer = () => {
 
   const handleDownloadPdf = async () => {
     if (!deedPanelRef.current) return;
+    await runPreExportAudit();
     try {
       const dataUrl = await toPng(deedPanelRef.current, {
         cacheBust: true,
