@@ -22,7 +22,7 @@ const menuItems = [
   { title: "معالج البيانات المنطقي", icon: FileSearch, path: "/" },
   { title: "محرك الأتمتة الصامتة", icon: Scissors, path: "/" },
   { title: "محرك أتمتة النصوص", icon: Megaphone, path: "/" },
-  { title: "نظام المؤشرات الرقمية", icon: Radio, path: "/" },
+  { title: "نظام المؤشرات الرقمية", icon: Radio, path: "/indicators" },
   { title: "وحدة معالجة الوسائط المتعددة", icon: Video, path: "/" },
   { title: "نظام تقييم المؤشرات الرقمية", icon: TrendingUp, path: "/tiktok" },
   { title: "الحاسبة الرقمية", icon: Calculator, path: "/" },
