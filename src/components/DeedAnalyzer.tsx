@@ -482,89 +482,9 @@ const DeedAnalyzer = () => {
               </span>
             </div>
 
-            {/* 3-Panel Tactical Dashboard */}
-            <div
-              ref={deedPanelRef}
-              className="relative rounded-2xl p-3 sm:p-4 overflow-hidden"
-              style={{
-                background: "linear-gradient(145deg, #000814 0%, #001428 60%, #000008 100%)",
-                border: `1.5px solid ${NEON_PINK}80`,
-                boxShadow: `0 0 35px ${NEON_PINK}40, inset 0 0 50px ${NEON_PINK}10`,
-              }}
-            >
-              {/* grid background */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-20"
-                style={{
-                  backgroundImage: `linear-gradient(${NEON_PINK}30 1px, transparent 1px), linear-gradient(90deg, ${NEON_PINK}30 1px, transparent 1px)`,
-                  backgroundSize: "24px 24px",
-                }}
-              />
-
-              {/* corner ornaments */}
-              {[
-                { top: 6, left: 6, b: "border-t-2 border-l-2" },
-                { top: 6, right: 6, b: "border-t-2 border-r-2" },
-                { bottom: 6, left: 6, b: "border-b-2 border-l-2" },
-                { bottom: 6, right: 6, b: "border-b-2 border-r-2" },
-              ].map((c, i) => (
-                <div key={i} className={`absolute w-5 h-5 ${c.b}`} style={{ ...c, borderColor: NEON_PINK, boxShadow: `0 0 8px ${NEON_PINK}` }} />
-              ))}
-
-              {/* Title bar */}
-              <div className="relative text-center mb-3 pb-2" style={{ borderBottom: `1px dashed ${NEON_PINK}50` }}>
-                <p className="text-[10px] font-bold tracking-[0.3em]" style={{ color: `${NEON_PINK}cc` }}>
-                  TACTICAL REAL-ESTATE INTERFACE
-                </p>
-                <h3 className="text-base font-extrabold mt-0.5" style={{ color: "#fff", textShadow: `0 0 10px ${NEON_PINK}` }}>
-                  وثيقة مبايعة رقمية مؤتمتة
-                </h3>
-              </div>
-
-              {/* 3 panels */}
-              <div className="relative grid grid-cols-1 md:grid-cols-3 gap-3">
-                {/* LEFT: Digital Deed */}
-                <div
-                  className="rounded-xl p-3 relative"
-                  style={{
-                    background: "rgba(0,8,20,0.7)",
-                    border: `1px solid ${NEON_PINK}60`,
-                    boxShadow: `inset 0 0 18px ${NEON_PINK}15, 0 0 14px ${NEON_PINK}25`,
-                  }}
-                >
-                  <p className="text-[9px] font-bold tracking-widest mb-2" style={{ color: `${NEON_PINK}aa` }}>
-                    01 · DIGITAL DEED
-                  </p>
-                  <div className="flex justify-center mb-2">
-                    <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center"
-                      style={{
-                        background: `radial-gradient(circle, ${NEON_PINK}25 0%, transparent 70%)`,
-                        border: `1.5px solid ${NEON_PINK}`,
-                        boxShadow: `0 0 14px ${NEON_PINK}`,
-                      }}
-                    >
-                      <svg viewBox="0 0 64 64" className="w-8 h-8" fill="none" stroke={NEON_PINK} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 4px ${NEON_PINK})` }}>
-                        <path d="M32 50 L32 28" />
-                        <path d="M32 28 C 22 22, 16 24, 14 30" />
-                        <path d="M32 28 C 42 22, 48 24, 50 30" />
-                        <path d="M32 28 C 26 18, 22 16, 18 18" />
-                        <path d="M32 28 C 38 18, 42 16, 46 18" />
-                        <path d="M32 28 C 30 20, 32 14, 32 12" />
-                        <path d="M14 54 L30 42" />
-                        <path d="M50 54 L34 42" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="space-y-1.5 text-center">
-                    <p className="text-[9px]" style={{ color: `${NEON_PINK}99` }}>المالك</p>
-                    <p className="text-sm font-extrabold" style={{ color: "#fff", textShadow: `0 0 8px ${NEON_PINK}` }}>{deedData.owner || "—"}</p>
-                    <p className="text-[9px] mt-2" style={{ color: `${NEON_PINK}99` }}>رقم الوثيقة</p>
-                    <p className="text-xs font-bold font-mono" style={{ color: NEON_PINK, textShadow: `0 0 6px ${NEON_PINK}` }}>{deedData.deedNumber || "—"}</p>
-                    <p className="text-[9px] mt-2" style={{ color: `${NEON_PINK}99` }}>المساحة</p>
-                    <p className="text-xs font-bold" style={{ color: "#fff", textShadow: `0 0 6px ${NEON_PINK}` }}>{deedData.area || "—"} م²</p>
-                  </div>
-                </div>
+            <div ref={deedPanelRef}>
+              <DeedVisualDashboard deed={deedData} />
+            </div>
 
                 {/* MIDDLE: Pulse / Radar */}
                 <div
