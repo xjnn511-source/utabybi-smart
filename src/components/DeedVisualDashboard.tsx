@@ -47,9 +47,9 @@ const ConnectorLines = () => (
 );
 
 const MiniField = ({ label, value }: { label: string; value: string }) => (
-  <div className="grid grid-cols-[1fr_0.82fr] items-center gap-[8%] border-b py-[3.5%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.28)" }}>
-    <span className="truncate text-left text-[7px] font-black leading-tight sm:text-[10px] md:text-[12px]" style={{ color: text, letterSpacing: "0.04em" }}>{value}</span>
-    <span className="text-right text-[6px] font-black leading-tight sm:text-[8px] md:text-[10px]" style={{ color: muted, letterSpacing: "0.06em" }}>{label}</span>
+  <div className="grid grid-cols-[1fr_0.78fr] items-center gap-[10%] border-b py-[4.5%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.28)" }}>
+    <span className="truncate text-left text-[8px] font-black leading-tight sm:text-[12px] md:text-[14px]" style={{ color: text, letterSpacing: "0.05em" }}>{value}</span>
+    <span className="text-right text-[7px] font-black leading-tight sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: "0.08em" }}>{label}</span>
   </div>
 );
 
