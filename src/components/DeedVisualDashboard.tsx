@@ -18,10 +18,10 @@ const panel = "hsl(var(--deed-panel) / 0.78)";
 const line = "hsl(var(--deed-gold) / 0.68)";
 
 const valueOf = (v?: string) => v?.trim() || "—";
-const compact = (v?: string, max = 16, fallback = "...") => {
+const compact = (v?: string, _max = 16, fallback = "...") => {
   const value = valueOf(v);
   if (value === "—") return fallback;
-  return value.length > max ? `...${value.slice(-(max - 3))}` : value;
+  return value;
 };
 const locationOf = (d: DeedVisualData) => [d.city, d.district].filter(Boolean).join(" - ") || "—";
 
@@ -47,9 +47,9 @@ const ConnectorLines = () => (
 );
 
 const MiniField = ({ label, value }: { label: string; value: string }) => (
-  <div className="grid grid-cols-[1fr_0.78fr] items-center gap-[10%] border-b py-[4.5%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.28)" }}>
-    <span className="truncate text-left text-[8px] font-black leading-tight sm:text-[12px] md:text-[14px]" style={{ color: text, letterSpacing: "0.05em" }}>{value}</span>
-    <span className="text-right text-[7px] font-black leading-tight sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: "0.08em" }}>{label}</span>
+  <div className="grid grid-cols-[minmax(0,1fr)_0.7fr] items-center gap-[7%] border-b py-[3.6%]" style={{ borderColor: "hsl(var(--deed-cyan) / 0.28)" }}>
+    <span dir="auto" className="min-w-0 break-words text-left text-[7px] font-black leading-[1.15] sm:text-[10px] md:text-[12px]" style={{ color: text, letterSpacing: 0 }}>{value}</span>
+    <span className="text-right text-[7px] font-black leading-tight sm:text-[10px] md:text-[12px]" style={{ color: muted, letterSpacing: 0 }}>{label}</span>
   </div>
 );
 
