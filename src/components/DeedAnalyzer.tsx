@@ -209,19 +209,27 @@ const DeedAnalyzer = () => {
     }
   };
 
+  const captureDeed = async (): Promise<string> => {
+    const node = deedPanelRef.current!;
+    const canvas = await html2canvas(node, {
+      backgroundColor: "#000814",
+      scale: 3,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      windowWidth: node.scrollWidth,
+      windowHeight: node.scrollHeight,
+    });
+    return canvas.toDataURL("image/png");
+  };
+
   const handleDownload = async () => {
     if (!deedPanelRef.current) return;
     await runPreExportAudit();
     try {
-      const dataUrl = await toPng(deedPanelRef.current, {
-        cacheBust: true,
-        pixelRatio: 3,
-        backgroundColor: DEED_BG,
-        skipFonts: true,
-      });
+      const dataUrl = await captureDeed();
       const fileName = `utaybi-deed-${deedData?.deedNumber || "document"}.png`;
 
-      // Try native share (mobile) with the image file
       try {
         const blob = await (await fetch(dataUrl)).blob();
         const imgFile = new File([blob], fileName, { type: "image/png" });
@@ -237,14 +245,14 @@ const DeedAnalyzer = () => {
         }
       } catch {}
 
-      // Fallback: direct download
       const link = document.createElement("a");
       link.download = fileName;
       link.href = dataUrl;
       link.click();
       toast({ title: "تم تحميل بطاقة الصك (PNG)", description: "بنفس شكل البطاقة الأفقية" });
     } catch (err: any) {
-      toast({ title: "فشل التحميل", description: err.message, variant: "destructive" });
+      console.error("PNG export error:", err);
+      toast({ title: "فشل التحميل", description: err.message || "تعذر التصدير", variant: "destructive" });
     }
   };
 
@@ -252,12 +260,7 @@ const DeedAnalyzer = () => {
     if (!deedPanelRef.current) return;
     await runPreExportAudit();
     try {
-      const dataUrl = await toPng(deedPanelRef.current, {
-        cacheBust: true,
-        pixelRatio: 3,
-        backgroundColor: DEED_BG,
-        skipFonts: true,
-      });
+      const dataUrl = await captureDeed();
       const img = new Image();
       img.src = dataUrl;
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
@@ -290,7 +293,8 @@ const DeedAnalyzer = () => {
       pdf.save(`utaybi-deed-${deedData?.deedNumber || "document"}.pdf`);
       toast({ title: "تم تصدير الوثيقة كملف PDF", description: "جودة طباعة عالية" });
     } catch (err: any) {
-      toast({ title: "فشل تصدير PDF", description: err.message, variant: "destructive" });
+      console.error("PDF export error:", err);
+      toast({ title: "فشل تصدير PDF", description: err.message || "تعذر الحفظ", variant: "destructive" });
     }
   };
 
