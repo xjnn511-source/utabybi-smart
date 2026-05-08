@@ -19,12 +19,12 @@ import {
 const menuItems = [
   { title: "الرئيسية", icon: Home, path: "/" },
   { title: "لوحة التحكم", icon: LayoutDashboard, path: "/dashboard" },
-  { title: "Logic Data Processor", icon: FileSearch, path: "/" },
-  { title: "محرك الأتمتة (The Silencer)", icon: Scissors, path: "/" },
-  { title: "Text Automation Engine", icon: Megaphone, path: "/" },
-  { title: "Digital Metrics System", icon: Radio, path: "/" },
-  { title: "وحدة معالجة الوسائط المتعددة", icon: Video, path: "/" },
-  { title: "نظام تحليل المؤشرات الرقمية", icon: TrendingUp, path: "/tiktok" },
+  { title: "Smart Document Analyzer", icon: FileSearch, path: "/" },
+  { title: "المُحرر الذكي (The Silencer)", icon: Scissors, path: "/" },
+  { title: "AI Content Engine", icon: Megaphone, path: "/" },
+  { title: "Big Data Analytics Hub", icon: Radio, path: "/" },
+  { title: "صانع فيديوهات المونتاج", icon: Video, path: "/" },
+  { title: "إعلانات TikTok", icon: TrendingUp, path: "/tiktok" },
   { title: "الحاسبة الرقمية", icon: Calculator, path: "/" },
   { title: "الاشتراكات", icon: CreditCard, path: "/" },
 ];
