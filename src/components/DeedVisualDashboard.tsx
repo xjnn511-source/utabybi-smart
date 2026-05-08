@@ -239,8 +239,8 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
     <div className="absolute inset-[1.8%] rounded-[8px] border" style={{ borderColor: `${gold}66` }} />
 
     {/* Header (top right) */}
-    <header className="absolute right-[3%] top-[4%] z-40 flex items-center gap-2">
-      <h2 className="truncate text-[9px] font-black sm:text-[15px] md:text-[20px]" style={{ color: goldSoft, textShadow: `0 0 10px ${gold}88` }}>
+    <header className="absolute right-[3%] top-[4%] z-40 flex max-w-[58%] items-center gap-2">
+      <h2 className="whitespace-nowrap text-[8px] font-black sm:text-[14px] md:text-[18px]" style={{ color: goldSoft, textShadow: `0 0 10px ${gold}88` }}>
         عُتيبي ذكي Ai: تحليل صك عقاري
       </h2>
       <svg viewBox="0 0 30 30" className="h-4 w-4 sm:h-6 sm:w-6" aria-hidden="true">
@@ -249,9 +249,9 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
       </svg>
     </header>
 
-    {/* Status pill (top center) */}
+    {/* Status pill (below header, without covering brand) */}
     <div
-      className="absolute left-1/2 top-[5.5%] z-50 flex -translate-x-1/2 items-center gap-1.5 rounded-[8px] border-2 px-3 py-[1%] text-[8px] font-black sm:text-[12px] md:text-[15px]"
+      className="absolute right-[3%] top-[14%] z-50 flex items-center gap-1.5 rounded-[8px] border-2 px-3 py-[1%] text-[7px] font-black sm:text-[11px] md:text-[13px]"
       style={{ color: goldSoft, borderColor: gold, background: "hsl(var(--deed-ink) / 0.92)", boxShadow: `0 0 14px ${gold}55` }}
     >
       حالة الصك: محدّث وساري
