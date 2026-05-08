@@ -1,9 +1,9 @@
 import { FileSearch, PenTool, Play, Calculator } from "lucide-react";
 
 const services = [
-  { icon: FileSearch, label: "محلل الصكوك" },
-  { icon: PenTool, label: "منشئ المحتوى" },
-  { icon: Play, label: "صانع الفيديو" },
+  { icon: FileSearch, label: "المعالج المنطقي" },
+  { icon: PenTool, label: "توليد نصوص مؤتمتة" },
+  { icon: Play, label: "معالجة الوسائط" },
   { icon: Calculator, label: "الأداة الحسابية" },
 ];
 
