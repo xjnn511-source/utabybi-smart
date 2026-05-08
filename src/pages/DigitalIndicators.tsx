@@ -87,7 +87,7 @@ const DigitalIndicators = () => {
           className="rounded-xl p-3 flex items-center justify-center text-[10px] mt-2"
           style={{ background: "hsl(var(--deed-bg) / 0.62)", border: "1px solid hsl(var(--deed-cyan) / 0.18)" }}
         >
-          <span style={{ color: `${CYAN}aa` }}>
+          <span style={{ color: CYAN_SOFT }}>
             عُتيبي ذكي Ai: نحلل بالرؤية والصوت — معالجة برمجية مؤتمتة
           </span>
         </div>
