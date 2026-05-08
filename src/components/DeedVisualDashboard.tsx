@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CheckCircle2, FileText, Home, MapPin, Ruler, ShieldCheck, Smartphone, User } from "lucide-react";
+import { CheckCircle2, FileText, Home, MapPin, Ruler, ShieldCheck, Smartphone, User, type LucideIcon } from "lucide-react";
 
 export interface DeedVisualData {
   deedNumber: string;
@@ -11,7 +11,6 @@ export interface DeedVisualData {
 
 const glow = "hsl(var(--deed-gold))";
 const glowSoft = "hsl(var(--deed-gold-soft))";
-const bg = "hsl(var(--deed-bg))";
 const ink = "hsl(var(--deed-ink))";
 const text = "hsl(var(--deed-text))";
 const muted = "hsl(var(--deed-muted))";
@@ -20,7 +19,7 @@ const line = "hsl(var(--deed-gold) / 0.54)";
 const valueOf = (v?: string) => v?.trim() || "—";
 const locationOf = (d: DeedVisualData) => [d.city, d.district].filter(Boolean).join(" - ") || "—";
 
-const Field = ({ label, value, icon: Icon }: { label: string; value: string; icon: typeof FileText }) => (
+const Field = ({ label, value, icon: Icon }: { label: string; value: string; icon: LucideIcon }) => (
   <div
     className="relative flex min-w-0 items-center gap-1.5 rounded-md border px-2 py-1.5"
     style={{
