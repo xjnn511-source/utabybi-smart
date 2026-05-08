@@ -26,6 +26,8 @@ const NEON_PURPLE = "hsl(var(--deed-blue))"; // neon blue
 const NEON_VIOLET = "hsl(var(--accent))"; // app blue accent
 const DEED_BG = "hsl(var(--deed-bg))";
 const DEED_TEXT = "hsl(var(--deed-text))";
+const cyanA = (alpha: number) => `hsl(var(--deed-cyan) / ${alpha})`;
+const blueA = (alpha: number) => `hsl(var(--deed-blue) / ${alpha})`;
 
 const DeedAnalyzer = () => {
   const [state, setState] = useState<AnalysisState>("idle");
