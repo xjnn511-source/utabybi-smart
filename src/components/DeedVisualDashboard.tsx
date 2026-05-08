@@ -141,7 +141,7 @@ export const DeedVisualDashboard = ({ deed }: { deed: DeedVisualData }) => (
       <Metric icon={MapPin} label="الموقع" value={trimValue(locationOf(deed))} />
       <Metric icon={FileText} label="رقم الصك" value={trimValue(deed.deedNumber)} />
     </div>
-    <div className="absolute bottom-[3%] left-[31%] right-[31%] text-center text-[16px] font-black leading-tight" style={{ color: text, textShadow: "0 0 10px hsl(var(--deed-cyan) / 0.65)" }}>
+    <div className="absolute bottom-[3%] left-[31%] right-[31%] text-center text-[9px] font-black leading-tight sm:text-[14px] md:text-[16px]" style={{ color: text, textShadow: "0 0 10px hsl(var(--deed-cyan) / 0.65)" }}>
       عُتيبي ذكي Ai: نحلل<br />بالرؤية والصوت
     </div>
   </section>
