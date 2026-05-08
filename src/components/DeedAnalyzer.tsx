@@ -358,15 +358,19 @@ const DeedAnalyzer = () => {
                     <input
                       type="text"
                       value={deedData[key]}
-                      readOnly={!editMode}
+                      placeholder="—"
                       onChange={(e) => updateField(key, e.target.value)}
-                      className="w-full bg-transparent outline-none text-sm font-bold font-cairo"
+                      className="w-full bg-transparent outline-none text-sm font-bold font-cairo focus:ring-1 rounded px-1 py-0.5"
                       style={{
-                        color: editMode ? "#a7f3d0" : "#e2e8f0",
+                        color: "#a7f3d0",
                         textShadow: `0 0 6px ${color}80`,
-                        cursor: editMode ? "text" : "default",
                       }}
                     />
+                    {key === "district" && deedData.district === "" && (
+                      <p className="text-[9px] mt-1" style={{ color: "rgba(34,211,238,0.6)" }}>
+                        لم يتم استخراج الحي — يرجى الإدخال يدوياً
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>
