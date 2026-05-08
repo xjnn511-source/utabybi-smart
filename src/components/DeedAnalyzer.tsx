@@ -215,14 +215,33 @@ const DeedAnalyzer = () => {
     try {
       const dataUrl = await toPng(deedPanelRef.current, {
         cacheBust: true,
-        pixelRatio: 2,
+        pixelRatio: 3,
         backgroundColor: DEED_BG,
       });
+      const fileName = `utaybi-deed-${deedData?.deedNumber || "document"}.png`;
+
+      // Try native share (mobile) with the image file
+      try {
+        const blob = await (await fetch(dataUrl)).blob();
+        const imgFile = new File([blob], fileName, { type: "image/png" });
+        const navAny = navigator as any;
+        if (navAny.canShare && navAny.canShare({ files: [imgFile] })) {
+          await navAny.share({
+            files: [imgFile],
+            title: "صك عقاري رقمي",
+            text: "بطاقة الصك العقاري — عُتيبي ذكي Ai",
+          });
+          toast({ title: "تمت المشاركة" });
+          return;
+        }
+      } catch {}
+
+      // Fallback: direct download
       const link = document.createElement("a");
-      link.download = `deed-${deedData?.deedNumber || "document"}.png`;
+      link.download = fileName;
       link.href = dataUrl;
       link.click();
-      toast({ title: "تم تحميل الوثيقة الرقمية" });
+      toast({ title: "تم تحميل بطاقة الصك (PNG)", description: "بنفس شكل البطاقة الأفقية" });
     } catch (err: any) {
       toast({ title: "فشل التحميل", description: err.message, variant: "destructive" });
     }
