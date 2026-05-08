@@ -46,7 +46,7 @@ const BrainCard = () => {
       // Record the analysis
       await supabase.from("deed_analyses").insert({
         user_id: user.id,
-        file_name: "تحليل_مستند_" + Date.now(),
+        file_name: "معالجة_مستند_" + Date.now(),
         status: "completed",
         analysis_result: {
           fields: 7,
@@ -65,7 +65,7 @@ const BrainCard = () => {
       setIsProcessing(false);
       setResult("تم استخراج ٧ حقول بيانات من المستند بنجاح ✓");
       setAnalysisCount((c) => c + 1);
-      toast({ title: "تم تحليل المستند بنجاح! 📄" });
+      toast({ title: "تم معالجة المستند بنجاح! 📄" });
     } catch (err) {
       setIsProcessing(false);
       toast({ title: "حدث خطأ", variant: "destructive" });

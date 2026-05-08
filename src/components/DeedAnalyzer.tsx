@@ -285,7 +285,7 @@ const DeedAnalyzer = () => {
               onClick={handleReset}
               className="w-full h-10 bg-secondary border border-border text-foreground text-xs font-bold rounded-xl flex items-center justify-center gap-2 hover:border-primary transition-all"
             >
-              تحليل صك جديد
+              معالجة صك جديد
             </button>
           </motion.div>
         )}
