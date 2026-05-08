@@ -491,7 +491,7 @@ const DeedAnalyzer = () => {
 
               <div className="grid grid-cols-2 gap-2">
                 <button
-                  onClick={() => setEditMode(!editMode)}
+                  onClick={() => toast({ title: "تم تأكيد البيانات", description: "تم حفظ المدخلات النهائية للمعالجة البرمجية" })}
                   className="h-10 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
                   style={{
                     background: "rgba(34,211,238,0.08)",
@@ -501,7 +501,7 @@ const DeedAnalyzer = () => {
                   }}
                 >
                   <Edit3 className="w-3.5 h-3.5" />
-                  {editMode ? "حفظ التعديلات" : "تعديل البيانات المستخرجة"}
+                  تأكيد البيانات المستخرجة
                 </button>
                 <button
                   onClick={handleReset}
