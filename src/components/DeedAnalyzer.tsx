@@ -119,8 +119,8 @@ const DeedAnalyzer = () => {
           <FileSearch className="w-5 h-5 text-primary" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-foreground">محلل الصكوك الذكي Ai</h2>
-          <p className="text-[10px] text-muted-foreground">تحليل صك عقاري فوري بالذكاء الاصطناعي</p>
+          <h2 className="text-sm font-bold text-foreground">نظام معالجة البيانات المنطقي Ai</h2>
+          <p className="text-[10px] text-muted-foreground">معالجة بيانات تقنية فورية بأنظمة الأتمتة البرمجية</p>
         </div>
       </div>
 
