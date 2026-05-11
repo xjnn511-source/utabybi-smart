@@ -272,10 +272,36 @@ const MediaStudio = () => {
             <input type="color" value={accent} onChange={(e) => setAccent(e.target.value)} className="h-8 w-14 rounded border border-border bg-transparent" />
           </div>
         </div>
+
+        {/* Image enhancement */}
+        {imgUrl && (
+          <div className="card-neon p-4 space-y-3">
+            <h3 className="text-xs font-bold text-foreground flex items-center gap-2">
+              <Sun className="w-4 h-4 text-primary" /> تحسين الإضاءة والألوان
+            </h3>
+            <Slider label="السطوع" value={brightness} min={50} max={160} onChange={setBrightness} />
+            <Slider label="التباين" value={contrast} min={50} max={160} onChange={setContrast} />
+            <Slider label="تشبع الألوان" value={saturate} min={0} max={200} onChange={setSaturate} />
+            <button
+              onClick={() => { setBrightness(100); setContrast(100); setSaturate(100); }}
+              className="text-[11px] text-primary hover:underline"
+            >إعادة الافتراضي</button>
+          </div>
+        )}
       </main>
     </div>
   );
 };
+
+const Slider = ({ label, value, min, max, onChange }: { label: string; value: number; min: number; max: number; onChange: (v: number) => void }) => (
+  <div>
+    <div className="flex items-center justify-between mb-1">
+      <label className="text-[11px] text-muted-foreground">{label}</label>
+      <span className="text-[11px] text-primary font-bold">{value}%</span>
+    </div>
+    <input type="range" min={min} max={max} value={value} onChange={(e) => onChange(parseInt(e.target.value))} className="w-full accent-primary" />
+  </div>
+);
 
 const Field = ({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) => (
   <div>
