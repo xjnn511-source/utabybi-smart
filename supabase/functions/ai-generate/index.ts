@@ -48,7 +48,7 @@ serve(async (req) => {
       });
     }
 
-    const system = SYSTEM_PROMPTS[type] || SYSTEM_PROMPTS.letter;
+    const system = SYSTEM_PROMPTS[type] || SYSTEM_PROMPTS.deed_analysis;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
