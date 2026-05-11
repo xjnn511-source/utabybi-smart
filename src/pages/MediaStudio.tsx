@@ -55,7 +55,11 @@ const MediaStudio = () => {
       const H = Math.round((img.height / img.width) * W);
       canvas.width = W;
       canvas.height = H;
+
+      // Lighting / enhancement filters
+      ctx.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate}%)`;
       ctx.drawImage(img, 0, 0, W, H);
+      ctx.filter = "none";
 
       // dark gradient overlay (bottom)
       const grad = ctx.createLinearGradient(0, H * 0.35, 0, H);
@@ -85,7 +89,6 @@ const MediaStudio = () => {
       y += 70;
       ctx.font = "500 36px Cairo, system-ui, sans-serif";
       ctx.fillStyle = "rgba(255,255,255,0.92)";
-      // wrap subline
       const words = (subline || "").split(" ");
       let line = "";
       const maxW = W - padR - 100;
@@ -126,6 +129,28 @@ const MediaStudio = () => {
       ctx.fillStyle = "rgba(255,255,255,0.6)";
       ctx.textAlign = "left";
       ctx.fillText("عُتيبي ذكي 🤖", 32, 44);
+
+      // Optional logo (top-right)
+      const drawLogo = (logo: HTMLImageElement) => {
+        const logoH = 110;
+        const logoW = (logo.width / logo.height) * logoH;
+        const lx = W - 32 - logoW;
+        const ly = 32;
+        ctx.fillStyle = "rgba(255,255,255,0.92)";
+        const pad = 12;
+        ctx.fillRect(lx - pad, ly - pad, logoW + pad * 2, logoH + pad * 2);
+        ctx.drawImage(logo, lx, ly, logoW, logoH);
+      };
+      if (logoUrl) {
+        if (logoImgRef.current && logoImgRef.current.src === logoUrl) {
+          drawLogo(logoImgRef.current);
+        } else {
+          const lg = new Image();
+          lg.crossOrigin = "anonymous";
+          lg.onload = () => { logoImgRef.current = lg; drawLogo(lg); };
+          lg.src = logoUrl;
+        }
+      }
     };
     img.src = imgUrl;
   }, [imgUrl, headline, subline, cta, accent]);
