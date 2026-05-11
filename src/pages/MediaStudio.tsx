@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Upload, Sparkles, Download, Loader2, Type, Wand2 } from "lucide-react";
+import { ArrowRight, Upload, Sparkles, Download, Loader2, Type, Wand2, Image as ImageIcon, Sun } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -13,20 +13,30 @@ interface AdCopy {
 const MediaStudio = () => {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
+  const logoRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const logoImgRef = useRef<HTMLImageElement | null>(null);
 
   const [imgUrl, setImgUrl] = useState<string | null>(null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [headline, setHeadline] = useState("عُتيبي ذكي");
-  const [subline, setSubline] = useState("منصتك الذكية للحلول البرمجية");
-  const [cta, setCta] = useState("اشترك الآن");
+  const [subline, setSubline] = useState("منصتك الذكية للحلول العقارية");
+  const [cta, setCta] = useState("اتصل الآن");
   const [accent, setAccent] = useState("#bf5af2");
+  const [brightness, setBrightness] = useState(105);
+  const [contrast, setContrast] = useState(110);
+  const [saturate, setSaturate] = useState(115);
   const [brief, setBrief] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
 
   const handleFile = (f: File) => {
     const url = URL.createObjectURL(f);
     setImgUrl(url);
+  };
+  const handleLogo = (f: File) => {
+    const url = URL.createObjectURL(f);
+    setLogoUrl(url);
   };
 
   // Render canvas whenever inputs change
