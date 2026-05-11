@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Upload, Sparkles, Download, Loader2, Type, Wand2 } from "lucide-react";
+import { ArrowRight, Upload, Sparkles, Download, Loader2, Type, Wand2, Image as ImageIcon, Sun } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -13,20 +13,30 @@ interface AdCopy {
 const MediaStudio = () => {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
+  const logoRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const logoImgRef = useRef<HTMLImageElement | null>(null);
 
   const [imgUrl, setImgUrl] = useState<string | null>(null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [headline, setHeadline] = useState("عُتيبي ذكي");
-  const [subline, setSubline] = useState("منصتك الذكية للحلول البرمجية");
-  const [cta, setCta] = useState("اشترك الآن");
+  const [subline, setSubline] = useState("منصتك الذكية للحلول العقارية");
+  const [cta, setCta] = useState("اتصل الآن");
   const [accent, setAccent] = useState("#bf5af2");
+  const [brightness, setBrightness] = useState(105);
+  const [contrast, setContrast] = useState(110);
+  const [saturate, setSaturate] = useState(115);
   const [brief, setBrief] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
 
   const handleFile = (f: File) => {
     const url = URL.createObjectURL(f);
     setImgUrl(url);
+  };
+  const handleLogo = (f: File) => {
+    const url = URL.createObjectURL(f);
+    setLogoUrl(url);
   };
 
   // Render canvas whenever inputs change
@@ -45,7 +55,11 @@ const MediaStudio = () => {
       const H = Math.round((img.height / img.width) * W);
       canvas.width = W;
       canvas.height = H;
+
+      // Lighting / enhancement filters
+      ctx.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate}%)`;
       ctx.drawImage(img, 0, 0, W, H);
+      ctx.filter = "none";
 
       // dark gradient overlay (bottom)
       const grad = ctx.createLinearGradient(0, H * 0.35, 0, H);
@@ -75,7 +89,6 @@ const MediaStudio = () => {
       y += 70;
       ctx.font = "500 36px Cairo, system-ui, sans-serif";
       ctx.fillStyle = "rgba(255,255,255,0.92)";
-      // wrap subline
       const words = (subline || "").split(" ");
       let line = "";
       const maxW = W - padR - 100;
@@ -116,9 +129,31 @@ const MediaStudio = () => {
       ctx.fillStyle = "rgba(255,255,255,0.6)";
       ctx.textAlign = "left";
       ctx.fillText("عُتيبي ذكي 🤖", 32, 44);
+
+      // Optional logo (top-right)
+      const drawLogo = (logo: HTMLImageElement) => {
+        const logoH = 110;
+        const logoW = (logo.width / logo.height) * logoH;
+        const lx = W - 32 - logoW;
+        const ly = 32;
+        ctx.fillStyle = "rgba(255,255,255,0.92)";
+        const pad = 12;
+        ctx.fillRect(lx - pad, ly - pad, logoW + pad * 2, logoH + pad * 2);
+        ctx.drawImage(logo, lx, ly, logoW, logoH);
+      };
+      if (logoUrl) {
+        if (logoImgRef.current && logoImgRef.current.src === logoUrl) {
+          drawLogo(logoImgRef.current);
+        } else {
+          const lg = new Image();
+          lg.crossOrigin = "anonymous";
+          lg.onload = () => { logoImgRef.current = lg; drawLogo(lg); };
+          lg.src = logoUrl;
+        }
+      }
     };
     img.src = imgUrl;
-  }, [imgUrl, headline, subline, cta, accent]);
+  }, [imgUrl, logoUrl, headline, subline, cta, accent, brightness, contrast, saturate]);
 
   const generateCopy = async () => {
     if (!brief.trim()) {
@@ -177,6 +212,23 @@ const MediaStudio = () => {
             <span className="text-sm text-foreground font-bold">{imgUrl ? "تغيير الصورة" : "ارفع صورة الإعلان"}</span>
             <span className="text-[10px] text-muted-foreground">PNG / JPG حتى 5MB</span>
           </button>
+
+          {/* Logo upload */}
+          <input ref={logoRef} type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && handleLogo(e.target.files[0])} />
+          <div className="mt-3 flex items-center gap-2">
+            <button
+              onClick={() => logoRef.current?.click()}
+              className="flex-1 h-10 rounded-lg border border-border bg-secondary text-xs flex items-center justify-center gap-2 text-foreground hover:border-primary"
+            >
+              <ImageIcon className="w-4 h-4 text-primary" />
+              {logoUrl ? "تغيير الشعار" : "إضافة شعار / لوقو"}
+            </button>
+            {logoUrl && (
+              <button onClick={() => setLogoUrl(null)} className="h-10 px-3 rounded-lg border border-border text-[11px] text-muted-foreground hover:text-destructive">
+                إزالة
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Preview */}
@@ -220,10 +272,36 @@ const MediaStudio = () => {
             <input type="color" value={accent} onChange={(e) => setAccent(e.target.value)} className="h-8 w-14 rounded border border-border bg-transparent" />
           </div>
         </div>
+
+        {/* Image enhancement */}
+        {imgUrl && (
+          <div className="card-neon p-4 space-y-3">
+            <h3 className="text-xs font-bold text-foreground flex items-center gap-2">
+              <Sun className="w-4 h-4 text-primary" /> تحسين الإضاءة والألوان
+            </h3>
+            <Slider label="السطوع" value={brightness} min={50} max={160} onChange={setBrightness} />
+            <Slider label="التباين" value={contrast} min={50} max={160} onChange={setContrast} />
+            <Slider label="تشبع الألوان" value={saturate} min={0} max={200} onChange={setSaturate} />
+            <button
+              onClick={() => { setBrightness(100); setContrast(100); setSaturate(100); }}
+              className="text-[11px] text-primary hover:underline"
+            >إعادة الافتراضي</button>
+          </div>
+        )}
       </main>
     </div>
   );
 };
+
+const Slider = ({ label, value, min, max, onChange }: { label: string; value: number; min: number; max: number; onChange: (v: number) => void }) => (
+  <div>
+    <div className="flex items-center justify-between mb-1">
+      <label className="text-[11px] text-muted-foreground">{label}</label>
+      <span className="text-[11px] text-primary font-bold">{value}%</span>
+    </div>
+    <input type="range" min={min} max={max} value={value} onChange={(e) => onChange(parseInt(e.target.value))} className="w-full accent-primary" />
+  </div>
+);
 
 const Field = ({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) => (
   <div>
