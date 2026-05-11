@@ -153,7 +153,7 @@ const MediaStudio = () => {
       }
     };
     img.src = imgUrl;
-  }, [imgUrl, headline, subline, cta, accent]);
+  }, [imgUrl, logoUrl, headline, subline, cta, accent, brightness, contrast, saturate]);
 
   const generateCopy = async () => {
     if (!brief.trim()) {
