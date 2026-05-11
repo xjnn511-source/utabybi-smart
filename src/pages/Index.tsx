@@ -96,7 +96,7 @@ const Index = () => {
           <Footer />
 
           <AiChatbot />
-          <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+          <BottomNav />
         </div>
       </div>
     </SidebarProvider>
