@@ -1,21 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Sparkles, Copy, Download, FileText, Scroll, Megaphone, FileSignature, Loader2 } from "lucide-react";
+import { ArrowRight, Sparkles, Copy, Download, FileSearch, Megaphone, FileSignature, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-type GenType = "letter" | "petition" | "marketing" | "contract";
+type GenType = "deed_analysis" | "real_estate_ad" | "real_estate_contract";
 
 const TEMPLATES: { id: GenType; label: string; icon: any; placeholder: string }[] = [
-  { id: "letter", label: "خطاب رسمي", icon: FileText, placeholder: "اكتب موضوع الخطاب وتفاصيله: الجهة المرسل إليها، الغرض، النقاط الأساسية..." },
-  { id: "petition", label: "معروض / شكوى", icon: Scroll, placeholder: "اشرح الواقعة، الجهة المخاطبة، والطلب المراد تقديمه..." },
-  { id: "marketing", label: "محتوى تسويقي", icon: Megaphone, placeholder: "صف المنتج/الخدمة، الجمهور المستهدف، والميزة التنافسية..." },
-  { id: "contract", label: "صياغة عقد", icon: FileSignature, placeholder: "نوع العقد، الأطراف، المدة، المقابل، الالتزامات الأساسية..." },
+  { id: "deed_analysis", label: "تحليل صك عقاري", icon: FileSearch, placeholder: "ألصق بيانات الصك أو وصفه: رقم الصك، المساحة، المالك، الموقع، الحدود، الاستخدام... وسيتم تحليله عقارياً وقانونياً." },
+  { id: "real_estate_ad", label: "إعلان تسويقي عقاري", icon: Megaphone, placeholder: "صف العقار: نوعه (فيلا/أرض/شقة)، الموقع، المساحة، عدد الغرف، السعر، المميزات، الجمهور المستهدف..." },
+  { id: "real_estate_contract", label: "عقد / اتفاقية عقارية", icon: FileSignature, placeholder: "نوع العقد (بيع/إيجار/وساطة)، الأطراف، وصف العقار ورقم الصك، المقابل المالي، المدة، الشروط الأساسية..." },
 ];
 
 const AutomationStudio = () => {
   const navigate = useNavigate();
-  const [type, setType] = useState<GenType>("letter");
+  const [type, setType] = useState<GenType>("deed_analysis");
   const [prompt, setPrompt] = useState("");
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -63,17 +62,17 @@ const AutomationStudio = () => {
         <button onClick={() => navigate("/")} className="text-xs text-primary flex items-center gap-1">
           <ArrowRight className="w-4 h-4" /> الرئيسية
         </button>
-        <h1 className="text-base font-bold text-primary">محرك الأتمتة الذكي</h1>
+        <h1 className="text-base font-bold text-primary">محرك الأتمتة العقارية</h1>
         <div className="w-12" />
       </header>
 
       <main className="max-w-2xl mx-auto p-4 space-y-5">
         <p className="text-xs text-muted-foreground text-center">
-          اختر نوع المحتوى، أدخل تفاصيلك، واترك الذكاء الاصطناعي يصيغ نصاً احترافياً بالعربية الفصحى.
+          محرك ذكاء اصطناعي متخصص في القطاع العقاري السعودي: تحليل الصكوك، صياغة الإعلانات، وإعداد العقود باحترافية.
         </p>
 
         {/* Template chooser */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {TEMPLATES.map((t) => (
             <button
               key={t.id}
