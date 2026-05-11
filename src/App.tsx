@@ -34,6 +34,9 @@ const App = () => (
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/refund" element={<RefundPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+<Route path="/automation" element={<UserDashboard />} />
+<Route path="/digital-processor" element={<DigitalIndicators />} />
+<Route path="/ai-voice" element={<Index />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
