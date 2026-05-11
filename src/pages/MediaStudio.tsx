@@ -212,6 +212,23 @@ const MediaStudio = () => {
             <span className="text-sm text-foreground font-bold">{imgUrl ? "تغيير الصورة" : "ارفع صورة الإعلان"}</span>
             <span className="text-[10px] text-muted-foreground">PNG / JPG حتى 5MB</span>
           </button>
+
+          {/* Logo upload */}
+          <input ref={logoRef} type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && handleLogo(e.target.files[0])} />
+          <div className="mt-3 flex items-center gap-2">
+            <button
+              onClick={() => logoRef.current?.click()}
+              className="flex-1 h-10 rounded-lg border border-border bg-secondary text-xs flex items-center justify-center gap-2 text-foreground hover:border-primary"
+            >
+              <ImageIcon className="w-4 h-4 text-primary" />
+              {logoUrl ? "تغيير الشعار" : "إضافة شعار / لوقو"}
+            </button>
+            {logoUrl && (
+              <button onClick={() => setLogoUrl(null)} className="h-10 px-3 rounded-lg border border-border text-[11px] text-muted-foreground hover:text-destructive">
+                إزالة
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Preview */}
