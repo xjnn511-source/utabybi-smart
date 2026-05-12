@@ -193,12 +193,16 @@ const MediaStudio = () => {
 
   return (
     <div className="min-h-screen bg-background font-cairo notranslate pb-24" dir="rtl">
-      <header className="bg-card border-b border-border px-4 py-4 flex items-center justify-between sticky top-0 z-30 backdrop-blur">
-        <button onClick={() => navigate("/")} className="text-xs text-primary flex items-center gap-1">
+      <header className="relative bg-card border-b border-border px-4 py-3 flex items-center justify-center sticky top-0 z-30 backdrop-blur">
+        <button onClick={() => navigate("/")} className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-primary flex items-center gap-1 hover:text-primary/80 transition-colors">
           <ArrowRight className="w-4 h-4" /> الرئيسية
         </button>
-        <h1 className="text-base font-bold text-primary">معالج الوسائط وصناعة الإعلانات</h1>
-        <div className="w-12" />
+        <div className="flex flex-col items-center gap-1.5">
+          <div className="w-[34px] h-[34px] rounded-xl bg-primary/10 p-0.5 border border-primary/30 glow-gold">
+            <img src={logo} alt="عتيبي ذكي" className="w-full h-full rounded-lg object-cover" />
+          </div>
+          <span className="text-[10px] font-bold text-primary/80 tracking-wide">معالج الوسائط</span>
+        </div>
       </header>
 
       <main className="max-w-2xl mx-auto p-4 space-y-5">
