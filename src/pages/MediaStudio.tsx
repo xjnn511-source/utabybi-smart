@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Upload, Sparkles, Download, Loader2, Type, Wand2, Image as ImageIcon, Sun } from "lucide-react";
+import { ArrowRight, Upload, Sparkles, Download, Loader2, Type, Wand2, Image as ImageIcon, Sun, Move } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -25,22 +25,22 @@ const MediaStudio = () => {
   const [subline, setSubline] = useState("منصتك الذكية للحلول العقارية");
   const [cta, setCta] = useState("اتصل الآن");
   const [accent, setAccent] = useState("#bf5af2");
+  const [textColor, setTextColor] = useState("#ffffff");
+  const [fontSize, setFontSize] = useState(44); // headline base size (px on 1080 width)
+  const [showPlate, setShowPlate] = useState(true);
+  const [textPos, setTextPos] = useState({ x: 0.5, y: 0.78 }); // ratios
   const [brightness, setBrightness] = useState(105);
   const [contrast, setContrast] = useState(110);
   const [saturate, setSaturate] = useState(115);
   const [brief, setBrief] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
+  const [canvasSize, setCanvasSize] = useState({ w: 1080, h: 1080 });
+  const draggingRef = useRef(false);
 
-  const handleFile = (f: File) => {
-    const url = URL.createObjectURL(f);
-    setImgUrl(url);
-  };
-  const handleLogo = (f: File) => {
-    const url = URL.createObjectURL(f);
-    setLogoUrl(url);
-  };
+  const handleFile = (f: File) => setImgUrl(URL.createObjectURL(f));
+  const handleLogo = (f: File) => setLogoUrl(URL.createObjectURL(f));
 
-  // Render canvas whenever inputs change
+  // Render canvas
   useEffect(() => {
     if (!imgUrl) return;
     const canvas = canvasRef.current;
@@ -48,102 +48,144 @@ const MediaStudio = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      imgRef.current = img;
+    const render = (img: HTMLImageElement) => {
       const W = 1080;
       const H = Math.round((img.height / img.width) * W);
       canvas.width = W;
       canvas.height = H;
+      setCanvasSize({ w: W, h: H });
 
-      // Lighting / enhancement filters
       ctx.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate}%)`;
       ctx.drawImage(img, 0, 0, W, H);
       ctx.filter = "none";
 
-      // dark gradient overlay (bottom)
-      const grad = ctx.createLinearGradient(0, H * 0.35, 0, H);
-      grad.addColorStop(0, "rgba(2,6,23,0)");
-      grad.addColorStop(1, "rgba(2,6,23,0.85)");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
+      // Compute text block dimensions
+      const headSize = fontSize * 2; // scale up for canvas
+      const subSize = Math.round(headSize * 0.45);
+      const ctaSize = Math.round(headSize * 0.5);
 
-      // accent bar
-      ctx.fillStyle = accent;
-      ctx.fillRect(W - 80, H - H * 0.45, 12, H * 0.4);
-
-      // text
       ctx.direction = "rtl";
-      ctx.textAlign = "right";
-      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
 
-      const padR = 60;
-      let y = H - 220;
-
-      ctx.font = "bold 78px Cairo, system-ui, sans-serif";
-      ctx.shadowColor = accent;
-      ctx.shadowBlur = 24;
-      ctx.fillText(headline || "", W - padR, y);
-      ctx.shadowBlur = 0;
-
-      y += 70;
-      ctx.font = "500 36px Cairo, system-ui, sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,0.92)";
-      const words = (subline || "").split(" ");
+      // Wrap subline
+      ctx.font = `500 ${subSize}px Cairo, system-ui, sans-serif`;
+      const maxW = W * 0.78;
+      const subWords = (subline || "").split(" ");
+      const subLines: string[] = [];
       let line = "";
-      const maxW = W - padR - 100;
-      for (const w of words) {
+      for (const w of subWords) {
         const test = line ? line + " " + w : w;
         if (ctx.measureText(test).width > maxW) {
-          ctx.fillText(line, W - padR, y);
-          y += 46;
+          if (line) subLines.push(line);
           line = w;
         } else line = test;
       }
-      if (line) { ctx.fillText(line, W - padR, y); y += 46; }
+      if (line) subLines.push(line);
+
+      // Measure widths
+      ctx.font = `bold ${headSize}px Cairo, system-ui, sans-serif`;
+      const headW = ctx.measureText(headline || "").width;
+      ctx.font = `500 ${subSize}px Cairo, system-ui, sans-serif`;
+      const subW = subLines.reduce((m, l) => Math.max(m, ctx.measureText(l).width), 0);
+      ctx.font = `bold ${ctaSize}px Cairo, system-ui, sans-serif`;
+      const ctaW = ctx.measureText(cta || "").width;
+
+      const blockW = Math.max(headW, subW, ctaW + 80);
+      const headLine = headSize * 1.05;
+      const subLineH = subSize * 1.25;
+      const ctaH = ctaSize * 1.6;
+      const gap = headSize * 0.35;
+      const blockH = (headline ? headLine : 0) + subLines.length * subLineH + (cta ? ctaH + gap : 0) + gap;
+
+      const cx = textPos.x * W;
+      const cy = textPos.y * H;
+      const bx = cx - blockW / 2 - 28;
+      const by = cy - blockH / 2 - 18;
+      const bw = blockW + 56;
+      const bh = blockH + 36;
+
+      // Plate
+      if (showPlate) {
+        ctx.fillStyle = "rgba(2,6,23,0.5)";
+        const r = 18;
+        ctx.beginPath();
+        ctx.moveTo(bx + r, by);
+        ctx.arcTo(bx + bw, by, bx + bw, by + bh, r);
+        ctx.arcTo(bx + bw, by + bh, bx, by + bh, r);
+        ctx.arcTo(bx, by + bh, bx, by, r);
+        ctx.arcTo(bx, by, bx + bw, by, r);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      let yCursor = by + 24 + headSize / 2;
+
+      // Headline
+      if (headline) {
+        ctx.font = `bold ${headSize}px Cairo, system-ui, sans-serif`;
+        ctx.fillStyle = textColor;
+        ctx.shadowColor = "rgba(0,0,0,0.55)";
+        ctx.shadowBlur = 10;
+        ctx.fillText(headline, cx, yCursor);
+        ctx.shadowBlur = 0;
+        yCursor += headLine * 0.6 + gap * 0.5;
+      }
+
+      // Subline
+      if (subLines.length) {
+        ctx.font = `500 ${subSize}px Cairo, system-ui, sans-serif`;
+        ctx.fillStyle = textColor;
+        ctx.globalAlpha = 0.92;
+        for (const l of subLines) {
+          ctx.fillText(l, cx, yCursor + subSize / 2);
+          yCursor += subLineH;
+        }
+        ctx.globalAlpha = 1;
+      }
 
       // CTA pill
-      y += 22;
-      const ctaText = cta || "";
-      ctx.font = "bold 34px Cairo, system-ui, sans-serif";
-      const tw = ctx.measureText(ctaText).width;
-      const padX = 36, padY = 18;
-      const pillW = tw + padX * 2, pillH = 34 + padY * 2;
-      const px = W - padR - pillW;
-      const py = y;
-      ctx.fillStyle = accent;
-      const r = pillH / 2;
-      ctx.beginPath();
-      ctx.moveTo(px + r, py);
-      ctx.arcTo(px + pillW, py, px + pillW, py + pillH, r);
-      ctx.arcTo(px + pillW, py + pillH, px, py + pillH, r);
-      ctx.arcTo(px, py + pillH, px, py, r);
-      ctx.arcTo(px, py, px + pillW, py, r);
-      ctx.closePath();
-      ctx.fill();
-      ctx.fillStyle = "#0b0613";
-      ctx.fillText(ctaText, W - padR - padX, py + padY + 30);
+      if (cta) {
+        yCursor += gap * 0.4;
+        const padX = ctaSize * 0.9;
+        const pillH = ctaSize * 1.5;
+        const pillW = ctaW + padX * 2;
+        const px = cx - pillW / 2;
+        const py = yCursor;
+        const rr = pillH / 2;
+        ctx.fillStyle = accent;
+        ctx.beginPath();
+        ctx.moveTo(px + rr, py);
+        ctx.arcTo(px + pillW, py, px + pillW, py + pillH, rr);
+        ctx.arcTo(px + pillW, py + pillH, px, py + pillH, rr);
+        ctx.arcTo(px, py + pillH, px, py, rr);
+        ctx.arcTo(px, py, px + pillW, py, rr);
+        ctx.closePath();
+        ctx.fill();
+        ctx.font = `bold ${ctaSize}px Cairo, system-ui, sans-serif`;
+        ctx.fillStyle = "#0b0613";
+        ctx.fillText(cta, cx, py + pillH / 2 + 2);
+      }
 
-      // brand watermark
-      ctx.font = "600 22px Cairo, system-ui, sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,0.6)";
+      // Watermark
       ctx.textAlign = "left";
-      ctx.fillText("عُتيبي ذكي 🤖", 32, 44);
+      ctx.textBaseline = "alphabetic";
+      ctx.font = "600 22px Cairo, system-ui, sans-serif";
+      ctx.fillStyle = "rgba(255,255,255,0.55)";
+      ctx.fillText("عُتيبي ذكي 🤖", 28, 40);
 
-      // Optional logo (top-right)
-      const drawLogo = (logo: HTMLImageElement) => {
-        const logoH = 110;
-        const logoW = (logo.width / logo.height) * logoH;
-        const lx = W - 32 - logoW;
-        const ly = 32;
+      // Logo
+      const drawLogo = (lg: HTMLImageElement) => {
+        const lh = 96;
+        const lw = (lg.width / lg.height) * lh;
+        const lx = W - 28 - lw;
+        const ly = 28;
         ctx.fillStyle = "rgba(255,255,255,0.92)";
-        const pad = 12;
-        ctx.fillRect(lx - pad, ly - pad, logoW + pad * 2, logoH + pad * 2);
-        ctx.drawImage(logo, lx, ly, logoW, logoH);
+        ctx.fillRect(lx - 10, ly - 10, lw + 20, lh + 20);
+        ctx.drawImage(lg, lx, ly, lw, lh);
       };
       if (logoUrl) {
-        if (logoImgRef.current && logoImgRef.current.src === logoUrl) {
+        if (logoImgRef.current && logoImgRef.current.src.endsWith(logoUrl.split("/").pop() || "")) {
           drawLogo(logoImgRef.current);
         } else {
           const lg = new Image();
@@ -153,14 +195,29 @@ const MediaStudio = () => {
         }
       }
     };
-    img.src = imgUrl;
-  }, [imgUrl, logoUrl, headline, subline, cta, accent, brightness, contrast, saturate]);
+
+    if (imgRef.current && imgRef.current.src === imgUrl) {
+      render(imgRef.current);
+    } else {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => { imgRef.current = img; render(img); };
+      img.src = imgUrl;
+    }
+  }, [imgUrl, logoUrl, headline, subline, cta, accent, textColor, fontSize, showPlate, textPos, brightness, contrast, saturate]);
+
+  // Drag & drop text
+  const handlePointer = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    setTextPos({ x: Math.min(0.95, Math.max(0.05, x)), y: Math.min(0.95, Math.max(0.05, y)) });
+  };
 
   const generateCopy = async () => {
-    if (!brief.trim()) {
-      toast.error("اكتب وصفاً موجزاً للإعلان");
-      return;
-    }
+    if (!brief.trim()) { toast.error("اكتب وصفاً موجزاً للإعلان"); return; }
     setAiLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("ai-generate", {
@@ -177,9 +234,7 @@ const MediaStudio = () => {
       toast.success("تم توليد نص الإعلان");
     } catch (e: any) {
       toast.error(e?.message || "فشل توليد النص");
-    } finally {
-      setAiLoading(false);
-    }
+    } finally { setAiLoading(false); }
   };
 
   const download = () => {
@@ -218,7 +273,6 @@ const MediaStudio = () => {
             <span className="text-[10px] text-muted-foreground">PNG / JPG حتى 5MB</span>
           </button>
 
-          {/* Logo upload */}
           <input ref={logoRef} type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && handleLogo(e.target.files[0])} />
           <div className="mt-3 flex items-center gap-2">
             <button
@@ -239,7 +293,18 @@ const MediaStudio = () => {
         {/* Preview */}
         {imgUrl && (
           <div className="card-neon p-3">
-            <canvas ref={canvasRef} className="w-full rounded-lg border border-border" />
+            <div className="relative">
+              <canvas
+                ref={canvasRef}
+                onPointerDown={(e) => { draggingRef.current = true; (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId); handlePointer(e); }}
+                onPointerMove={(e) => { if (draggingRef.current) handlePointer(e); }}
+                onPointerUp={() => { draggingRef.current = false; }}
+                className="w-full rounded-lg border border-border touch-none cursor-move"
+              />
+              <div className="absolute top-2 left-2 bg-background/80 backdrop-blur px-2 py-1 rounded text-[10px] text-primary flex items-center gap-1 pointer-events-none">
+                <Move className="w-3 h-3" /> اسحب لتحريك النص
+              </div>
+            </div>
             <button onClick={download} className="mt-3 w-full h-11 btn-neon text-sm flex items-center justify-center gap-2">
               <Download className="w-4 h-4" /> تنزيل التصميم النهائي
             </button>
@@ -267,14 +332,32 @@ const MediaStudio = () => {
         {/* Manual editor */}
         <div className="card-neon p-4 space-y-3">
           <h3 className="text-xs font-bold text-foreground flex items-center gap-2">
-            <Type className="w-4 h-4 text-primary" /> تحرير النصوص يدوياً
+            <Type className="w-4 h-4 text-primary" /> تحرير النصوص
           </h3>
           <Field label="العنوان الرئيسي" value={headline} onChange={setHeadline} />
           <Field label="العنوان الفرعي" value={subline} onChange={setSubline} />
           <Field label="زر الدعوة (CTA)" value={cta} onChange={setCta} />
-          <div className="flex items-center gap-3">
-            <label className="text-[11px] text-muted-foreground">لون التمييز</label>
-            <input type="color" value={accent} onChange={(e) => setAccent(e.target.value)} className="h-8 w-14 rounded border border-border bg-transparent" />
+
+          <Slider label="حجم الخط" value={fontSize} min={20} max={90} onChange={setFontSize} unit="px" />
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex items-center gap-2">
+              <label className="text-[11px] text-muted-foreground">لون النص</label>
+              <input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} className="h-8 w-12 rounded border border-border bg-transparent" />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-[11px] text-muted-foreground">لون الزر</label>
+              <input type="color" value={accent} onChange={(e) => setAccent(e.target.value)} className="h-8 w-12 rounded border border-border bg-transparent" />
+            </div>
+          </div>
+
+          <label className="flex items-center gap-2 text-[11px] text-muted-foreground cursor-pointer">
+            <input type="checkbox" checked={showPlate} onChange={(e) => setShowPlate(e.target.checked)} className="accent-primary" />
+            خلفية شفافة خلف النص لزيادة الوضوح
+          </label>
+
+          <div className="text-[10px] text-muted-foreground bg-secondary/50 rounded p-2 border border-border">
+            💡 اضغط واسحب على الصورة في المعاينة لتحريك النص إلى المكان الذي تريده.
           </div>
         </div>
 
@@ -298,11 +381,11 @@ const MediaStudio = () => {
   );
 };
 
-const Slider = ({ label, value, min, max, onChange }: { label: string; value: number; min: number; max: number; onChange: (v: number) => void }) => (
+const Slider = ({ label, value, min, max, onChange, unit = "%" }: { label: string; value: number; min: number; max: number; onChange: (v: number) => void; unit?: string }) => (
   <div>
     <div className="flex items-center justify-between mb-1">
       <label className="text-[11px] text-muted-foreground">{label}</label>
-      <span className="text-[11px] text-primary font-bold">{value}%</span>
+      <span className="text-[11px] text-primary font-bold">{value}{unit}</span>
     </div>
     <input type="range" min={min} max={max} value={value} onChange={(e) => onChange(parseInt(e.target.value))} className="w-full accent-primary" />
   </div>
