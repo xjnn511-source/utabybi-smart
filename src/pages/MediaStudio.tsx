@@ -274,9 +274,15 @@ const MediaStudio = () => {
     const ctx = canvas.getContext("2d")!;
     setPreviewing(true);
     const start = performance.now();
-    const audio = audioElRef.current;
+    const audio = voiceMode === "upload" ? audioElRef.current : null;
     if (audio) { audio.currentTime = 0; audio.play().catch(() => {}); }
+    if (voiceMode === "internal") {
+      try { window.speechSynthesis.cancel(); } catch {}
+      spokenIdsRef.current.clear();
+    }
     let raf = 0;
+    let acc = 0;
+    const slideStarts = slides.map((s) => { const v = acc; acc += s.duration; return v; });
     const loop = () => {
       const t = (performance.now() - start) / 1000;
       if (t >= totalDuration) {
@@ -284,6 +290,15 @@ const MediaStudio = () => {
         setPreviewing(false);
         if (audio) audio.pause();
         return;
+      }
+      // Trigger TTS at each slide boundary in internal mode
+      if (voiceMode === "internal") {
+        for (let i = 0; i < slides.length; i++) {
+          if (t >= slideStarts[i] && !spokenIdsRef.current.has(slides[i].id)) {
+            spokenIdsRef.current.add(slides[i].id);
+            speakCaption(slides[i].caption);
+          }
+        }
       }
       drawFrame(ctx, t);
       raf = requestAnimationFrame(loop);
@@ -293,6 +308,7 @@ const MediaStudio = () => {
       cancelAnimationFrame(raf);
       setPreviewing(false);
       if (audio) audio.pause();
+      try { window.speechSynthesis.cancel(); } catch {}
     };
   };
 
