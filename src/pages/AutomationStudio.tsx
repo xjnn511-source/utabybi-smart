@@ -112,9 +112,10 @@ const AutomationStudio = () => {
         {/* Output */}
         {output && (
           <div className="card-neon p-4 space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <h3 className="text-sm font-bold text-primary">النص المُولَّد</h3>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
+                <SpeakButton text={output} label="استماع للنص" />
                 <button onClick={copyText} className="p-2 rounded-lg bg-secondary hover:bg-primary/10 text-primary" title="نسخ">
                   <Copy className="w-4 h-4" />
                 </button>
