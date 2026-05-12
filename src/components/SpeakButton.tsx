@@ -5,15 +5,16 @@ interface SpeakButtonProps {
   text: string;
   label?: string;
   className?: string;
-  rate?: number;
-  pitch?: number;
+  /** Voice character. "majestic" = deeper, slower, more authoritative (Otaibi). */
+  profile?: "majestic" | "natural" | "fast";
+  autoPlay?: boolean;
 }
 
 /**
- * Arabic Text-to-Speech using the browser's built-in Web Speech API.
- * Zero-cost, no external API. Picks the best available Arabic voice.
+ * "صوت عُتيبي الذكي" — internal Arabic Text-to-Speech using the browser's
+ * built-in Web Speech API. No external/paid API required.
  */
-const SpeakButton = ({ text, label = "استماع", className = "", rate = 0.95, pitch = 1 }: SpeakButtonProps) => {
+const SpeakButton = ({ text, label = "استماع", className = "", profile = "majestic", autoPlay = false }: SpeakButtonProps) => {
   const [supported, setSupported] = useState(true);
   const [playing, setPlaying] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -53,8 +54,11 @@ const SpeakButton = ({ text, label = "استماع", className = "", rate = 0.95
     const u = new SpeechSynthesisUtterance(text);
     u.lang = arabicVoiceRef.current?.lang || "ar-SA";
     if (arabicVoiceRef.current) u.voice = arabicVoiceRef.current;
-    u.rate = rate;
-    u.pitch = pitch;
+    // Profile tuned for "صوت عُتيبي الذكي" — deeper, slower, authoritative
+    if (profile === "majestic") { u.rate = 0.86; u.pitch = 0.78; }
+    else if (profile === "fast") { u.rate = 1.1; u.pitch = 1; }
+    else { u.rate = 0.95; u.pitch = 1; }
+    u.volume = 1;
     u.onend = () => { setPlaying(false); setPaused(false); };
     u.onerror = () => { setPlaying(false); setPaused(false); };
     utterRef.current = u;
@@ -62,6 +66,13 @@ const SpeakButton = ({ text, label = "استماع", className = "", rate = 0.95
     setPlaying(true);
     setPaused(false);
   };
+
+  // Auto-play when text becomes available (e.g. assistant streaming complete)
+  useEffect(() => {
+    if (autoPlay && text?.trim()) start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoPlay, text]);
+
 
   const togglePause = () => {
     if (!playing) return;

@@ -27,6 +27,7 @@ const MediaStudio = () => {
   const audioElRef = useRef<HTMLAudioElement | null>(null);
 
   const [slides, setSlides] = useState<Slide[]>([]);
+  const [voiceMode, setVoiceMode] = useState<"internal" | "upload">("internal");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioName, setAudioName] = useState<string>("");
   const [accent, setAccent] = useState("#bf5af2");
@@ -36,6 +37,33 @@ const MediaStudio = () => {
   const [previewing, setPreviewing] = useState(false);
   const [progress, setProgress] = useState(0);
   const stopRef = useRef<() => void>(() => {});
+  const arabicVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
+  const spokenIdsRef = useRef<Set<string>>(new Set());
+
+  // Pick best Arabic voice for "صوت عُتيبي الذكي"
+  useEffect(() => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    const pick = () => {
+      const voices = window.speechSynthesis.getVoices();
+      arabicVoiceRef.current =
+        voices.find((v) => /ar-SA/i.test(v.lang)) ||
+        voices.find((v) => /^ar/i.test(v.lang)) ||
+        null;
+    };
+    pick();
+    window.speechSynthesis.onvoiceschanged = pick;
+  }, []);
+
+  const speakCaption = (text: string) => {
+    if (!text?.trim() || !("speechSynthesis" in window)) return;
+    try {
+      const u = new SpeechSynthesisUtterance(text);
+      if (arabicVoiceRef.current) { u.voice = arabicVoiceRef.current; u.lang = arabicVoiceRef.current.lang; }
+      else u.lang = "ar-SA";
+      u.rate = 0.86; u.pitch = 0.78; u.volume = 1;
+      window.speechSynthesis.speak(u);
+    } catch {}
+  };
 
   const totalDuration = slides.reduce((s, x) => s + x.duration, 0);
 
@@ -246,9 +274,15 @@ const MediaStudio = () => {
     const ctx = canvas.getContext("2d")!;
     setPreviewing(true);
     const start = performance.now();
-    const audio = audioElRef.current;
+    const audio = voiceMode === "upload" ? audioElRef.current : null;
     if (audio) { audio.currentTime = 0; audio.play().catch(() => {}); }
+    if (voiceMode === "internal") {
+      try { window.speechSynthesis.cancel(); } catch {}
+      spokenIdsRef.current.clear();
+    }
     let raf = 0;
+    let acc = 0;
+    const slideStarts = slides.map((s) => { const v = acc; acc += s.duration; return v; });
     const loop = () => {
       const t = (performance.now() - start) / 1000;
       if (t >= totalDuration) {
@@ -256,6 +290,15 @@ const MediaStudio = () => {
         setPreviewing(false);
         if (audio) audio.pause();
         return;
+      }
+      // Trigger TTS at each slide boundary in internal mode
+      if (voiceMode === "internal") {
+        for (let i = 0; i < slides.length; i++) {
+          if (t >= slideStarts[i] && !spokenIdsRef.current.has(slides[i].id)) {
+            spokenIdsRef.current.add(slides[i].id);
+            speakCaption(slides[i].caption);
+          }
+        }
       }
       drawFrame(ctx, t);
       raf = requestAnimationFrame(loop);
@@ -265,6 +308,7 @@ const MediaStudio = () => {
       cancelAnimationFrame(raf);
       setPreviewing(false);
       if (audio) audio.pause();
+      try { window.speechSynthesis.cancel(); } catch {}
     };
   };
 
@@ -393,22 +437,58 @@ const MediaStudio = () => {
           </div>
         </div>
 
-        {/* Voice upload */}
+        {/* Voice source */}
         <div className="card-neon p-4 space-y-3">
           <h3 className="text-xs font-bold text-foreground flex items-center gap-2">
-            <Music className="w-4 h-4 text-primary" /> صوت عُتيبي المسجّل (التعليق الصوتي)
+            <Music className="w-4 h-4 text-primary" /> مصدر الصوت
           </h3>
-          <input ref={audioFileRef} type="file" accept="audio/*" hidden onChange={(e) => e.target.files?.[0] && onPickAudio(e.target.files[0])} />
-          <button
-            onClick={() => audioFileRef.current?.click()}
-            className="w-full h-12 border border-dashed border-primary/40 rounded-lg text-xs text-foreground hover:bg-primary/5 flex items-center justify-center gap-2"
-          >
-            <Upload className="w-4 h-4 text-primary" />
-            {audioUrl ? `تم الرفع: ${audioName}` : "ارفع ملف صوت (mp3 / wav / m4a)"}
-          </button>
-          <p className="text-[10px] text-muted-foreground">
-            المدة الكلية للفيديو ستتوافق مع مجموع مدد الصور أدناه — اضبط المدد لتطابق طول الصوت.
-          </p>
+
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => setVoiceMode("internal")}
+              className={`h-12 rounded-lg text-[11px] font-bold flex items-center justify-center gap-2 transition border ${
+                voiceMode === "internal"
+                  ? "btn-neon border-primary"
+                  : "bg-secondary border-border text-foreground hover:border-primary"
+              }`}
+            >
+              🎙 صوت عُتيبي الذكي (افتراضي)
+            </button>
+            <button
+              onClick={() => setVoiceMode("upload")}
+              className={`h-12 rounded-lg text-[11px] font-bold flex items-center justify-center gap-2 transition border ${
+                voiceMode === "upload"
+                  ? "btn-neon border-primary"
+                  : "bg-secondary border-border text-foreground hover:border-primary"
+              }`}
+            >
+              <Upload className="w-3.5 h-3.5" /> رفع ملف صوتي
+            </button>
+          </div>
+
+          {voiceMode === "internal" ? (
+            <div className="bg-secondary/40 border border-primary/20 rounded-lg p-3 space-y-1.5">
+              <p className="text-[11px] text-foreground font-bold">قراءة آلية لكل مشهد</p>
+              <p className="text-[10px] text-muted-foreground leading-relaxed">
+                سيقرأ المحرّك نص كل مشهد بصوت عربي فخم تلقائياً عند تشغيل المعاينة، دون رفع أي ملف.
+                ملاحظة: لإضافة الصوت داخل ملف الفيديو النهائي، استخدم وضع رفع ملف صوتي.
+              </p>
+            </div>
+          ) : (
+            <>
+              <input ref={audioFileRef} type="file" accept="audio/*" hidden onChange={(e) => e.target.files?.[0] && onPickAudio(e.target.files[0])} />
+              <button
+                onClick={() => audioFileRef.current?.click()}
+                className="w-full h-12 border border-dashed border-primary/40 rounded-lg text-xs text-foreground hover:bg-primary/5 flex items-center justify-center gap-2"
+              >
+                <Upload className="w-4 h-4 text-primary" />
+                {audioUrl ? `تم الرفع: ${audioName}` : "ارفع ملف صوت (mp3 / wav / m4a)"}
+              </button>
+              <p className="text-[10px] text-muted-foreground">
+                اضبط مدد المشاهد لتطابق طول الصوت.
+              </p>
+            </>
+          )}
         </div>
 
         {/* Brand */}
