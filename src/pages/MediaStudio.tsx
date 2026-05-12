@@ -27,6 +27,7 @@ const MediaStudio = () => {
   const audioElRef = useRef<HTMLAudioElement | null>(null);
 
   const [slides, setSlides] = useState<Slide[]>([]);
+  const [voiceMode, setVoiceMode] = useState<"internal" | "upload">("internal");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioName, setAudioName] = useState<string>("");
   const [accent, setAccent] = useState("#bf5af2");
@@ -36,6 +37,33 @@ const MediaStudio = () => {
   const [previewing, setPreviewing] = useState(false);
   const [progress, setProgress] = useState(0);
   const stopRef = useRef<() => void>(() => {});
+  const arabicVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
+  const spokenIdsRef = useRef<Set<string>>(new Set());
+
+  // Pick best Arabic voice for "صوت عُتيبي الذكي"
+  useEffect(() => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    const pick = () => {
+      const voices = window.speechSynthesis.getVoices();
+      arabicVoiceRef.current =
+        voices.find((v) => /ar-SA/i.test(v.lang)) ||
+        voices.find((v) => /^ar/i.test(v.lang)) ||
+        null;
+    };
+    pick();
+    window.speechSynthesis.onvoiceschanged = pick;
+  }, []);
+
+  const speakCaption = (text: string) => {
+    if (!text?.trim() || !("speechSynthesis" in window)) return;
+    try {
+      const u = new SpeechSynthesisUtterance(text);
+      if (arabicVoiceRef.current) { u.voice = arabicVoiceRef.current; u.lang = arabicVoiceRef.current.lang; }
+      else u.lang = "ar-SA";
+      u.rate = 0.86; u.pitch = 0.78; u.volume = 1;
+      window.speechSynthesis.speak(u);
+    } catch {}
+  };
 
   const totalDuration = slides.reduce((s, x) => s + x.duration, 0);
 
