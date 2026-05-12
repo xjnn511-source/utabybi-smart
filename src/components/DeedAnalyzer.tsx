@@ -9,6 +9,7 @@ import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import DeedVisualDashboard from "@/components/DeedVisualDashboard";
+import SpeakButton from "@/components/SpeakButton";
 
 type AnalysisState = "idle" | "scanning" | "done" | "error";
 
@@ -520,7 +521,7 @@ const DeedAnalyzer = () => {
           >
             {/* Status Banner */}
             <div
-              className="rounded-xl p-3 flex items-center justify-between"
+              className="rounded-xl p-3 flex items-center justify-between gap-2 flex-wrap"
               style={{
                 background: cyanA(0.06),
                 border: `1px solid ${cyanA(0.44)}`,
@@ -533,9 +534,17 @@ const DeedAnalyzer = () => {
                   تمت المعالجة البرمجية بنجاح
                 </span>
               </div>
-              <span className="text-[10px] font-extrabold tracking-widest" style={{ color: NEON_PINK }}>
-                UTAYBI · SMART AI
-              </span>
+              <SpeakButton
+                label="قراءة التحليل"
+                text={[
+                  "تحليل الصك العقاري.",
+                  `المالك: ${deedData.owner || "غير محدد"}.`,
+                  `رقم الوثيقة: ${deedData.deedNumber || "غير محدد"}.`,
+                  `المساحة: ${deedData.area ? deedData.area + " متر مربع" : "غير محددة"}.`,
+                  `المدينة: ${deedData.city || "غير محددة"}.`,
+                  `الحي: ${deedData.district || "غير محدد"}.`,
+                ].join(" ")}
+              />
             </div>
 
             <div ref={deedPanelRef} className="overflow-x-auto pb-2">
