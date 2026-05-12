@@ -5,15 +5,16 @@ interface SpeakButtonProps {
   text: string;
   label?: string;
   className?: string;
-  rate?: number;
-  pitch?: number;
+  /** Voice character. "majestic" = deeper, slower, more authoritative (Otaibi). */
+  profile?: "majestic" | "natural" | "fast";
+  autoPlay?: boolean;
 }
 
 /**
- * Arabic Text-to-Speech using the browser's built-in Web Speech API.
- * Zero-cost, no external API. Picks the best available Arabic voice.
+ * "صوت عُتيبي الذكي" — internal Arabic Text-to-Speech using the browser's
+ * built-in Web Speech API. No external/paid API required.
  */
-const SpeakButton = ({ text, label = "استماع", className = "", rate = 0.95, pitch = 1 }: SpeakButtonProps) => {
+const SpeakButton = ({ text, label = "استماع", className = "", profile = "majestic", autoPlay = false }: SpeakButtonProps) => {
   const [supported, setSupported] = useState(true);
   const [playing, setPlaying] = useState(false);
   const [paused, setPaused] = useState(false);
