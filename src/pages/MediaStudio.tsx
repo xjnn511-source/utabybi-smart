@@ -437,22 +437,58 @@ const MediaStudio = () => {
           </div>
         </div>
 
-        {/* Voice upload */}
+        {/* Voice source */}
         <div className="card-neon p-4 space-y-3">
           <h3 className="text-xs font-bold text-foreground flex items-center gap-2">
-            <Music className="w-4 h-4 text-primary" /> صوت عُتيبي المسجّل (التعليق الصوتي)
+            <Music className="w-4 h-4 text-primary" /> مصدر الصوت
           </h3>
-          <input ref={audioFileRef} type="file" accept="audio/*" hidden onChange={(e) => e.target.files?.[0] && onPickAudio(e.target.files[0])} />
-          <button
-            onClick={() => audioFileRef.current?.click()}
-            className="w-full h-12 border border-dashed border-primary/40 rounded-lg text-xs text-foreground hover:bg-primary/5 flex items-center justify-center gap-2"
-          >
-            <Upload className="w-4 h-4 text-primary" />
-            {audioUrl ? `تم الرفع: ${audioName}` : "ارفع ملف صوت (mp3 / wav / m4a)"}
-          </button>
-          <p className="text-[10px] text-muted-foreground">
-            المدة الكلية للفيديو ستتوافق مع مجموع مدد الصور أدناه — اضبط المدد لتطابق طول الصوت.
-          </p>
+
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => setVoiceMode("internal")}
+              className={`h-12 rounded-lg text-[11px] font-bold flex items-center justify-center gap-2 transition border ${
+                voiceMode === "internal"
+                  ? "btn-neon border-primary"
+                  : "bg-secondary border-border text-foreground hover:border-primary"
+              }`}
+            >
+              🎙 صوت عُتيبي الذكي (افتراضي)
+            </button>
+            <button
+              onClick={() => setVoiceMode("upload")}
+              className={`h-12 rounded-lg text-[11px] font-bold flex items-center justify-center gap-2 transition border ${
+                voiceMode === "upload"
+                  ? "btn-neon border-primary"
+                  : "bg-secondary border-border text-foreground hover:border-primary"
+              }`}
+            >
+              <Upload className="w-3.5 h-3.5" /> رفع ملف صوتي
+            </button>
+          </div>
+
+          {voiceMode === "internal" ? (
+            <div className="bg-secondary/40 border border-primary/20 rounded-lg p-3 space-y-1.5">
+              <p className="text-[11px] text-foreground font-bold">قراءة آلية لكل مشهد</p>
+              <p className="text-[10px] text-muted-foreground leading-relaxed">
+                سيقرأ المحرّك نص كل مشهد بصوت عربي فخم تلقائياً عند تشغيل المعاينة، دون رفع أي ملف.
+                ملاحظة: لإضافة الصوت داخل ملف الفيديو النهائي، استخدم وضع رفع ملف صوتي.
+              </p>
+            </div>
+          ) : (
+            <>
+              <input ref={audioFileRef} type="file" accept="audio/*" hidden onChange={(e) => e.target.files?.[0] && onPickAudio(e.target.files[0])} />
+              <button
+                onClick={() => audioFileRef.current?.click()}
+                className="w-full h-12 border border-dashed border-primary/40 rounded-lg text-xs text-foreground hover:bg-primary/5 flex items-center justify-center gap-2"
+              >
+                <Upload className="w-4 h-4 text-primary" />
+                {audioUrl ? `تم الرفع: ${audioName}` : "ارفع ملف صوت (mp3 / wav / m4a)"}
+              </button>
+              <p className="text-[10px] text-muted-foreground">
+                اضبط مدد المشاهد لتطابق طول الصوت.
+              </p>
+            </>
+          )}
         </div>
 
         {/* Brand */}
