@@ -152,9 +152,23 @@ const AiChatbot = () => {
           >
             <div className="flex items-center justify-between p-3 border-b border-border bg-primary text-primary-foreground">
               <h3 className="text-xs font-bold">المستشار الذكي 🤖</h3>
-              <button onClick={() => setIsOpen(false)} className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => { if (autoSpeak) stopSpeaking(); setAutoSpeak((v) => !v); }}
+                  title={autoSpeak ? "إيقاف صوت عُتيبي" : "تفعيل صوت عُتيبي الذكي"}
+                  className={`h-7 px-2 rounded-md text-[10px] font-bold flex items-center gap-1 transition-colors ${
+                    autoSpeak
+                      ? "bg-primary-foreground/20 hover:bg-primary-foreground/30"
+                      : "bg-primary-foreground/5 hover:bg-primary-foreground/15"
+                  }`}
+                >
+                  {autoSpeak ? <Volume2 className="w-3 h-3" /> : <VolumeX className="w-3 h-3" />}
+                  صوت عُتيبي
+                </button>
+                <button onClick={() => { stopSpeaking(); setIsOpen(false); }} className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-2">
@@ -168,8 +182,13 @@ const AiChatbot = () => {
                   }`}
                 >
                   {msg.role === "assistant" ? (
-                    <div className="prose prose-sm prose-slate max-w-none text-xs [&>p]:m-0 [&>ul]:m-0 [&>ol]:m-0">
-                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    <div className="space-y-1.5">
+                      <div className="prose prose-sm prose-slate max-w-none text-xs [&>p]:m-0 [&>ul]:m-0 [&>ol]:m-0">
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      </div>
+                      {!isLoading && i === messages.length - 1 && (
+                        <SpeakButton text={msg.content.replace(/[*_`#>\[\]()]/g, "")} label="استماع" profile="majestic" />
+                      )}
                     </div>
                   ) : (
                     msg.content
