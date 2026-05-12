@@ -22,7 +22,33 @@ const AiChatbot = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [autoSpeak, setAutoSpeak] = useState(true); // "صوت عُتيبي الذكي" — افتراضي
+  const [lastSpoken, setLastSpoken] = useState<string>("");
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Auto-speak last completed assistant message when not loading
+  useEffect(() => {
+    if (!autoSpeak || isLoading) return;
+    const last = messages[messages.length - 1];
+    if (!last || last.role !== "assistant") return;
+    if (last.content === lastSpoken) return;
+    if (!("speechSynthesis" in window)) return;
+    setLastSpoken(last.content);
+    try {
+      window.speechSynthesis.cancel();
+      const voices = window.speechSynthesis.getVoices();
+      const ar =
+        voices.find((v) => /ar-SA/i.test(v.lang)) ||
+        voices.find((v) => /^ar/i.test(v.lang));
+      const plain = last.content.replace(/[*_`#>\[\]()]/g, "").replace(/\n+/g, "، ");
+      const u = new SpeechSynthesisUtterance(plain);
+      if (ar) { u.voice = ar; u.lang = ar.lang; } else { u.lang = "ar-SA"; }
+      u.rate = 0.86; u.pitch = 0.78; u.volume = 1;
+      window.speechSynthesis.speak(u);
+    } catch {}
+  }, [messages, isLoading, autoSpeak, lastSpoken]);
+
+  const stopSpeaking = () => { try { window.speechSynthesis.cancel(); } catch {} };
 
   useEffect(() => {
     if (scrollRef.current) {
