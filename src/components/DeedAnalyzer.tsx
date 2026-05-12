@@ -9,6 +9,7 @@ import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import DeedVisualDashboard from "@/components/DeedVisualDashboard";
+import SpeakButton from "@/components/SpeakButton";
 
 type AnalysisState = "idle" | "scanning" | "done" | "error";
 
