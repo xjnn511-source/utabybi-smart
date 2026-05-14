@@ -86,7 +86,7 @@ serve(async (req) => {
     }
 
     const buf = await r.arrayBuffer();
-    const audioContent = base64Encode(new Uint8Array(buf));
+    const audioContent = base64Encode(buf);
 
     return new Response(
       JSON.stringify({ audioContent, mime: "audio/mpeg", voice_id: VOICE_ID }),
