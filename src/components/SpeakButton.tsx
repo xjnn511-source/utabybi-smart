@@ -1,19 +1,25 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Play, Pause, Square, Volume2, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  speakOtaibi,
+  stopOtaibi,
+  pauseOtaibi,
+  resumeOtaibi,
+  type OtaibiProfile,
+} from "@/lib/otaibiVoice";
 
 interface SpeakButtonProps {
   text: string;
   label?: string;
   className?: string;
   /** Voice character. "majestic" = deeper, slower. */
-  profile?: "majestic" | "natural" | "fast";
+  profile?: OtaibiProfile;
   autoPlay?: boolean;
 }
 
 /**
- * "صوت عُتيبي" — يستخدم صوت ElevenLabs المعتمد (Ali / MI88rOZjXbH22N8KHXUo)
- * عبر Edge Function آمنة فقط.
+ * "صوت عُتيبي" — محرك مجاني يعتمد على Web Speech API بصوت عربي (ar-SA)
+ * بدون أي مفاتيح API خارجية.
  */
 const SpeakButton = ({
   text,
@@ -25,18 +31,9 @@ const SpeakButton = ({
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [paused, setPaused] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const stop = () => {
-    try {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
-    } catch {}
+    stopOtaibi();
     setPlaying(false);
     setPaused(false);
   };
@@ -45,32 +42,15 @@ const SpeakButton = ({
     if (!text?.trim() || loading) return;
     stop();
     setLoading(true);
-
-    // إعدادات الصوت حسب الـ profile
-    const settings =
-      profile === "majestic"
-        ? { stability: 0.85, similarity_boost: 0.85, style: 0.4, speed: 0.95 }
-        : profile === "fast"
-        ? { stability: 0.7, similarity_boost: 0.75, style: 0.2, speed: 1.1 }
-        : { stability: 0.8, similarity_boost: 0.8, style: 0.3, speed: 1.0 };
-
     try {
-      const { data, error } = await supabase.functions.invoke("tts-otaibi", {
-        body: { text, ...settings },
+      await speakOtaibi(text, {
+        profile,
+        onStart: () => { setPlaying(true); setPaused(false); setLoading(false); },
+        onEnd: () => { setPlaying(false); setPaused(false); },
+        onError: () => { setPlaying(false); setPaused(false); setLoading(false); },
       });
-      if (data?.unavailable) return;
-      if (error || !data?.audioContent) throw error || new Error("no audio");
-
-      const audio = new Audio(`data:${data.mime || "audio/mpeg"};base64,${data.audioContent}`);
-      audioRef.current = audio;
-      audio.onended = () => { setPlaying(false); setPaused(false); };
-      audio.onerror = () => { setPlaying(false); setPaused(false); };
-      await audio.play();
-      setPlaying(true);
-      setPaused(false);
     } catch (e) {
-      console.warn("tts-otaibi failed", e);
-    } finally {
+      console.warn("otaibi voice failed", e);
       setLoading(false);
     }
   };
@@ -82,9 +62,8 @@ const SpeakButton = ({
   }, [autoPlay, text]);
 
   const togglePause = () => {
-    if (!audioRef.current) return;
-    if (paused) { audioRef.current.play(); setPaused(false); }
-    else { audioRef.current.pause(); setPaused(true); }
+    if (paused) { resumeOtaibi(); setPaused(false); }
+    else { pauseOtaibi(); setPaused(true); }
   };
 
   return (
