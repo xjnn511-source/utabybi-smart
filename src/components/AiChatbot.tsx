@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, Loader2, Volume2, VolumeX } from "lucide-react"
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import SpeakButton from "@/components/SpeakButton";
+import { supabase } from "@/integrations/supabase/client";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 
