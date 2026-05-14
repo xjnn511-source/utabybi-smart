@@ -61,6 +61,24 @@ serve(async (req) => {
     if (!r.ok) {
       const errTxt = await r.text();
       console.error("ElevenLabs error", r.status, errTxt);
+
+      const isPaidPlanRequired =
+        r.status === 402 || /paid_plan_required|payment_required/i.test(errTxt);
+
+      if (isPaidPlanRequired) {
+        return new Response(
+          JSON.stringify({
+            audioContent: null,
+            mime: "audio/mpeg",
+            unavailable: true,
+            reason: "paid_plan_required",
+            message:
+              "ElevenLabs requires a paid plan or an owned cloned voice for this voice ID.",
+          }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+
       return new Response(
         JSON.stringify({ error: "tts_failed", status: r.status, detail: errTxt }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
@@ -68,7 +86,7 @@ serve(async (req) => {
     }
 
     const buf = await r.arrayBuffer();
-    const audioContent = base64Encode(new Uint8Array(buf));
+    const audioContent = base64Encode(buf);
 
     return new Response(
       JSON.stringify({ audioContent, mime: "audio/mpeg", voice_id: VOICE_ID }),

@@ -13,7 +13,7 @@ interface SpeakButtonProps {
 
 /**
  * "صوت عُتيبي" — يستخدم صوت ElevenLabs المعتمد (Ali / MI88rOZjXbH22N8KHXUo)
- * عبر Edge Function آمنة. يسقط تلقائياً إلى Web Speech API عند الفشل.
+ * عبر Edge Function آمنة فقط.
  */
 const SpeakButton = ({
   text,
@@ -41,22 +41,6 @@ const SpeakButton = ({
     setPaused(false);
   };
 
-  const fallbackWebSpeech = () => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    const voices = window.speechSynthesis.getVoices();
-    const ar =
-      voices.find((v) => /ar-SA/i.test(v.lang)) ||
-      voices.find((v) => /^ar/i.test(v.lang));
-    const u = new SpeechSynthesisUtterance(text);
-    if (ar) { u.voice = ar; u.lang = ar.lang; } else { u.lang = "ar-SA"; }
-    u.rate = profile === "majestic" ? 0.86 : profile === "fast" ? 1.1 : 0.95;
-    u.pitch = profile === "majestic" ? 0.78 : 1;
-    u.onend = () => { setPlaying(false); setPaused(false); };
-    u.onerror = () => { setPlaying(false); setPaused(false); };
-    window.speechSynthesis.speak(u);
-    setPlaying(true);
-  };
-
   const start = async () => {
     if (!text?.trim() || loading) return;
     stop();
@@ -74,18 +58,18 @@ const SpeakButton = ({
       const { data, error } = await supabase.functions.invoke("tts-otaibi", {
         body: { text, ...settings },
       });
+      if (data?.unavailable) return;
       if (error || !data?.audioContent) throw error || new Error("no audio");
 
       const audio = new Audio(`data:${data.mime || "audio/mpeg"};base64,${data.audioContent}`);
       audioRef.current = audio;
       audio.onended = () => { setPlaying(false); setPaused(false); };
-      audio.onerror = () => { setPlaying(false); setPaused(false); fallbackWebSpeech(); };
+      audio.onerror = () => { setPlaying(false); setPaused(false); };
       await audio.play();
       setPlaying(true);
       setPaused(false);
     } catch (e) {
-      console.warn("tts-otaibi failed, using browser fallback", e);
-      fallbackWebSpeech();
+      console.warn("tts-otaibi failed", e);
     } finally {
       setLoading(false);
     }
