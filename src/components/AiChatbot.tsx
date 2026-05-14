@@ -44,19 +44,13 @@ const AiChatbot = () => {
         const { data, error } = await supabase.functions.invoke("tts-otaibi", {
           body: { text: plain, stability: 0.85, similarity_boost: 0.85, style: 0.4, speed: 0.95 },
         });
+        if (data?.unavailable) return;
         if (error || !data?.audioContent) throw error || new Error("no audio");
         const audio = new Audio(`data:${data.mime || "audio/mpeg"};base64,${data.audioContent}`);
         otaibiAudioRef.current = audio;
         await audio.play();
       } catch (e) {
-        // fallback to Web Speech
-        if (!("speechSynthesis" in window)) return;
-        const voices = window.speechSynthesis.getVoices();
-        const ar = voices.find((v) => /ar-SA/i.test(v.lang)) || voices.find((v) => /^ar/i.test(v.lang));
-        const u = new SpeechSynthesisUtterance(plain);
-        if (ar) { u.voice = ar; u.lang = ar.lang; } else { u.lang = "ar-SA"; }
-        u.rate = 0.86; u.pitch = 0.78;
-        window.speechSynthesis.speak(u);
+        console.warn("tts-otaibi auto-speak failed", e);
       }
     })();
   }, [messages, isLoading, autoSpeak, lastSpoken]);
