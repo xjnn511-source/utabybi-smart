@@ -3,7 +3,7 @@ import { MessageCircle, X, Send, Loader2, Volume2, VolumeX } from "lucide-react"
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import SpeakButton from "@/components/SpeakButton";
-import { supabase } from "@/integrations/supabase/client";
+import { speakOtaibi, stopOtaibi } from "@/lib/otaibiVoice";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 
@@ -25,40 +25,21 @@ const AiChatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState(true); // "صوت عُتيبي" — افتراضي
   const [lastSpoken, setLastSpoken] = useState<string>("");
-  const otaibiAudioRef = useRef<HTMLAudioElement | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-speak last completed assistant message via cloned ElevenLabs voice
+  // Auto-speak last completed assistant message via free Web Speech API (ar-SA)
   useEffect(() => {
     if (!autoSpeak || isLoading) return;
     const last = messages[messages.length - 1];
     if (!last || last.role !== "assistant") return;
     if (last.content === lastSpoken) return;
     setLastSpoken(last.content);
-    const plain = last.content.replace(/[*_`#>\[\]()]/g, "").replace(/\n+/g, "، ");
-    (async () => {
-      try {
-        // stop any prior playback
-        try { otaibiAudioRef.current?.pause(); } catch {}
-        try { window.speechSynthesis?.cancel(); } catch {}
-        const { data, error } = await supabase.functions.invoke("tts-otaibi", {
-          body: { text: plain, stability: 0.85, similarity_boost: 0.85, style: 0.4, speed: 0.95 },
-        });
-        if (data?.unavailable) return;
-        if (error || !data?.audioContent) throw error || new Error("no audio");
-        const audio = new Audio(`data:${data.mime || "audio/mpeg"};base64,${data.audioContent}`);
-        otaibiAudioRef.current = audio;
-        await audio.play();
-      } catch (e) {
-        console.warn("tts-otaibi auto-speak failed", e);
-      }
-    })();
+    speakOtaibi(last.content, { profile: "majestic" }).catch((e) =>
+      console.warn("otaibi auto-speak failed", e)
+    );
   }, [messages, isLoading, autoSpeak, lastSpoken]);
 
-  const stopSpeaking = () => {
-    try { otaibiAudioRef.current?.pause(); } catch {}
-    try { window.speechSynthesis?.cancel(); } catch {}
-  };
+  const stopSpeaking = () => stopOtaibi();
 
   useEffect(() => {
     if (scrollRef.current) {
