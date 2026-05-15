@@ -27,20 +27,40 @@ const loadVoices = (): Promise<SpeechSynthesisVoice[]> => {
   return voicesReady;
 };
 
+// كلمات مفتاحية تدل على أصوات عالية الجودة في المتصفحات/الأنظمة المختلفة
+const PREMIUM_HINTS = /(premium|enhanced|neural|natural|online|wavenet|studio|google|microsoft|siri|majed|maged|tarik|hamed|naayf|salim)/i;
+const ARABIC_LANG = /^ar([-_]|$)/i;
+const SAUDI_LANG = /ar[-_]SA/i;
+
+const scoreVoice = (v: SpeechSynthesisVoice): number => {
+  let score = 0;
+  if (!ARABIC_LANG.test(v.lang)) return -1;
+  if (SAUDI_LANG.test(v.lang)) score += 50;
+  if (PREMIUM_HINTS.test(v.name)) score += 40;
+  if (/google/i.test(v.name)) score += 30; // Google عادةً Neural
+  if (/microsoft/i.test(v.name)) score += 25;
+  if (/natural|neural|online|wavenet|studio/i.test(v.name)) score += 35;
+  if (!v.localService) score += 15; // الأصوات السحابية أعلى جودة عادةً
+  if (/male|majed|maged|tarik|hamed|naayf|salim/i.test(v.name)) score += 10;
+  return score;
+};
+
 const pickArabicVoice = (voices: SpeechSynthesisVoice[]) => {
   if (!voices.length) return null;
-  // الأولوية: السعودية، ثم أي عربي ذكوري، ثم أي عربي.
-  const priorities: Array<(v: SpeechSynthesisVoice) => boolean> = [
-    (v) => /ar[-_]SA/i.test(v.lang),
-    (v) => /ar[-_]SA/i.test(v.lang) || /Saudi|Majed|Tarik|Hamed/i.test(v.name),
-    (v) => /^ar/i.test(v.lang) && /male|majed|tarik|hamed|naayf/i.test(v.name),
-    (v) => /^ar/i.test(v.lang),
-  ];
-  for (const test of priorities) {
-    const found = voices.find(test);
-    if (found) return found;
+  const arabic = voices.filter((v) => ARABIC_LANG.test(v.lang));
+  const pool = arabic.length ? arabic : voices;
+  const ranked = [...pool].sort((a, b) => scoreVoice(b) - scoreVoice(a));
+  if (typeof console !== "undefined") {
+    console.info(
+      "[otaibiVoice] selected:",
+      ranked[0]?.name,
+      ranked[0]?.lang,
+      "from",
+      pool.length,
+      "Arabic voices"
+    );
   }
-  return voices[0];
+  return ranked[0] || voices[0];
 };
 
 export const getOtaibiVoice = async (): Promise<SpeechSynthesisVoice | null> => {
@@ -55,13 +75,13 @@ export type OtaibiProfile = "majestic" | "natural" | "fast";
 const profileSettings = (p: OtaibiProfile) => {
   switch (p) {
     case "fast":
-      return { rate: 1.05, pitch: 1.0 };
+      return { rate: 1.0, pitch: 1.0 };
     case "natural":
-      return { rate: 0.95, pitch: 0.95 };
+      return { rate: 0.9, pitch: 1.0 };
     case "majestic":
     default:
-      // نبرة فخمة، أبطأ قليلاً، أعمق قليلاً → نطق مسترسل غير متقطع
-      return { rate: 0.88, pitch: 0.85 };
+      // إعدادات مطلوبة من المستخدم: نطق مسترسل هادئ يليق بمنصة احترافية
+      return { rate: 0.85, pitch: 1.0 };
   }
 };
 
