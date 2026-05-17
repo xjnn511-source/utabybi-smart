@@ -17,11 +17,11 @@ interface DeedData {
 const DigitalIndicators = () => {
   const navigate = useNavigate();
   const [deed, setDeed] = useState<DeedData>({
-    deedNumber: "09487333847",
-    area: "500",
-    owner: "خالد العتيبي",
-    city: "الرياض",
-    district: "حي الريس",
+    deedNumber: "",
+    area: "",
+    owner: "",
+    city: "",
+    district: "",
   });
 
   useEffect(() => {

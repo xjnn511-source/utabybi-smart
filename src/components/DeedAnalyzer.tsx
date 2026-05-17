@@ -9,8 +9,6 @@ import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import DeedVisualDashboard from "@/components/DeedVisualDashboard";
-import SpeakButton from "@/components/SpeakButton";
-import { speakOtaibi } from "@/lib/otaibiVoice";
 
 type AnalysisState = "idle" | "scanning" | "done" | "error";
 
@@ -96,15 +94,12 @@ const DeedAnalyzer = () => {
       if (data?.error) throw new Error(data.error);
 
       if (data?.success && data?.data) {
-        const extracted = data.data as DeedData;
-        setDeedData(extracted);
-        try { localStorage.setItem("utaybi.deedData", JSON.stringify(extracted)); } catch {}
-        setEditMode(true);
-        setState("done");
-        speakOtaibi(
-          `تم تحليل الصك بنجاح. رقم الصك ${extracted.deedNumber || "غير محدد"}. المساحة ${extracted.area || "غير محددة"}. الموقع ${extracted.city || "غير محدد"} ${extracted.district || ""}.`,
-          { profile: "majestic" }
-        );
+        setTimeout(() => {
+          setDeedData(data.data);
+          try { localStorage.setItem("utaybi.deedData", JSON.stringify(data.data)); } catch {}
+          setEditMode(true);
+          setState("done");
+        }, 400);
       } else {
         throw new Error("لم يتمكن النظام من استخراج البيانات");
       }
@@ -148,10 +143,20 @@ const DeedAnalyzer = () => {
     // Convert Arabic-Indic & Persian digits to ASCII
     s = s.replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x0660));
     s = s.replace(/[\u06F0-\u06F9]/g, (d) => String(d.charCodeAt(0) - 0x06F0));
-    // Keep visible Arabic letters exactly as extracted; only unify common non-Arabic glyph variants
-    s = s.replace(/[\u06CC\u06D2]/g, "\u064A");
+    // Alef forms (incl. Wasla / superscript) -> bare Alef
+    s = s.replace(/[\u0622\u0623\u0625\u0671\u0672\u0673]/g, "\u0627");
+    // Alef Maksura -> Yeh; Persian/Urdu Yeh & alt forms -> Arabic Yeh
+    s = s.replace(/[\u0649\u06CC\u064A\u06D2\u0626]/g, "\u064A");
+    // Persian/Urdu Kaf variants -> Arabic Kaf
     s = s.replace(/[\u06A9\u06AA\u06AB\u0762\u0763\u0764]/g, "\u0643");
+    // Heh variants -> standard Heh
     s = s.replace(/[\u06C1\u06BE\u06D5]/g, "\u0647");
+    // Taa Marbouta -> Heh (common normalization to reduce variance)
+    s = s.replace(/\u0629/g, "\u0647");
+    // Waw with Hamza -> Waw
+    s = s.replace(/\u0624/g, "\u0648");
+    // Standalone Hamza removal
+    s = s.replace(/\u0621/g, "");
     // Remove Tatweel & all Arabic diacritics (tashkeel) incl. Quranic marks
     s = s.replace(/\u0640/g, "");
     s = s.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "");
@@ -204,31 +209,18 @@ const DeedAnalyzer = () => {
     }
   };
 
-  const captureDeed = async (): Promise<string> => {
-    const node = deedPanelRef.current!;
-    // Wait for fonts (Cairo) to load before capturing — fixes Arabic ligature breaks
-    try { await (document as any).fonts?.ready; } catch {}
-    // html-to-image uses SVG foreignObject which preserves native Arabic shaping
-    // (unlike html2canvas which re-implements text layout and breaks ligatures)
-    const dataUrl = await toPng(node, {
-      backgroundColor: "#000814",
-      pixelRatio: 3,
-      cacheBust: true,
-      skipFonts: false,
-      style: {
-        fontFamily: "'Cairo', system-ui, sans-serif",
-      },
-    });
-    return dataUrl;
-  };
-
   const handleDownload = async () => {
     if (!deedPanelRef.current) return;
     await runPreExportAudit();
     try {
-      const dataUrl = await captureDeed();
+      const dataUrl = await toPng(deedPanelRef.current, {
+        cacheBust: true,
+        pixelRatio: 3,
+        backgroundColor: DEED_BG,
+      });
       const fileName = `utaybi-deed-${deedData?.deedNumber || "document"}.png`;
 
+      // Try native share (mobile) with the image file
       try {
         const blob = await (await fetch(dataUrl)).blob();
         const imgFile = new File([blob], fileName, { type: "image/png" });
@@ -244,14 +236,14 @@ const DeedAnalyzer = () => {
         }
       } catch {}
 
+      // Fallback: direct download
       const link = document.createElement("a");
       link.download = fileName;
       link.href = dataUrl;
       link.click();
       toast({ title: "تم تحميل بطاقة الصك (PNG)", description: "بنفس شكل البطاقة الأفقية" });
     } catch (err: any) {
-      console.error("PNG export error:", err);
-      toast({ title: "فشل التحميل", description: err.message || "تعذر التصدير", variant: "destructive" });
+      toast({ title: "فشل التحميل", description: err.message, variant: "destructive" });
     }
   };
 
@@ -259,7 +251,11 @@ const DeedAnalyzer = () => {
     if (!deedPanelRef.current) return;
     await runPreExportAudit();
     try {
-      const dataUrl = await captureDeed();
+      const dataUrl = await toPng(deedPanelRef.current, {
+        cacheBust: true,
+        pixelRatio: 3,
+        backgroundColor: DEED_BG,
+      });
       const img = new Image();
       img.src = dataUrl;
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
@@ -292,8 +288,7 @@ const DeedAnalyzer = () => {
       pdf.save(`utaybi-deed-${deedData?.deedNumber || "document"}.pdf`);
       toast({ title: "تم تصدير الوثيقة كملف PDF", description: "جودة طباعة عالية" });
     } catch (err: any) {
-      console.error("PDF export error:", err);
-      toast({ title: "فشل تصدير PDF", description: err.message || "تعذر الحفظ", variant: "destructive" });
+      toast({ title: "فشل تصدير PDF", description: err.message, variant: "destructive" });
     }
   };
 
@@ -525,7 +520,7 @@ const DeedAnalyzer = () => {
           >
             {/* Status Banner */}
             <div
-              className="rounded-xl p-3 flex items-center justify-between gap-2 flex-wrap"
+              className="rounded-xl p-3 flex items-center justify-between"
               style={{
                 background: cyanA(0.06),
                 border: `1px solid ${cyanA(0.44)}`,
@@ -538,17 +533,9 @@ const DeedAnalyzer = () => {
                   تمت المعالجة البرمجية بنجاح
                 </span>
               </div>
-              <SpeakButton
-                label="قراءة التحليل"
-                text={[
-                  "تحليل الصك العقاري.",
-                  `المالك: ${deedData.owner || "غير محدد"}.`,
-                  `رقم الوثيقة: ${deedData.deedNumber || "غير محدد"}.`,
-                  `المساحة: ${deedData.area ? deedData.area + " متر مربع" : "غير محددة"}.`,
-                  `المدينة: ${deedData.city || "غير محددة"}.`,
-                  `الحي: ${deedData.district || "غير محدد"}.`,
-                ].join(" ")}
-              />
+              <span className="text-[10px] font-extrabold tracking-widest" style={{ color: NEON_PINK }}>
+                UTAYBI · SMART AI
+              </span>
             </div>
 
             <div ref={deedPanelRef} className="overflow-x-auto pb-2">
