@@ -273,10 +273,11 @@ const VideoMontageCard = () => {
       setProgress(100);
       speakOtaibi("تم إنتاج فيديو ويب إم حقيقي وقابل للتنزيل والتشغيل بنجاح.", { profile: "majestic" });
       toast({ title: "تم إنشاء فيديو WebM فعلي" });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("MediaRecorder montage failed", error);
       setStatus("error");
-      toast({ title: "فشل إنشاء الفيديو", description: error?.message || "حاول مرة أخرى", variant: "destructive" });
+      const message = error instanceof Error ? error.message : "حاول مرة أخرى";
+      toast({ title: "فشل إنشاء الفيديو", description: message, variant: "destructive" });
     } finally {
       if (audioContext) audioContext.close();
       stream.getTracks().forEach((track) => track.stop());
