@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import DeedVisualDashboard from "@/components/DeedVisualDashboard";
 import SpeakButton from "@/components/SpeakButton";
+import { speakOtaibi } from "@/lib/otaibiVoice";
 
 type AnalysisState = "idle" | "scanning" | "done" | "error";
 
@@ -95,12 +96,15 @@ const DeedAnalyzer = () => {
       if (data?.error) throw new Error(data.error);
 
       if (data?.success && data?.data) {
-        setTimeout(() => {
-          setDeedData(data.data);
-          try { localStorage.setItem("utaybi.deedData", JSON.stringify(data.data)); } catch {}
-          setEditMode(true);
-          setState("done");
-        }, 400);
+        const extracted = data.data as DeedData;
+        setDeedData(extracted);
+        try { localStorage.setItem("utaybi.deedData", JSON.stringify(extracted)); } catch {}
+        setEditMode(true);
+        setState("done");
+        speakOtaibi(
+          `تم تحليل الصك بنجاح. رقم الصك ${extracted.deedNumber || "غير محدد"}. المساحة ${extracted.area || "غير محددة"}. الموقع ${extracted.city || "غير محدد"} ${extracted.district || ""}.`,
+          { profile: "majestic" }
+        );
       } else {
         throw new Error("لم يتمكن النظام من استخراج البيانات");
       }
