@@ -264,7 +264,7 @@ const VideoMontageCard = () => {
       });
 
       if (audioElement) audioElement.pause();
-      await new Promise((resolve) => setTimeout(resolve, 250));
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       recorder.stop();
       const blob = await completed;
       const url = URL.createObjectURL(blob);
