@@ -1,4 +1,5 @@
 import { Crown, Building2, Rocket, Gift, Gem } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const plans = [
   {
@@ -37,6 +38,7 @@ const plans = [
 ];
 
 const SubscriptionRow = () => {
+  const navigate = useNavigate();
   return (
     <>
       <div className="flex gap-3 overflow-x-auto pb-3 px-4 snap-x snap-mandatory" style={{ scrollbarWidth: "none" }}>
@@ -78,7 +80,9 @@ const SubscriptionRow = () => {
               ))}
             </ul>
 
-            <button className={`w-full h-9 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all ${
+            <button
+              onClick={() => navigate(plan.isFree ? "/auth" : "/upgrade")}
+              className={`w-full h-9 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all ${
               plan.isFree
                 ? "bg-green-600 text-white hover:bg-green-700"
                 : plan.highlight
