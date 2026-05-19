@@ -2,7 +2,8 @@ import { Mic, Volume2, Loader2, Pause, Play } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 
-const SAMPLE = "بسم الله الرحمن الرحيم… فرصة استثمارية ذهبية في قلب الرياض. أرض سكنية مميزة بصك إلكتروني محدث، إطلالة فاخرة، وموقع استراتيجي لا يُعوّض. تواصلوا معنا الآن مع عُتيبي ذكي.";
+const SAMPLE =
+  "بسم الله الرحمن الرحيم، فرصة استثمارية ذهبية في قلب الرياض. أرض سكنية مميزة بصك إلكتروني محدث، إطلالة فاخرة، وموقع استراتيجي لا يُعوّض. تواصلوا معنا الآن مع عُتيبي ذكي.";
 
 // Curated premium Arabic-capable voices (ElevenLabs Multilingual v2)
 const VOICES = [
