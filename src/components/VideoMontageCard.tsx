@@ -26,26 +26,31 @@ const VideoMontageCard = () => {
     setErrorMsg("");
 
     try {
-      const path = `montage/${Date.now()}_${file.name}`;
-      const { error: upErr } = await supabase.storage.from("deeds").upload(path, file);
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const path = `montage/${Date.now()}_${safeName}`;
+      const { error: upErr } = await supabase.storage.from("deeds").upload(path, file, {
+        contentType: file.type,
+        upsert: false,
+      });
       if (upErr) throw upErr;
 
-      const { data: urlData } = supabase.storage.from("deeds").getPublicUrl(path);
+      // Signed URL (deeds bucket is private) — long enough for Creatomate to fetch
+      const { data: signed, error: signErr } = await supabase.storage
+        .from("deeds")
+        .createSignedUrl(path, 60 * 60);
+      if (signErr || !signed?.signedUrl) throw signErr || new Error("تعذر إنشاء رابط آمن للفيديو");
 
       setPhase("processing");
       const { data, error } = await supabase.functions.invoke("creatomate-render", {
         body: {
-          source_url: urlData.publicUrl,
+          source_url: signed.signedUrl,
           modifications: { volume: "100%" },
         },
       });
-      if (error) throw error;
+      if (error) throw new Error(error.message || "فشل محرك المونتاج");
 
-      const url = data?.[0]?.url || data?.url || null;
-      if (!url) {
-        // Render queued — show friendly fallback
-        throw new Error("لم يُرجع المحرك رابط فيديو نهائي. تأكد من اشتراك Creatomate.");
-      }
+      const url = (data as any)?.url || (Array.isArray(data) && (data as any)[0]?.url) || null;
+      if (!url) throw new Error("لم يُرجع المحرك رابط الفيديو النهائي");
 
       setResultUrl(url);
       setPhase("result");
