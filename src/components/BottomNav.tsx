@@ -14,15 +14,18 @@ interface BottomNavProps {
 
 const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-xl border-t border-primary/20 max-w-md mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-xl border-t border-primary/20 max-w-md mx-auto" aria-label="التنقل الرئيسي">
       <div className="flex items-center justify-around py-2 px-2">
         {tabs.map(({ id, icon: Icon, label }) => {
           const isActive = activeTab === id;
           return (
             <button
+              type="button"
               key={id}
+              aria-label={label}
+              aria-current={isActive ? "page" : undefined}
               onClick={() => onTabChange(id)}
-              className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all duration-300 ${
+              className={`flex min-w-16 flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all duration-300 active:scale-95 ${
                 isActive
                   ? "text-primary bg-primary/10 border border-primary/25 shadow-[0_0_15px_hsl(var(--primary)/0.2)]"
                   : "text-muted-foreground hover:text-primary/70"
