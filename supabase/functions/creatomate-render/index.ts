@@ -1,38 +1,45 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+const CREATOMATE_API = "https://api.creatomate.com/v1/renders";
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+async function pollRender(id: string, apiKey: string, maxMs = 110_000): Promise<any> {
+  const start = Date.now();
+  while (Date.now() - start < maxMs) {
+    await new Promise((r) => setTimeout(r, 3000));
+    const r = await fetch(`${CREATOMATE_API}/${id}`, {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    if (!r.ok) continue;
+    const j = await r.json();
+    if (j.status === "succeeded" && j.url) return j;
+    if (j.status === "failed") throw new Error(j.error_message || "Creatomate render failed");
   }
+  throw new Error("انتهت مهلة المعالجة. حاول مرة أخرى بعد قليل.");
+}
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const CREATOMATE_API_KEY = Deno.env.get("CREATOMATE_API_KEY");
-    if (!CREATOMATE_API_KEY) {
-      return new Response(JSON.stringify({ error: "CREATOMATE_API_KEY is not configured" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+    const apiKey = Deno.env.get("CREATOMATE_API_KEY");
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: "CREATOMATE_API_KEY غير مهيأ" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const { source_url, modifications } = await req.json();
-
     if (!source_url) {
-      return new Response(JSON.stringify({ error: "source_url is required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      return new Response(JSON.stringify({ error: "source_url مطلوب" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Create a render using Creatomate API
-    const response = await fetch("https://api.creatomate.com/v1/renders", {
+    // Submit render — 9:16 vertical
+    const submit = await fetch(CREATOMATE_API, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${CREATOMATE_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -40,11 +47,12 @@ serve(async (req) => {
           output_format: "mp4",
           width: 1080,
           height: 1920,
+          frame_rate: 30,
           elements: [
             {
               type: "video",
               source: source_url,
-              trim_start: 0,
+              fit: "cover",
               ...(modifications || {}),
             },
           ],
@@ -52,24 +60,40 @@ serve(async (req) => {
       }),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Creatomate API error:", response.status, errorText);
-      return new Response(JSON.stringify({ error: `Creatomate error [${response.status}]: ${errorText}` }), {
-        status: response.status,
+    if (!submit.ok) {
+      const errorText = await submit.text();
+      console.error("Creatomate submit error:", submit.status, errorText);
+      return new Response(
+        JSON.stringify({ error: `Creatomate [${submit.status}]: ${errorText}` }),
+        { status: submit.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const submitted = await submit.json();
+    const render = Array.isArray(submitted) ? submitted[0] : submitted;
+
+    // Already finished?
+    if (render?.status === "succeeded" && render.url) {
+      return new Response(JSON.stringify({ url: render.url, id: render.id }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const data = await response.json();
-    return new Response(JSON.stringify(data), {
+    if (!render?.id) {
+      return new Response(JSON.stringify({ error: "لم يُرجع المحرك معرّف معالجة" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Poll until done
+    const finished = await pollRender(render.id, apiKey);
+    return new Response(JSON.stringify({ url: finished.url, id: finished.id }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("Render error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "خطأ غير معروف" }), {
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
