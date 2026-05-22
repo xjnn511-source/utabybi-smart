@@ -23,6 +23,18 @@ import { Menu, LayoutGrid } from "lucide-react";
 const Index = () => {
   const [activeTab, setActiveTab] = useState("home");
 
+  const sectionByTab: Record<string, string> = {
+    home: "home-section",
+    radar: "radar-section",
+    analyze: "ai-engine-section",
+    editor: "video-section",
+  };
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    document.getElementById(sectionByTab[tab])?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="min-h-screen flex w-full bg-background">
@@ -46,15 +58,19 @@ const Index = () => {
             </div>
           </div>
 
-          <main className="space-y-8 p-4 mt-4">
+          <main id="home-section" className="space-y-8 p-4 mt-4 scroll-mt-4">
             {/* Quick Access Grid */}
             <ServiceQuickGrid />
 
             {/* نظام معالجة الوثائق */}
-            <DeedAnalyzer />
+            <section id="deed-section" className="scroll-mt-24">
+              <DeedAnalyzer />
+            </section>
 
             {/* بوابة المحركات البرمجية */}
-            <AiEnginePortal />
+            <section id="ai-engine-section" className="scroll-mt-24">
+              <AiEnginePortal />
+            </section>
 
             {/* Digital Compliance Section */}
             <ComplianceSection />
@@ -65,13 +81,21 @@ const Index = () => {
               محركات المعالجة والأنظمة البرمجية المؤتمتة
             </h2>
 
-            <SmartRadar />
+            <section id="radar-section" className="scroll-mt-24">
+              <SmartRadar />
+            </section>
             <BrainCard />
             <AiVideoEditor />
-            <ContentCard />
-            <VideoMontageCard />
+            <section id="content-section" className="scroll-mt-24">
+              <ContentCard />
+            </section>
+            <section id="video-section" className="scroll-mt-24">
+              <VideoMontageCard />
+            </section>
             <VoiceCard />
-            <NewsTicker />
+            <section id="calculator-section" className="scroll-mt-24">
+              <NewsTicker />
+            </section>
 
             {/* Subscription CTA */}
             <SubscriptionCTA />
@@ -96,7 +120,7 @@ const Index = () => {
           <Footer />
 
           <AiChatbot />
-          <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+          <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
         </div>
       </div>
     </SidebarProvider>
