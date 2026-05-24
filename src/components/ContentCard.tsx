@@ -120,16 +120,12 @@ const ContentCard = () => {
       ) : (
         <button
           onClick={handleClick}
-          disabled={!isPaid || status !== "idle"}
-          style={!isPaid ? { pointerEvents: "none", opacity: 0.5 } : undefined}
+          disabled={status !== "idle"}
           className="w-full h-10 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-50"
         >
-          {!isPaid ? <Lock className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" strokeWidth={2} />}
+          <Sparkles className="w-3.5 h-3.5" strokeWidth={2} />
           {status === "uploading" ? "جاري الرفع..." : status === "processing" ? "جاري المونتاج..." : "توليد حلول برمجية احترافية"}
         </button>
-      )}
-      {!isPaid && (
-        <p className="text-[9px] text-muted-foreground/70 text-center mt-2">🔒 مغلق — يفعّل بعد رفع إيصال التحويل</p>
       )}
       <span className="watermark">عُتيبي ذكي 🤖</span>
     </div>
