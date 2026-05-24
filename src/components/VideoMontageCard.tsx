@@ -2,7 +2,7 @@ import { Video, Upload, Sparkles, Loader2, Download } from "lucide-react";
 import { useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { isActivated } from "@/hooks/useActivation";
+
 
 const VideoMontageCard = () => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -11,12 +11,9 @@ const VideoMontageCard = () => {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handlePick = () => {
-    if (!isActivated()) {
-      toast({ title: "الخدمة مغلقة", description: "يرجى رفع إيصال التحويل لتفعيل الخدمات", variant: "destructive" });
-      return;
-    }
     fileRef.current?.click();
   };
+
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];

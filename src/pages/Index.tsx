@@ -12,7 +12,7 @@ import AiChatbot from "@/components/AiChatbot";
 import AppSidebar from "@/components/AppSidebar";
 import Footer from "@/components/Footer";
 import ComplianceSection from "@/components/ComplianceSection";
-import PaymentActivation from "@/components/PaymentActivation";
+
 import SubscriptionCTA from "@/components/SubscriptionCTA";
 import ServiceQuickGrid from "@/components/ServiceQuickGrid";
 import BottomNav from "@/components/BottomNav";
@@ -83,10 +83,7 @@ const Index = () => {
             <SubscriptionRow />
           </section>
 
-          {/* Payment & Activation */}
-          <section className="px-4 mt-6">
-            <PaymentActivation />
-          </section>
+
 
 
           {/* Legal Disclaimer */}
