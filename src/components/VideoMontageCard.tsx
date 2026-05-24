@@ -1,17 +1,46 @@
-import { Video, Upload, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { Video, Upload, Sparkles, Loader2, Download } from "lucide-react";
+import { useRef, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
+import { isActivated } from "@/hooks/useActivation";
 
 const VideoMontageCard = () => {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [result, setResult] = useState(false);
+  const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string>("");
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleCreate = () => {
+  const handlePick = () => {
+    if (!isActivated()) {
+      toast({ title: "الخدمة مغلقة", description: "يرجى رفع إيصال التحويل لتفعيل الخدمات", variant: "destructive" });
+      return;
+    }
+    fileRef.current?.click();
+  };
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    if (!f.type.startsWith("video/") && !f.type.startsWith("image/")) {
+      toast({ title: "يرجى رفع ملف فيديو أو صورة", variant: "destructive" });
+      return;
+    }
+    setFileName(f.name);
     setIsProcessing(true);
-    setResult(false);
-    setTimeout(() => {
+    setResultUrl(null);
+    try {
+      const path = `montage/${Date.now()}_${f.name}`;
+      const { error: upErr } = await supabase.storage.from("deeds").upload(path, f);
+      if (upErr) throw upErr;
+      const { data: urlData } = supabase.storage.from("deeds").getPublicUrl(path);
+      setResultUrl(urlData.publicUrl);
+      toast({ title: "تمت معالجة الوسائط ✓", description: "الملف جاهز للتحميل" });
+    } catch (err: any) {
+      toast({ title: "فشل المعالجة", description: err.message, variant: "destructive" });
+    } finally {
       setIsProcessing(false);
-      setResult(true);
-    }, 4000);
+      if (fileRef.current) fileRef.current.value = "";
+    }
   };
 
   return (
@@ -26,17 +55,21 @@ const VideoMontageCard = () => {
         </div>
       </div>
 
+      <input ref={fileRef} type="file" accept="video/*,image/*" onChange={handleFile} className="hidden" />
+
       <div className="aspect-video max-h-36 rounded-lg overflow-hidden mb-3 relative bg-secondary border border-border">
         {isProcessing ? (
           <div className="absolute inset-0 flex flex-col gap-2 items-center justify-center">
-            <div className="w-7 h-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-[10px] text-muted-foreground">جاري معالجة الفيديو...</p>
+            <Loader2 className="w-6 h-6 text-primary animate-spin" />
+            <p className="text-[10px] text-muted-foreground">جاري معالجة {fileName}...</p>
           </div>
-        ) : result ? (
+        ) : resultUrl ? (
           <div className="absolute inset-0 bg-primary/5 flex flex-col items-center justify-center p-3">
             <Sparkles className="w-7 h-7 text-primary mb-2" />
             <p className="text-xs text-primary font-bold text-center">ملف الوسائط جاهز</p>
-            <p className="text-[10px] text-muted-foreground mt-1">جاهز للتحميل والمشاركة</p>
+            <a href={resultUrl} target="_blank" rel="noreferrer" className="text-[10px] text-primary underline mt-1 flex items-center gap-1">
+              <Download className="w-3 h-3" /> تحميل
+            </a>
           </div>
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
@@ -47,7 +80,7 @@ const VideoMontageCard = () => {
       </div>
 
       <button
-        onClick={handleCreate}
+        onClick={handlePick}
         disabled={isProcessing}
         className="w-full h-10 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-50"
       >
