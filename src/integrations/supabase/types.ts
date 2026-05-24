@@ -220,6 +220,51 @@ export type Database = {
         }
         Relationships: []
       }
+      upgrade_requests: {
+        Row: {
+          admin_note: string | null
+          amount_sar: number
+          created_at: string
+          id: string
+          plan: string
+          receipt_url: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          sender_name: string | null
+          sender_phone: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          amount_sar: number
+          created_at?: string
+          id?: string
+          plan: string
+          receipt_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          sender_name?: string | null
+          sender_phone?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          amount_sar?: number
+          created_at?: string
+          id?: string
+          plan?: string
+          receipt_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          sender_name?: string | null
+          sender_phone?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
