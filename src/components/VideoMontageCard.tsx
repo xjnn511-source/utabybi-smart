@@ -2,7 +2,7 @@ import { Video, Upload, Sparkles, Loader2, Download } from "lucide-react";
 import { useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { isActivated } from "@/hooks/useActivation";
+
 
 const VideoMontageCard = () => {
   const [isProcessing, setIsProcessing] = useState(false);
