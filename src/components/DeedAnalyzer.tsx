@@ -68,10 +68,7 @@ const DeedAnalyzer = () => {
   };
 
   const handleLaunch = async () => {
-    if (!isActivated()) {
-      toast({ title: "الخدمة مغلقة", description: "يرجى رفع إيصال التحويل لتفعيل الخدمات", variant: "destructive" });
-      return;
-    }
+
     if (!file) {
       toast({ title: "يرجى رفع صورة الوثيقة أولاً", variant: "destructive" });
       return;
