@@ -11,12 +11,9 @@ const VideoMontageCard = () => {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handlePick = () => {
-    if (!isActivated()) {
-      toast({ title: "الخدمة مغلقة", description: "يرجى رفع إيصال التحويل لتفعيل الخدمات", variant: "destructive" });
-      return;
-    }
     fileRef.current?.click();
   };
+
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
