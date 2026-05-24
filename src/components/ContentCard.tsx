@@ -1,23 +1,17 @@
-import { FileText, Sparkles, Upload, Scissors, Volume2, CheckCircle, Video, Lock } from "lucide-react";
+import { FileText, Sparkles, Upload, Scissors, Volume2, CheckCircle, Video } from "lucide-react";
 import { useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { useActivation } from "@/hooks/useActivation";
 
 type RenderStatus = "idle" | "uploading" | "processing" | "done" | "error";
 
 const ContentCard = () => {
-  const isPaid = useActivation();
   const [status, setStatus] = useState<RenderStatus>("idle");
   const [fileName, setFileName] = useState("");
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
-    if (!isPaid) {
-      toast({ title: "الخدمة مغلقة", description: "يرجى رفع إيصال التحويل لتفعيل الخدمات", variant: "destructive" });
-      return;
-    }
     fileRef.current?.click();
   };
 
