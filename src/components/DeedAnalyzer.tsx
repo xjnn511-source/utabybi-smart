@@ -9,6 +9,7 @@ import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import DeedVisualDashboard from "@/components/DeedVisualDashboard";
+import { isActivated } from "@/hooks/useActivation";
 
 type AnalysisState = "idle" | "scanning" | "done" | "error";
 
@@ -67,6 +68,10 @@ const DeedAnalyzer = () => {
   };
 
   const handleLaunch = async () => {
+    if (!isActivated()) {
+      toast({ title: "الخدمة مغلقة", description: "يرجى رفع إيصال التحويل لتفعيل الخدمات", variant: "destructive" });
+      return;
+    }
     if (!file) {
       toast({ title: "يرجى رفع صورة الوثيقة أولاً", variant: "destructive" });
       return;
