@@ -83,6 +83,12 @@ const Index = () => {
             <SubscriptionRow />
           </section>
 
+          {/* Payment & Activation */}
+          <section className="px-4 mt-6">
+            <PaymentActivation />
+          </section>
+
+
           {/* Legal Disclaimer */}
           <div className="mx-4 mt-4 p-3 rounded-lg bg-secondary/50 border border-border">
             <p className="text-[8px] text-muted-foreground leading-relaxed text-center">
