@@ -12,7 +12,7 @@ import AiChatbot from "@/components/AiChatbot";
 import AppSidebar from "@/components/AppSidebar";
 import Footer from "@/components/Footer";
 import ComplianceSection from "@/components/ComplianceSection";
-import PaymentActivation from "@/components/PaymentActivation";
+
 import SubscriptionCTA from "@/components/SubscriptionCTA";
 import ServiceQuickGrid from "@/components/ServiceQuickGrid";
 import BottomNav from "@/components/BottomNav";
