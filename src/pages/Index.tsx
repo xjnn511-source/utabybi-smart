@@ -83,10 +83,7 @@ const Index = () => {
             <SubscriptionRow />
           </section>
 
-          {/* Payment & Activation */}
-          <section className="px-4 mt-6">
-            <PaymentActivation />
-          </section>
+
 
 
           {/* Legal Disclaimer */}
