@@ -29,6 +29,11 @@ const AiVideoEditor = () => {
   }, []);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isActivated()) {
+      toast({ title: "الخدمة مغلقة", description: "يرجى رفع إيصال التحويل لتفعيل الخدمات", variant: "destructive" });
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
     const file = e.target.files?.[0];
     if (!file) return;
 
