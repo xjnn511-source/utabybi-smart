@@ -2,7 +2,7 @@ import { Video, Upload, Scissors, Volume2, Sparkles, CheckCircle, ShieldAlert } 
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { isActivated } from "@/hooks/useActivation";
+
 
 type RenderStatus = "idle" | "uploading" | "processing" | "done" | "error";
 
