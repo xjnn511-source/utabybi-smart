@@ -44,10 +44,10 @@ const ContentCard = () => {
     try {
       const urls: string[] = [];
       for (const f of valid) {
-        const path = `media/${Date.now()}_${f.name.replace(/\s+/g, "_")}`;
-        const { error } = await supabase.storage.from("deeds").upload(path, f);
+        const path = `uploads/${Date.now()}_${f.name.replace(/\s+/g, "_")}`;
+        const { error } = await supabase.storage.from("media").upload(path, f, { upsert: true });
         if (error) throw error;
-        urls.push(supabase.storage.from("deeds").getPublicUrl(path).data.publicUrl);
+        urls.push(supabase.storage.from("media").getPublicUrl(path).data.publicUrl);
       }
 
       setStatus("processing");
