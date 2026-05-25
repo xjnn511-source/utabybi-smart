@@ -55,9 +55,9 @@ function buildElements(template: Template, mediaUrls: string[], title?: string, 
       duration: segmentDuration,
       ...(isImg ? {} : { volume: template === "slideshow" ? "0%" : "100%" }),
       fit: "cover",
-      // Cinematic color grading
-      color_filter: i % 2 === 0 ? "warm" : "cool",
-      color_filter_value: template === "cinematic" ? 0.45 : 0.3,
+      // Creatomate-supported color grading
+      color_filter: template === "product" ? "contrast" : template === "slideshow" ? "brighten" : "sepia",
+      color_filter_value: template === "cinematic" ? 18 : template === "fast_cuts" ? 10 : 8,
       color_contrast: template === "cinematic" ? 20 : 12,
       color_saturation: template === "fast_cuts" ? 30 : 18,
       color_brightness: 4,

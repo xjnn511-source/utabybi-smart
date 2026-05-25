@@ -14,6 +14,12 @@ const TEMPLATES: { id: Template; label: string; icon: any; desc: string }[] = [
   { id: "story", label: "قصة قصيرة", icon: Layout, desc: "عنوان علوي + قطع متتالية" },
 ];
 
+const createSafeUploadPath = (file: File) => {
+  const extension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || (file.type.startsWith("image/") ? "jpg" : "mp4");
+  const safeId = `${Date.now()}_${crypto.randomUUID()}`;
+  return `uploads/${safeId}.${extension}`;
+};
+
 const ContentCard = () => {
   const [status, setStatus] = useState<RenderStatus>("idle");
   const [files, setFiles] = useState<File[]>([]);
@@ -44,7 +50,7 @@ const ContentCard = () => {
     try {
       const urls: string[] = [];
       for (const f of valid) {
-        const path = `uploads/${Date.now()}_${f.name.replace(/\s+/g, "_")}`;
+        const path = createSafeUploadPath(f);
         const { error } = await supabase.storage.from("media").upload(path, f, { upsert: true });
         if (error) throw error;
         urls.push(supabase.storage.from("media").getPublicUrl(path).data.publicUrl);
