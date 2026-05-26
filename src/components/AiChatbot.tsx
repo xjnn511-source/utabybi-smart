@@ -35,12 +35,29 @@ const AiChatbot = () => {
     const userMsg = text || input;
     if (!userMsg.trim() || isLoading) return;
 
+    const isCommand = COMMAND_REGEX.test(userMsg);
+
     const newUserMsg: Msg = { role: "user", content: userMsg };
     const updatedMessages = [...messages, newUserMsg];
     setMessages(updatedMessages);
     setInput("");
-    setIsLoading(true);
 
+    // If this is an executable command, hand off to the marketing assistant
+    if (isCommand) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "تمام، فهمت الأمر ✅\nسأفتح لك مساعد التسويق الذكي وأبدأ بكتابة الخطة فوراً.",
+          command: userMsg,
+        },
+      ]);
+      window.dispatchEvent(new CustomEvent("utaybi:command", { detail: { prompt: userMsg } }));
+      setTimeout(() => setIsOpen(false), 600);
+      return;
+    }
+
+    setIsLoading(true);
     let assistantSoFar = "";
 
     try {
