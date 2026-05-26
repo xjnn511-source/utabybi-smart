@@ -1,23 +1,29 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Wand2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Msg = { role: "user" | "assistant"; content: string; command?: string };
 
 const quickReplies = [
-  "كيف أستخدم أدوات المعالجة الرقمية؟",
-  "ما هي باقة النخبة؟",
-  "كيف تعمل معالجة الوسائط؟",
-  "ما الفرق بين الباقات؟",
+  "أنتج إعلان تيك توك لفيلا في الرياض",
+  "صمّم فيديو سينمائي لشقة تمليك",
+  "اعمل عرض مشروع سكني للمستثمرين",
+  "ما هي باقات عُتيبي ذكي؟",
 ];
+
+const COMMAND_REGEX = /(أنتج|انتج|اعمل|صمّ?م|سوّ?ق|أنشئ|انشئ|اصنع|ولّ?د|ابني|اطلق).*(فيديو|إعلان|اعلان|ريلز|تيك ?توك|قصة|مونتاج|عرض)/i;
 
 const AiChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "أهلاً! أنا المستشار الذكي 🤖 كيف أقدر أساعدك؟" },
+    {
+      role: "assistant",
+      content:
+        "أهلاً 👋 أنا مركز الأوامر الذكي لـ **عُتيبي ذكي العقاري**.\n\nاكتب أمرك مباشرة، مثل:\n- *\"أنتج إعلان تيك توك سريع لفيلا في الرياض\"*\n- *\"صمّم فيديو سينمائي لشقة تمليك\"*\n\nوسأفتح لك مساعد التسويق وأبدأ التنفيذ فوراً.",
+    },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,12 +39,29 @@ const AiChatbot = () => {
     const userMsg = text || input;
     if (!userMsg.trim() || isLoading) return;
 
+    const isCommand = COMMAND_REGEX.test(userMsg);
+
     const newUserMsg: Msg = { role: "user", content: userMsg };
     const updatedMessages = [...messages, newUserMsg];
     setMessages(updatedMessages);
     setInput("");
-    setIsLoading(true);
 
+    // If this is an executable command, hand off to the marketing assistant
+    if (isCommand) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "تمام، فهمت الأمر ✅\nسأفتح لك مساعد التسويق الذكي وأبدأ بكتابة الخطة فوراً.",
+          command: userMsg,
+        },
+      ]);
+      window.dispatchEvent(new CustomEvent("utaybi:command", { detail: { prompt: userMsg } }));
+      setTimeout(() => setIsOpen(false), 600);
+      return;
+    }
+
+    setIsLoading(true);
     let assistantSoFar = "";
 
     try {

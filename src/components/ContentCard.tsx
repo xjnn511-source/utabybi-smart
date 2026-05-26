@@ -1,5 +1,5 @@
 import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Edit3, Film, Zap, Image as ImageIcon, Star, Layout } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -26,8 +26,8 @@ const BRAND_TAG = "Produced by Utaybi Smart · عُتيبي ذكي";
 
 const SUGGESTIONS = [
   "إعلان تيك توك سريع لفيلا فاخرة في الرياض",
-  "فيديو سينمائي لمطعم برجر جديد",
-  "إعلان منتج عطر نسائي راقي",
+  "جولة سينمائية لشقة تمليك في جدة",
+  "عرض مشروع سكني جديد للمستثمرين",
   "قصة قصيرة عن خدمة استشارات عقارية",
 ];
 
@@ -44,15 +44,18 @@ const ContentCard = () => {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const generatePlan = async () => {
-    if (!prompt.trim()) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const generatePlanFor = async (promptText: string) => {
+    if (!promptText.trim()) {
       toast({ title: "اكتب طلبك التسويقي أولاً", variant: "destructive" });
       return;
     }
+    setPrompt(promptText);
     setStage("planning");
     try {
       const { data, error } = await supabase.functions.invoke("ai-marketing-director", {
-        body: { prompt },
+        body: { prompt: promptText },
       });
       if (error) throw error;
       if (!data?.plan) throw new Error("لم يتم استلام خطة");
@@ -64,6 +67,20 @@ const ContentCard = () => {
       setStage("prompt");
     }
   };
+
+  useEffect(() => {
+    const onCmd = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { prompt?: string };
+      if (!detail?.prompt) return;
+      cardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      generatePlanFor(detail.prompt);
+    };
+    window.addEventListener("utaybi:command", onCmd);
+    return () => window.removeEventListener("utaybi:command", onCmd);
+  }, []);
+
+  const generatePlan = async () => generatePlanFor(prompt);
+
 
   const pollRender = async (id: string, attempts = 0): Promise<string | null> => {
     if (attempts > 40) return null;
@@ -138,7 +155,7 @@ const ContentCard = () => {
   };
 
   return (
-    <div className="card-neon p-5 relative">
+    <div ref={cardRef} className="card-neon p-5 relative">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center shadow-[0_0_18px_hsl(var(--primary)/0.5)]">
           <Wand2 className="w-5 h-5 text-white" strokeWidth={2.2} />
