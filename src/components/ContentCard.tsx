@@ -44,15 +44,18 @@ const ContentCard = () => {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const generatePlan = async () => {
-    if (!prompt.trim()) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const generatePlanFor = async (promptText: string) => {
+    if (!promptText.trim()) {
       toast({ title: "اكتب طلبك التسويقي أولاً", variant: "destructive" });
       return;
     }
+    setPrompt(promptText);
     setStage("planning");
     try {
       const { data, error } = await supabase.functions.invoke("ai-marketing-director", {
-        body: { prompt },
+        body: { prompt: promptText },
       });
       if (error) throw error;
       if (!data?.plan) throw new Error("لم يتم استلام خطة");
@@ -64,6 +67,20 @@ const ContentCard = () => {
       setStage("prompt");
     }
   };
+
+  useEffect(() => {
+    const onCmd = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { prompt?: string };
+      if (!detail?.prompt) return;
+      cardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      generatePlanFor(detail.prompt);
+    };
+    window.addEventListener("utaybi:command", onCmd);
+    return () => window.removeEventListener("utaybi:command", onCmd);
+  }, []);
+
+  const generatePlan = async () => generatePlanFor(prompt);
+
 
   const pollRender = async (id: string, attempts = 0): Promise<string | null> => {
     if (attempts > 40) return null;
