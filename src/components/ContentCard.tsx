@@ -1,5 +1,5 @@
 import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Edit3, Film, Zap, Image as ImageIcon, Star, Layout } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
