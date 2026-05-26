@@ -1,18 +1,20 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Wand2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Msg = { role: "user" | "assistant"; content: string; command?: string };
 
 const quickReplies = [
-  "كيف أستخدم أدوات المعالجة الرقمية؟",
-  "ما هي باقة النخبة؟",
-  "كيف تعمل معالجة الوسائط؟",
-  "ما الفرق بين الباقات؟",
+  "أنتج إعلان تيك توك لفيلا في الرياض",
+  "صمّم فيديو سينمائي لشقة تمليك",
+  "اعمل عرض مشروع سكني للمستثمرين",
+  "ما هي باقات عُتيبي ذكي؟",
 ];
+
+const COMMAND_REGEX = /(أنتج|انتج|اعمل|صمّ?م|سوّ?ق|أنشئ|انشئ|اصنع|ولّ?د|ابني|اطلق).*(فيديو|إعلان|اعلان|ريلز|تيك ?توك|قصة|مونتاج|عرض)/i;
 
 const AiChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
