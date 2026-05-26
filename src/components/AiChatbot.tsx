@@ -19,7 +19,11 @@ const COMMAND_REGEX = /(أنتج|انتج|اعمل|صمّ?م|سوّ?ق|أنشئ|
 const AiChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "أهلاً! أنا المستشار الذكي 🤖 كيف أقدر أساعدك؟" },
+    {
+      role: "assistant",
+      content:
+        "أهلاً 👋 أنا مركز الأوامر الذكي لـ **عُتيبي ذكي العقاري**.\n\nاكتب أمرك مباشرة، مثل:\n- *\"أنتج إعلان تيك توك سريع لفيلا في الرياض\"*\n- *\"صمّم فيديو سينمائي لشقة تمليك\"*\n\nوسأفتح لك مساعد التسويق وأبدأ التنفيذ فوراً.",
+    },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
