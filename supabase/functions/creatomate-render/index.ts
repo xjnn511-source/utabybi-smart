@@ -100,7 +100,7 @@ function buildElements(template: Template, mediaUrls: string[], title?: string, 
       background_color: "rgba(2,6,23,0.55)",
       background_x_padding: "4%",
       background_y_padding: "3%",
-      background_border_radius: "2 vmin",
+      background_border_radius: "2%",
       animations: [
         { time: 0, duration: 0.6, easing: "quadratic-out", type: "slide", direction: "up", fade: true },
         { reversed: true, time: 0, duration: 0.4, easing: "quadratic-in", type: "fade" },
