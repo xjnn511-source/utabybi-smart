@@ -133,7 +133,7 @@ const ContentCard = () => {
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="اكتب فكرة الإعلان... مثال: إعلان تيك توك سريع لفيلا فاخرة"
+            placeholder="اكتب أمرك مباشرة... مثال: إعلان تيك توك سريع لفيلا فاخرة في الرياض"
             rows={3}
             className="w-full p-3 text-xs bg-secondary/60 border border-border rounded-lg text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary resize-none"
           />
@@ -148,81 +148,23 @@ const ContentCard = () => {
               </button>
             ))}
           </div>
-          <button onClick={generatePlan} className="w-full h-11 btn-neon text-xs flex items-center justify-center gap-2">
-            <Sparkles className="w-4 h-4" /> اكتب الخطة بالذكاء الاصطناعي
-          </button>
-        </div>
-      )}
-
-      {/* STAGE: PLANNING */}
-      {stage === "planning" && (
-        <div className="py-10 flex flex-col items-center gap-3">
-          <Wand2 className="w-8 h-8 text-primary animate-pulse" />
-          <p className="text-xs text-muted-foreground">المخرج الذكي يكتب السكربت ويختار القالب...</p>
-        </div>
-      )}
-
-      {/* STAGE: APPROVE */}
-      {stage === "approve" && plan && (
-        <div className="space-y-3">
-          <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-blue-500/5 border border-primary/30">
-            <p className="text-[9px] text-muted-foreground mb-1">القالب المختار</p>
-            <div className="flex items-center gap-2 mb-3">
-              {(() => {
-                const Icon = TEMPLATE_META[plan.template].icon;
-                return <Icon className="w-4 h-4 text-primary" />;
-              })()}
-              <span className="text-xs font-bold text-foreground">{TEMPLATE_META[plan.template].label}</span>
-            </div>
-            <p className="text-[9px] text-muted-foreground mb-1">العنوان على الفيديو</p>
-            <input
-              value={plan.title}
-              onChange={(e) => setPlan({ ...plan, title: e.target.value })}
-              className="w-full h-8 px-2 mb-2 text-xs bg-background/60 border border-border rounded text-foreground focus:outline-none focus:border-primary"
-            />
-            <p className="text-[9px] text-muted-foreground mb-1">السيناريو</p>
-            <ul className="space-y-1 mb-2">
-              {plan.script.map((s, i) => (
-                <li key={i} className="text-[10px] text-foreground/90 flex gap-1.5">
-                  <span className="text-primary font-bold">{i + 1}.</span> {s}
-                </li>
-              ))}
-            </ul>
-            <p className="text-[9px] text-muted-foreground mb-1">دعوة الإجراء</p>
-            <input
-              value={plan.cta}
-              onChange={(e) => setPlan({ ...plan, cta: e.target.value })}
-              className="w-full h-8 px-2 text-xs bg-background/60 border border-border rounded text-foreground focus:outline-none focus:border-primary"
-            />
-          </div>
-
-          {/* Upload */}
-          <input ref={fileRef} type="file" accept="video/*,image/*" multiple onChange={handleFiles} className="hidden" />
+          <input ref={fileRef} type="file" accept="image/*" onChange={handleFiles} className="hidden" />
           <button
             onClick={() => fileRef.current?.click()}
             className="w-full h-16 rounded-lg border-2 border-dashed border-primary/40 bg-primary/5 flex flex-col items-center justify-center gap-1 hover:bg-primary/10"
           >
             <Upload className="w-4 h-4 text-primary" />
             <p className="text-[10px] text-foreground font-bold">
-              {files.length ? `${files.length} ملف جاهز` : "ارفع صور / فيديوهات"}
+              {file ? file.name : "ارفع صورة العقار"}
             </p>
           </button>
-
-          <div className="flex gap-2">
-            <button
-              onClick={() => setStage("prompt")}
-              className="h-10 px-3 bg-secondary border border-border rounded-[var(--radius)] text-[10px] font-bold text-muted-foreground hover:border-primary flex items-center gap-1"
-            >
-              <Edit3 className="w-3 h-3" /> تعديل
-            </button>
-            <button
-              onClick={generateVideo}
-              disabled={!files.length}
-              className="flex-1 h-10 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-40"
-            >
-              <Send className="w-3.5 h-3.5" /> أنتج الفيديو الآن
-            </button>
-          </div>
+          <button
+            onClick={generateVideo}
+            disabled={!prompt.trim() || !file}
+            className="w-full h-11 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-40"
+          >
+            <Send className="w-3.5 h-3.5" /> أنتج الفيديو الآن
+          </button>
         </div>
       )}
 
@@ -233,7 +175,7 @@ const ContentCard = () => {
             {stage === "uploading" ? (
               <Upload className="w-6 h-6 text-primary animate-bounce" />
             ) : (
-              <Film className="w-6 h-6 text-primary animate-pulse" />
+              <ImageIcon className="w-6 h-6 text-primary animate-pulse" />
             )}
           </div>
           <p className="text-xs text-foreground font-bold">
