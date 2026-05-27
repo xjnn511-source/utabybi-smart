@@ -1,26 +1,9 @@
-import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Edit3, Film, Zap, Image as ImageIcon, Star, Layout } from "lucide-react";
+import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Image as ImageIcon } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
-type Stage = "prompt" | "planning" | "approve" | "uploading" | "rendering" | "polling" | "done" | "error";
-type Template = "cinematic" | "fast_cuts" | "slideshow" | "product" | "story";
-
-interface Plan {
-  title: string;
-  hook: string;
-  script: string[];
-  template: Template;
-  cta: string;
-}
-
-const TEMPLATE_META: Record<Template, { label: string; icon: any }> = {
-  cinematic: { label: "سينمائي فاخر", icon: Film },
-  fast_cuts: { label: "قطع سريعة - تيك توك", icon: Zap },
-  slideshow: { label: "عرض صور", icon: ImageIcon },
-  product: { label: "عرض منتج", icon: Star },
-  story: { label: "قصة قصيرة", icon: Layout },
-};
+type Stage = "prompt" | "uploading" | "rendering" | "polling" | "done" | "error";
 
 const BRAND_TAG = "Produced by Utaybi Smart · عُتيبي ذكي";
 
@@ -39,48 +22,23 @@ const safePath = (f: File) => {
 const ContentCard = () => {
   const [stage, setStage] = useState<Stage>("prompt");
   const [prompt, setPrompt] = useState("");
-  const [plan, setPlan] = useState<Plan | null>(null);
-  const [files, setFiles] = useState<File[]>([]);
+  const [file, setFile] = useState<File | null>(null);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const cardRef = useRef<HTMLDivElement>(null);
-
-  const generatePlanFor = async (promptText: string) => {
-    if (!promptText.trim()) {
-      toast({ title: "اكتب طلبك التسويقي أولاً", variant: "destructive" });
-      return;
-    }
-    setPrompt(promptText);
-    setStage("planning");
-    try {
-      const { data, error } = await supabase.functions.invoke("ai-marketing-director", {
-        body: { prompt: promptText },
-      });
-      if (error) throw error;
-      if (!data?.plan) throw new Error("لم يتم استلام خطة");
-      setPlan(data.plan);
-      setStage("approve");
-    } catch (e: any) {
-      console.error(e);
-      toast({ title: "فشل التوليد", description: e.message, variant: "destructive" });
-      setStage("prompt");
-    }
-  };
 
   useEffect(() => {
     const onCmd = (e: Event) => {
       const detail = (e as CustomEvent).detail as { prompt?: string };
       if (!detail?.prompt) return;
       cardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-      generatePlanFor(detail.prompt);
+      setPrompt(detail.prompt);
+      toast({ title: "تم نقل أمرك للمونتاج الذكي", description: "ارفع صورة العقار ثم اضغط إنتاج الفيديو." });
     };
     window.addEventListener("utaybi:command", onCmd);
     return () => window.removeEventListener("utaybi:command", onCmd);
   }, []);
-
-  const generatePlan = async () => generatePlanFor(prompt);
-
 
   const pollRender = async (id: string, attempts = 0): Promise<string | null> => {
     if (attempts > 40) return null;
@@ -92,40 +50,39 @@ const ContentCard = () => {
   };
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = Array.from(e.target.files || []).filter(
-      (f) => f.type.startsWith("video/") || f.type.startsWith("image/")
-    );
-    if (!selected.length) return;
-    setFiles(selected);
+    const selected = Array.from(e.target.files || []).find((f) => f.type.startsWith("image/"));
+    if (!selected) {
+      alert("ارفع صورة فقط لهذا القالب المبسط");
+      return;
+    }
+    setFile(selected);
   };
 
   const generateVideo = async () => {
-    if (!plan) return;
-    if (!files.length) {
-      toast({ title: "ارفع صور أو فيديوهات أولاً", variant: "destructive" });
+    if (!prompt.trim()) {
+      alert("text is required");
+      return;
+    }
+    if (!file) {
+      alert("image is required");
       return;
     }
     setStage("uploading");
     try {
-      const urls: string[] = [];
-      for (const f of files) {
-        const path = safePath(f);
-        const { error } = await supabase.storage.from("media").upload(path, f, { upsert: true });
-        if (error) throw error;
-        urls.push(supabase.storage.from("media").getPublicUrl(path).data.publicUrl);
-      }
+      const path = safePath(file);
+      const { error: uploadError } = await supabase.storage.from("media").upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const image = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
+
       setStage("rendering");
       const { data, error } = await supabase.functions.invoke("creatomate-render", {
-        body: {
-          media_urls: urls,
-          template: plan.template,
-          title: plan.title,
-          subtitle: `${plan.cta}  ·  ${BRAND_TAG}`,
-          aspect: "vertical",
-        },
+        body: { text: `${prompt.trim()}\n${BRAND_TAG}`, image },
       });
-      if (error) throw error;
-      const render = Array.isArray(data) ? data[0] : data;
+      if (error) throw new Error(error.message);
+      if (data?.ok === false) throw new Error(data.error || "Creatomate failed");
+
+      const payload = data?.render;
+      const render = Array.isArray(payload) ? payload[0] : payload;
       if (!render?.id) throw new Error("فشل بدء المعالجة");
 
       if (render.status === "succeeded" && render.url) {
@@ -140,7 +97,7 @@ const ContentCard = () => {
       toast({ title: "الفيديو الإعلاني جاهز! 🎬" });
     } catch (e: any) {
       console.error(e);
-      toast({ title: "حدث خطأ", description: e.message, variant: "destructive" });
+      alert(e.message || "Unknown Creatomate error");
       setStage("error");
     }
   };
@@ -148,8 +105,7 @@ const ContentCard = () => {
   const reset = () => {
     setStage("prompt");
     setPrompt("");
-    setPlan(null);
-    setFiles([]);
+    setFile(null);
     setResultUrl(null);
     if (fileRef.current) fileRef.current.value = "";
   };
@@ -177,7 +133,7 @@ const ContentCard = () => {
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="اكتب فكرة الإعلان... مثال: إعلان تيك توك سريع لفيلا فاخرة"
+            placeholder="اكتب أمرك مباشرة... مثال: إعلان تيك توك سريع لفيلا فاخرة في الرياض"
             rows={3}
             className="w-full p-3 text-xs bg-secondary/60 border border-border rounded-lg text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary resize-none"
           />
@@ -192,81 +148,23 @@ const ContentCard = () => {
               </button>
             ))}
           </div>
-          <button onClick={generatePlan} className="w-full h-11 btn-neon text-xs flex items-center justify-center gap-2">
-            <Sparkles className="w-4 h-4" /> اكتب الخطة بالذكاء الاصطناعي
-          </button>
-        </div>
-      )}
-
-      {/* STAGE: PLANNING */}
-      {stage === "planning" && (
-        <div className="py-10 flex flex-col items-center gap-3">
-          <Wand2 className="w-8 h-8 text-primary animate-pulse" />
-          <p className="text-xs text-muted-foreground">المخرج الذكي يكتب السكربت ويختار القالب...</p>
-        </div>
-      )}
-
-      {/* STAGE: APPROVE */}
-      {stage === "approve" && plan && (
-        <div className="space-y-3">
-          <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-blue-500/5 border border-primary/30">
-            <p className="text-[9px] text-muted-foreground mb-1">القالب المختار</p>
-            <div className="flex items-center gap-2 mb-3">
-              {(() => {
-                const Icon = TEMPLATE_META[plan.template].icon;
-                return <Icon className="w-4 h-4 text-primary" />;
-              })()}
-              <span className="text-xs font-bold text-foreground">{TEMPLATE_META[plan.template].label}</span>
-            </div>
-            <p className="text-[9px] text-muted-foreground mb-1">العنوان على الفيديو</p>
-            <input
-              value={plan.title}
-              onChange={(e) => setPlan({ ...plan, title: e.target.value })}
-              className="w-full h-8 px-2 mb-2 text-xs bg-background/60 border border-border rounded text-foreground focus:outline-none focus:border-primary"
-            />
-            <p className="text-[9px] text-muted-foreground mb-1">السيناريو</p>
-            <ul className="space-y-1 mb-2">
-              {plan.script.map((s, i) => (
-                <li key={i} className="text-[10px] text-foreground/90 flex gap-1.5">
-                  <span className="text-primary font-bold">{i + 1}.</span> {s}
-                </li>
-              ))}
-            </ul>
-            <p className="text-[9px] text-muted-foreground mb-1">دعوة الإجراء</p>
-            <input
-              value={plan.cta}
-              onChange={(e) => setPlan({ ...plan, cta: e.target.value })}
-              className="w-full h-8 px-2 text-xs bg-background/60 border border-border rounded text-foreground focus:outline-none focus:border-primary"
-            />
-          </div>
-
-          {/* Upload */}
-          <input ref={fileRef} type="file" accept="video/*,image/*" multiple onChange={handleFiles} className="hidden" />
+          <input ref={fileRef} type="file" accept="image/*" onChange={handleFiles} className="hidden" />
           <button
             onClick={() => fileRef.current?.click()}
             className="w-full h-16 rounded-lg border-2 border-dashed border-primary/40 bg-primary/5 flex flex-col items-center justify-center gap-1 hover:bg-primary/10"
           >
             <Upload className="w-4 h-4 text-primary" />
             <p className="text-[10px] text-foreground font-bold">
-              {files.length ? `${files.length} ملف جاهز` : "ارفع صور / فيديوهات"}
+              {file ? file.name : "ارفع صورة العقار"}
             </p>
           </button>
-
-          <div className="flex gap-2">
-            <button
-              onClick={() => setStage("prompt")}
-              className="h-10 px-3 bg-secondary border border-border rounded-[var(--radius)] text-[10px] font-bold text-muted-foreground hover:border-primary flex items-center gap-1"
-            >
-              <Edit3 className="w-3 h-3" /> تعديل
-            </button>
-            <button
-              onClick={generateVideo}
-              disabled={!files.length}
-              className="flex-1 h-10 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-40"
-            >
-              <Send className="w-3.5 h-3.5" /> أنتج الفيديو الآن
-            </button>
-          </div>
+          <button
+            onClick={generateVideo}
+            disabled={!prompt.trim() || !file}
+            className="w-full h-11 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-40"
+          >
+            <Send className="w-3.5 h-3.5" /> أنتج الفيديو الآن
+          </button>
         </div>
       )}
 
@@ -277,7 +175,7 @@ const ContentCard = () => {
             {stage === "uploading" ? (
               <Upload className="w-6 h-6 text-primary animate-bounce" />
             ) : (
-              <Film className="w-6 h-6 text-primary animate-pulse" />
+              <ImageIcon className="w-6 h-6 text-primary animate-pulse" />
             )}
           </div>
           <p className="text-xs text-foreground font-bold">
