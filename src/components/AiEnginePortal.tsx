@@ -1,13 +1,19 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   BarChart3, FileSearch, PenTool, Video, VolumeX,
   ShieldCheck, Loader2, Zap, UploadCloud, CheckCircle2,
-  User, Ruler, MapPin,
+  User, Ruler, MapPin, Clock, PlayCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
+
+const BRAND_TAG = "Produced by Utaybi Smart · عُتيبي ذكي";
+const safePath = (f: File) => {
+  const ext = f.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+  return `uploads/${Date.now()}_${crypto.randomUUID()}.${ext}`;
+};
 
 const engines = [
   { id: "معالج الوثائق", title: "معالج الوثائق", icon: FileSearch },
