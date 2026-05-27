@@ -264,6 +264,30 @@ const AiEnginePortal = () => {
           </AnimatePresence>
         </div>
 
+        {/* Video engine prompt + queue status */}
+        {activeEngine === "توليد الحلول" && (
+          <div className="mb-4 space-y-2 relative z-10">
+            <textarea
+              value={videoPrompt}
+              onChange={(e) => setVideoPrompt(e.target.value)}
+              placeholder="اكتب وصف الفيديو الإعلاني... مثال: فيلا فاخرة في حي الياسمين بالرياض"
+              rows={2}
+              className="w-full p-2.5 text-xs bg-secondary/60 border border-border rounded-lg text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary resize-none"
+            />
+            {videoJob && videoJob.status !== "done" && videoJob.status !== "failed" && (
+              <div className="flex items-center gap-2 text-[10px] text-primary px-2 py-1.5 bg-primary/5 border border-primary/20 rounded-lg">
+                <Clock className="w-3.5 h-3.5 animate-pulse" />
+                {videoJob.status === "queued" ? "في قائمة الانتظار للمعالجة..." : "المحرك يصنع الفيديو الآن..."}
+              </div>
+            )}
+            {videoJob?.status === "done" && videoJob.result_url && (
+              <a href={videoJob.result_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 text-[10px] font-bold text-green-500 px-2 py-1.5 bg-green-500/10 border border-green-500/30 rounded-lg">
+                <CheckCircle2 className="w-3.5 h-3.5" /> الفيديو جاهز · افتح / حمّل
+              </a>
+            )}
+          </div>
+        )}
+
         {/* Scan progress */}
         {loading && activeEngine === "معالج الوثائق" && (
           <div className="mb-4 relative z-10">
@@ -279,10 +303,15 @@ const AiEnginePortal = () => {
           disabled={loading}
           className="w-full h-12 btn-neon text-sm flex items-center justify-center gap-3 rounded-xl disabled:opacity-40 relative z-10"
         >
-          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Zap className="w-4 h-4" />}
-          {loading ? "جاري المعالجة الرقمية..." : "تشغيل المحرك البرمجي"}
+          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : activeEngine === "توليد الحلول" ? <PlayCircle className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
+          {loading
+            ? "جاري الإرسال للمحرك..."
+            : activeEngine === "توليد الحلول"
+              ? "توليد الفيديو الإعلاني الآن"
+              : "تشغيل المحرك البرمجي"}
         </button>
       </div>
+
 
       {/* نتائج معالجة الوثيقة */}
       <AnimatePresence>
