@@ -45,7 +45,28 @@ const AiEnginePortal = () => {
   const [scanProgress, setScanProgress] = useState(0);
   const [deedData, setDeedData] = useState<DeedData | null>(null);
   const [genericResult, setGenericResult] = useState<{ engine: string; summary: string; data: string } | null>(null);
+  const [videoPrompt, setVideoPrompt] = useState("");
+  const [videoJob, setVideoJob] = useState<{ id: string; status: string; result_url?: string | null; error?: string | null } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Realtime subscription on the active video job
+  useEffect(() => {
+    if (!videoJob?.id) return;
+    const ch = supabase
+      .channel(`engine_video_${videoJob.id}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "video_jobs", filter: `id=eq.${videoJob.id}` },
+        (payload) => {
+          const row = payload.new as any;
+          setVideoJob({ id: row.id, status: row.status, result_url: row.result_url, error: row.error });
+          if (row.status === "done") toast({ title: "✅ الفيديو الإعلاني جاهز" });
+          if (row.status === "failed") toast({ title: row.error || "فشل الإنتاج", variant: "destructive" });
+        },
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [videoJob?.id]);
 
   const fileToBase64 = (f: File): Promise<string> =>
     new Promise((resolve, reject) => {
