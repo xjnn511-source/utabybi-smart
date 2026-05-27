@@ -1,26 +1,9 @@
-import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Edit3, Film, Zap, Image as ImageIcon, Star, Layout } from "lucide-react";
+import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Image as ImageIcon } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
-type Stage = "prompt" | "planning" | "approve" | "uploading" | "rendering" | "polling" | "done" | "error";
-type Template = "cinematic" | "fast_cuts" | "slideshow" | "product" | "story";
-
-interface Plan {
-  title: string;
-  hook: string;
-  script: string[];
-  template: Template;
-  cta: string;
-}
-
-const TEMPLATE_META: Record<Template, { label: string; icon: any }> = {
-  cinematic: { label: "سينمائي فاخر", icon: Film },
-  fast_cuts: { label: "قطع سريعة - تيك توك", icon: Zap },
-  slideshow: { label: "عرض صور", icon: ImageIcon },
-  product: { label: "عرض منتج", icon: Star },
-  story: { label: "قصة قصيرة", icon: Layout },
-};
+type Stage = "prompt" | "uploading" | "rendering" | "polling" | "done" | "error";
 
 const BRAND_TAG = "Produced by Utaybi Smart · عُتيبي ذكي";
 
@@ -39,48 +22,23 @@ const safePath = (f: File) => {
 const ContentCard = () => {
   const [stage, setStage] = useState<Stage>("prompt");
   const [prompt, setPrompt] = useState("");
-  const [plan, setPlan] = useState<Plan | null>(null);
-  const [files, setFiles] = useState<File[]>([]);
+  const [file, setFile] = useState<File | null>(null);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const cardRef = useRef<HTMLDivElement>(null);
-
-  const generatePlanFor = async (promptText: string) => {
-    if (!promptText.trim()) {
-      toast({ title: "اكتب طلبك التسويقي أولاً", variant: "destructive" });
-      return;
-    }
-    setPrompt(promptText);
-    setStage("planning");
-    try {
-      const { data, error } = await supabase.functions.invoke("ai-marketing-director", {
-        body: { prompt: promptText },
-      });
-      if (error) throw error;
-      if (!data?.plan) throw new Error("لم يتم استلام خطة");
-      setPlan(data.plan);
-      setStage("approve");
-    } catch (e: any) {
-      console.error(e);
-      toast({ title: "فشل التوليد", description: e.message, variant: "destructive" });
-      setStage("prompt");
-    }
-  };
 
   useEffect(() => {
     const onCmd = (e: Event) => {
       const detail = (e as CustomEvent).detail as { prompt?: string };
       if (!detail?.prompt) return;
       cardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-      generatePlanFor(detail.prompt);
+      setPrompt(detail.prompt);
+      toast({ title: "تم نقل أمرك للمونتاج الذكي", description: "ارفع صورة العقار ثم اضغط إنتاج الفيديو." });
     };
     window.addEventListener("utaybi:command", onCmd);
     return () => window.removeEventListener("utaybi:command", onCmd);
   }, []);
-
-  const generatePlan = async () => generatePlanFor(prompt);
-
 
   const pollRender = async (id: string, attempts = 0): Promise<string | null> => {
     if (attempts > 40) return null;
@@ -92,40 +50,39 @@ const ContentCard = () => {
   };
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = Array.from(e.target.files || []).filter(
-      (f) => f.type.startsWith("video/") || f.type.startsWith("image/")
-    );
-    if (!selected.length) return;
-    setFiles(selected);
+    const selected = Array.from(e.target.files || []).find((f) => f.type.startsWith("image/"));
+    if (!selected) {
+      alert("ارفع صورة فقط لهذا القالب المبسط");
+      return;
+    }
+    setFile(selected);
   };
 
   const generateVideo = async () => {
-    if (!plan) return;
-    if (!files.length) {
-      toast({ title: "ارفع صور أو فيديوهات أولاً", variant: "destructive" });
+    if (!prompt.trim()) {
+      alert("text is required");
+      return;
+    }
+    if (!file) {
+      alert("image is required");
       return;
     }
     setStage("uploading");
     try {
-      const urls: string[] = [];
-      for (const f of files) {
-        const path = safePath(f);
-        const { error } = await supabase.storage.from("media").upload(path, f, { upsert: true });
-        if (error) throw error;
-        urls.push(supabase.storage.from("media").getPublicUrl(path).data.publicUrl);
-      }
+      const path = safePath(file);
+      const { error: uploadError } = await supabase.storage.from("media").upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const image = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
+
       setStage("rendering");
       const { data, error } = await supabase.functions.invoke("creatomate-render", {
-        body: {
-          media_urls: urls,
-          template: plan.template,
-          title: plan.title,
-          subtitle: `${plan.cta}  ·  ${BRAND_TAG}`,
-          aspect: "vertical",
-        },
+        body: { text: `${prompt.trim()}\n${BRAND_TAG}`, image },
       });
-      if (error) throw error;
-      const render = Array.isArray(data) ? data[0] : data;
+      if (error) throw new Error(error.message);
+      if (data?.ok === false) throw new Error(data.error || "Creatomate failed");
+
+      const payload = data?.render;
+      const render = Array.isArray(payload) ? payload[0] : payload;
       if (!render?.id) throw new Error("فشل بدء المعالجة");
 
       if (render.status === "succeeded" && render.url) {
@@ -140,7 +97,7 @@ const ContentCard = () => {
       toast({ title: "الفيديو الإعلاني جاهز! 🎬" });
     } catch (e: any) {
       console.error(e);
-      toast({ title: "حدث خطأ", description: e.message, variant: "destructive" });
+      alert(e.message || "Unknown Creatomate error");
       setStage("error");
     }
   };
@@ -148,8 +105,7 @@ const ContentCard = () => {
   const reset = () => {
     setStage("prompt");
     setPrompt("");
-    setPlan(null);
-    setFiles([]);
+    setFile(null);
     setResultUrl(null);
     if (fileRef.current) fileRef.current.value = "";
   };
