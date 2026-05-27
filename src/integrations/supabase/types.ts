@@ -286,6 +286,48 @@ export type Database = {
         }
         Relationships: []
       }
+      video_jobs: {
+        Row: {
+          attempts: number
+          created_at: string
+          error: string | null
+          id: string
+          image_url: string
+          prompt: string
+          render_id: string | null
+          result_url: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          error?: string | null
+          id?: string
+          image_url: string
+          prompt: string
+          render_id?: string | null
+          result_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          error?: string | null
+          id?: string
+          image_url?: string
+          prompt?: string
+          render_id?: string | null
+          result_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -298,6 +340,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      user_video_jobs_today: { Args: { _user: string }; Returns: number }
     }
     Enums: {
       app_role: "admin" | "user"
