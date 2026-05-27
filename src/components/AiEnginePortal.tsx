@@ -88,7 +88,58 @@ const AiEnginePortal = () => {
     setGenericResult(null);
   };
 
+  const enqueueVideoJob = async () => {
+    if (!file || !file.type.startsWith("image/")) {
+      toast({ title: "ارفع صورة العقار أولاً", variant: "destructive" });
+      return;
+    }
+    if (!videoPrompt.trim()) {
+      toast({ title: "اكتب وصف الإعلان للمحرك", variant: "destructive" });
+      return;
+    }
+    setLoading(true);
+    setVideoJob(null);
+    try {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) throw new Error("سجّل الدخول أولاً");
+
+      const path = safePath(file);
+      const { error: upErr } = await supabase.storage.from("media").upload(path, file, { upsert: true });
+      if (upErr) throw upErr;
+      const image_url = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
+
+      const { data, error } = await supabase
+        .from("video_jobs")
+        .insert({
+          user_id: auth.user.id,
+          prompt: `${videoPrompt.trim()}\n${BRAND_TAG}`,
+          image_url,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        if (error.code === "42501" || error.message?.includes("row-level security")) {
+          throw new Error("لقد استخدمت إنتاجك اليومي (1/يوم). جرّب غداً.");
+        }
+        throw error;
+      }
+
+      setVideoJob({ id: data.id, status: "queued" });
+      toast({ title: "في قائمة الانتظار", description: "سيبدأ المحرك خلال دقيقة." });
+    } catch (e: any) {
+      toast({ title: e.message || "خطأ", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleLaunchEngine = async () => {
+    // Engine: توليد الحلول → official video renderer trigger
+    if (activeEngine === "توليد الحلول") {
+      return enqueueVideoJob();
+    }
+
     if (!file) {
       toast({ title: "يرجى اختيار الملف أو رفع البيانات أولاً", variant: "destructive" });
       return;
@@ -102,7 +153,6 @@ const AiEnginePortal = () => {
     // محرك الوثائق عبر نظام الرؤية البرمجية
     if (activeEngine === "معالج الوثائق") {
       try {
-        // Scanning animation
         const interval = setInterval(() => {
           setScanProgress((p) => {
             if (p >= 90) { clearInterval(interval); return 90; }
