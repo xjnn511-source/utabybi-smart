@@ -1,9 +1,9 @@
-import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Image as ImageIcon } from "lucide-react";
+import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Image as ImageIcon, Clock } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
-type Stage = "prompt" | "uploading" | "rendering" | "polling" | "done" | "error";
+type Stage = "prompt" | "uploading" | "queued" | "rendering" | "done" | "error";
 
 const BRAND_TAG = "Produced by Utaybi Smart · عُتيبي ذكي";
 
@@ -15,7 +15,9 @@ const SUGGESTIONS = [
 ];
 
 const safePath = (f: File) => {
-  const ext = f.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || (f.type.startsWith("image/") ? "jpg" : "mp4");
+  const ext =
+    f.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") ||
+    (f.type.startsWith("image/") ? "jpg" : "mp4");
   return `uploads/${Date.now()}_${crypto.randomUUID()}.${ext}`;
 };
 
@@ -24,8 +26,9 @@ const ContentCard = () => {
   const [prompt, setPrompt] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [errMsg, setErrMsg] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,64 +43,75 @@ const ContentCard = () => {
     return () => window.removeEventListener("utaybi:command", onCmd);
   }, []);
 
-  const pollRender = async (id: string, attempts = 0): Promise<string | null> => {
-    if (attempts > 40) return null;
-    await new Promise((r) => setTimeout(r, 3000));
-    const { data } = await supabase.functions.invoke("creatomate-status", { body: { id } });
-    if (data?.status === "succeeded" && data?.url) return data.url;
-    if (data?.status === "failed") throw new Error(data?.error_message || "Render failed");
-    return pollRender(id, attempts + 1);
-  };
+  // Realtime subscription on the current job
+  useEffect(() => {
+    if (!jobId) return;
+    const ch = supabase
+      .channel(`video_job_${jobId}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "video_jobs", filter: `id=eq.${jobId}` },
+        (payload) => {
+          const row = payload.new as any;
+          if (row.status === "rendering") setStage("rendering");
+          if (row.status === "done" && row.result_url) {
+            setResultUrl(row.result_url);
+            setStage("done");
+            toast({ title: "الفيديو الإعلاني جاهز! 🎬" });
+          }
+          if (row.status === "failed") {
+            setErrMsg(row.error || "فشل الإنتاج");
+            setStage("error");
+          }
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
+  }, [jobId]);
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files || []).find((f) => f.type.startsWith("image/"));
     if (!selected) {
-      alert("ارفع صورة فقط لهذا القالب المبسط");
+      toast({ title: "ارفع صورة فقط", variant: "destructive" });
       return;
     }
     setFile(selected);
   };
 
-  const generateVideo = async () => {
-    if (!prompt.trim()) {
-      alert("text is required");
-      return;
-    }
-    if (!file) {
-      alert("image is required");
-      return;
-    }
+  const enqueue = async () => {
+    if (!prompt.trim() || !file) return;
+    setErrMsg(null);
     setStage("uploading");
     try {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) throw new Error("سجّل الدخول أولاً");
+
       const path = safePath(file);
-      const { error: uploadError } = await supabase.storage.from("media").upload(path, file, { upsert: true });
-      if (uploadError) throw uploadError;
-      const image = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
+      const { error: upErr } = await supabase.storage.from("media").upload(path, file, { upsert: true });
+      if (upErr) throw upErr;
+      const image_url = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
 
-      setStage("rendering");
-      const { data, error } = await supabase.functions.invoke("creatomate-render", {
-        body: { text: `${prompt.trim()}\n${BRAND_TAG}`, image },
-      });
-      if (error) throw new Error(error.message);
-      if (data?.ok === false) throw new Error(data.error || "Creatomate failed");
+      const { data, error } = await supabase
+        .from("video_jobs")
+        .insert({ user_id: auth.user.id, prompt: `${prompt.trim()}\n${BRAND_TAG}`, image_url })
+        .select()
+        .single();
 
-      const payload = data?.render;
-      const render = Array.isArray(payload) ? payload[0] : payload;
-      if (!render?.id) throw new Error("فشل بدء المعالجة");
-
-      if (render.status === "succeeded" && render.url) {
-        setResultUrl(render.url);
-        setStage("done");
-      } else {
-        setStage("polling");
-        const url = await pollRender(render.id);
-        setResultUrl(url || render.url);
-        setStage("done");
+      if (error) {
+        if (error.message?.includes("row-level security") || error.code === "42501") {
+          throw new Error("لقد استخدمت إنتاجك اليومي (1/يوم). جرّب غداً.");
+        }
+        throw error;
       }
-      toast({ title: "الفيديو الإعلاني جاهز! 🎬" });
+
+      setJobId(data.id);
+      setStage("queued");
+      toast({ title: "في قائمة الانتظار", description: "سيبدأ الإنتاج خلال دقيقة." });
     } catch (e: any) {
       console.error(e);
-      alert(e.message || "Unknown Creatomate error");
+      setErrMsg(e.message || "خطأ غير معروف");
       setStage("error");
     }
   };
@@ -107,6 +121,8 @@ const ContentCard = () => {
     setPrompt("");
     setFile(null);
     setResultUrl(null);
+    setJobId(null);
+    setErrMsg(null);
     if (fileRef.current) fileRef.current.value = "";
   };
 
@@ -127,7 +143,6 @@ const ContentCard = () => {
         )}
       </div>
 
-      {/* STAGE: PROMPT */}
       {stage === "prompt" && (
         <div className="space-y-3">
           <textarea
@@ -159,35 +174,43 @@ const ContentCard = () => {
             </p>
           </button>
           <button
-            onClick={generateVideo}
+            onClick={enqueue}
             disabled={!prompt.trim() || !file}
             className="w-full h-11 btn-neon text-xs flex items-center justify-center gap-2 disabled:opacity-40"
           >
             <Send className="w-3.5 h-3.5" /> أنتج الفيديو الآن
           </button>
+          <p className="text-[9px] text-muted-foreground text-center">حد يومي: إنتاج واحد لكل مستخدم</p>
         </div>
       )}
 
-      {/* STAGE: PROCESSING */}
-      {(stage === "uploading" || stage === "rendering" || stage === "polling") && (
+      {stage === "uploading" && (
         <div className="py-8 flex flex-col items-center gap-3">
+          <Upload className="w-8 h-8 text-primary animate-bounce" />
+          <p className="text-xs text-foreground font-bold">رفع الصورة...</p>
+        </div>
+      )}
+
+      {stage === "queued" && (
+        <div className="py-6 flex flex-col items-center gap-3">
           <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center">
-            {stage === "uploading" ? (
-              <Upload className="w-6 h-6 text-primary animate-bounce" />
-            ) : (
-              <ImageIcon className="w-6 h-6 text-primary animate-pulse" />
-            )}
+            <Clock className="w-6 h-6 text-primary animate-pulse" />
           </div>
-          <p className="text-xs text-foreground font-bold">
-            {stage === "uploading" ? "رفع الملفات..." : stage === "rendering" ? "بدء المونتاج الذكي..." : "إنتاج الفيديو الإعلاني..."}
-          </p>
+          <p className="text-xs text-foreground font-bold">في قائمة الانتظار للمعالجة</p>
+          <p className="text-[10px] text-muted-foreground">سيبدأ الإنتاج خلال دقيقة وستظهر النتيجة هنا تلقائياً</p>
+        </div>
+      )}
+
+      {stage === "rendering" && (
+        <div className="py-8 flex flex-col items-center gap-3">
+          <ImageIcon className="w-8 h-8 text-primary animate-pulse" />
+          <p className="text-xs text-foreground font-bold">المحرك يصنع الفيديو الآن...</p>
           <div className="w-40 h-1.5 bg-border rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-primary to-blue-500 animate-pulse" style={{ width: "70%" }} />
           </div>
         </div>
       )}
 
-      {/* STAGE: DONE */}
       {stage === "done" && (
         <div className="space-y-3">
           <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30 flex flex-col items-center gap-2">
@@ -210,7 +233,7 @@ const ContentCard = () => {
 
       {stage === "error" && (
         <div className="space-y-3">
-          <p className="text-[11px] text-destructive text-center py-4">حدث خطأ، حاول مرة أخرى</p>
+          <p className="text-[11px] text-destructive text-center py-4">{errMsg || "حدث خطأ، حاول مرة أخرى"}</p>
           <button onClick={reset} className="w-full h-10 btn-neon text-xs flex items-center justify-center gap-2">
             <RefreshCw className="w-3.5 h-3.5" /> إعادة المحاولة
           </button>
