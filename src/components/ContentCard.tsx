@@ -165,15 +165,16 @@ const ContentCard = () => {
               </button>
             ))}
           </div>
-          <input ref={fileRef} type="file" accept="image/*" onChange={handleFiles} className="hidden" />
+          <input ref={fileRef} type="file" accept="image/*,video/*" onChange={handleFiles} className="hidden" />
           <button
             onClick={() => fileRef.current?.click()}
             className="w-full h-16 rounded-lg border-2 border-dashed border-primary/40 bg-primary/5 flex flex-col items-center justify-center gap-1 hover:bg-primary/10"
           >
             <Upload className="w-4 h-4 text-primary" />
             <p className="text-[10px] text-foreground font-bold">
-              {file ? file.name : "ارفع صورة العقار"}
+              {file ? file.name : "ارفع صورة أو فيديو للعقار"}
             </p>
+            <p className="text-[9px] text-muted-foreground">JPG · PNG · MP4 · MOV</p>
           </button>
           <button
             onClick={enqueue}
