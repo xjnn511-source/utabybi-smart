@@ -17,30 +17,36 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
 
-async function startRender(prompt: string, image: string) {
+async function startRender(prompt: string, image: string, source: any | null) {
+  // If the AI planner provided a dynamic Creatomate source, use it (CapCut-style multi-scene).
+  // Otherwise fall back to the static template.
+  const body: any = source
+    ? { source }
+    : {
+        template_id: TEMPLATE_ID,
+        modifications: {
+          "Text-1": prompt,
+          "Title": prompt,
+          "Headline": prompt,
+          "Caption": prompt,
+          "Image-1": image,
+          "Image": image,
+          "Video-1": image,
+          "Video": image,
+          "Media": image,
+          "Background": image,
+          "Brand": BRAND_TAG,
+          "Brand-Tag": BRAND_TAG,
+        },
+      };
+
   const res = await fetch("https://api.creatomate.com/v1/renders", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${API_KEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      template_id: TEMPLATE_ID,
-      modifications: {
-        "Text-1": prompt,
-        "Title": prompt,
-        "Headline": prompt,
-        "Caption": prompt,
-        "Image-1": image,
-        "Image": image,
-        "Video-1": image,
-        "Video": image,
-        "Media": image,
-        "Background": image,
-        "Brand": BRAND_TAG,
-        "Brand-Tag": BRAND_TAG,
-      },
-    }),
+    body: JSON.stringify(body),
   });
   const raw = await res.text();
   if (!res.ok) throw new Error(raw || `Creatomate ${res.status}`);
