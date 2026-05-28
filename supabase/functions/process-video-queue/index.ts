@@ -33,6 +33,8 @@ async function startRender(prompt: string, image: string) {
         "Caption": prompt,
         "Image-1": image,
         "Image": image,
+        "Video-1": image,
+        "Video": image,
         "Media": image,
         "Background": image,
         "Brand": BRAND_TAG,
