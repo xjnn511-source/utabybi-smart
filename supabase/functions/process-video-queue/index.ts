@@ -81,7 +81,7 @@ async function processQueued() {
       .update({ status: "rendering", attempts: job.attempts + 1 })
       .eq("id", job.id);
 
-    const render = await startRender(job.prompt, job.image_url);
+    const render = await startRender(job.prompt, job.image_url, job.source ?? null);
 
     if (render?.status === "succeeded" && render?.url) {
       await supabase
