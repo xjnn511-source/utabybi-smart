@@ -93,11 +93,26 @@ const ContentCard = () => {
       const path = safePath(file);
       const { error: upErr } = await supabase.storage.from("media").upload(path, file, { upsert: true });
       if (upErr) throw upErr;
-      const image_url = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
+      const media_url = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
+      const is_video = file.type.startsWith("video/");
 
+      // 1) Ask the AI montage planner to design a multi-scene timeline
+      toast({ title: "المخرج الذكي يصمم السيناريو...", description: "خطة مونتاج من 5 مشاهد" });
+      const { data: plan, error: planErr } = await supabase.functions.invoke("ai-montage-planner", {
+        body: { prompt: prompt.trim(), media_url, is_video },
+      });
+      if (planErr) throw new Error(planErr.message);
+      if (!plan?.ok) throw new Error(plan?.error || "فشل تخطيط المونتاج");
+
+      // 2) Queue the job with the dynamic source
       const { data, error } = await supabase
         .from("video_jobs")
-        .insert({ user_id: auth.user.id, prompt: `${prompt.trim()}\n${BRAND_TAG}`, image_url })
+        .insert({
+          user_id: auth.user.id,
+          prompt: `${prompt.trim()}\n${BRAND_TAG}`,
+          image_url: media_url,
+          source: plan.source,
+        })
         .select()
         .single();
 
@@ -110,7 +125,7 @@ const ContentCard = () => {
 
       setJobId(data.id);
       setStage("queued");
-      toast({ title: "في قائمة الانتظار", description: "سيبدأ الإنتاج خلال دقيقة." });
+      toast({ title: "في قائمة الانتظار", description: "المحرك يصنع الفيديو الآن." });
     } catch (e: any) {
       console.error(e);
       setErrMsg(e.message || "خطأ غير معروف");
