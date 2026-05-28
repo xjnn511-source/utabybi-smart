@@ -72,9 +72,11 @@ const ContentCard = () => {
   }, [jobId]);
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = Array.from(e.target.files || []).find((f) => f.type.startsWith("image/"));
+    const selected = Array.from(e.target.files || []).find(
+      (f) => f.type.startsWith("image/") || f.type.startsWith("video/"),
+    );
     if (!selected) {
-      toast({ title: "ارفع صورة فقط", variant: "destructive" });
+      toast({ title: "ارفع صورة أو فيديو", variant: "destructive" });
       return;
     }
     setFile(selected);
