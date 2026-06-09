@@ -1,5 +1,6 @@
-import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Image as ImageIcon, Clock } from "lucide-react";
+import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Image as ImageIcon, Clock, LogIn } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
