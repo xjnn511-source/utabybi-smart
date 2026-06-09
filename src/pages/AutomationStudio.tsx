@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, Sparkles, Copy, Download, FileSearch, Megaphone, FileSignature, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { incrementUsage } from "@/lib/usage";
 
 type GenType = "deed_analysis" | "real_estate_ad" | "real_estate_contract";
 
@@ -33,6 +34,7 @@ const AutomationStudio = () => {
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
       setOutput(data?.text || "");
+      incrementUsage(type === "deed_analysis" ? "analyze_deed" : "generate_text");
       toast.success("تم التوليد بنجاح");
     } catch (e: any) {
       toast.error(e?.message || "فشل التوليد");

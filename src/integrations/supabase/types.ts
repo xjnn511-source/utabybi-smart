@@ -265,6 +265,33 @@ export type Database = {
         }
         Relationships: []
       }
+      usage_counters: {
+        Row: {
+          analyze_deed: number
+          created_at: string
+          generate_text: number
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          analyze_deed?: number
+          created_at?: string
+          generate_text?: number
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          analyze_deed?: number
+          created_at?: string
+          generate_text?: number
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -343,6 +370,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_usage: { Args: { _action: string }; Returns: undefined }
       user_video_jobs_today: { Args: { _user: string }; Returns: number }
     }
     Enums: {

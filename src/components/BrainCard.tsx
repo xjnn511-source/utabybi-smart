@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { incrementUsage } from "@/lib/usage";
 
 const BrainCard = () => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -65,6 +66,7 @@ const BrainCard = () => {
       setIsProcessing(false);
       setResult("تم استخراج ٧ حقول بيانات من المستند بنجاح ✓");
       setAnalysisCount((c) => c + 1);
+      incrementUsage("analyze_deed");
       toast({ title: "تم معالجة المستند بنجاح! 📄" });
     } catch (err) {
       setIsProcessing(false);

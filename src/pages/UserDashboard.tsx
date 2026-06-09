@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { CreditCard, FileText, Video, ArrowRight, Package, Mic } from "lucide-react";
+import { CreditCard, FileText, Video, ArrowRight, Package, Mic, Sparkles } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import type { Tables } from "@/integrations/supabase/types";
+import { fetchUsage, type UsageCounters } from "@/lib/usage";
 
 const planLabels: Record<string, string> = {
   elite: "باقة النخبة",
@@ -23,6 +24,7 @@ const UserDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);
   const [analysisCount, setAnalysisCount] = useState(0);
+  const [usage, setUsage] = useState<UsageCounters>({ analyze_deed: 0, generate_text: 0 });
 
   useEffect(() => {
     const load = async () => {
@@ -38,6 +40,7 @@ const UserDashboard = () => {
       setSubscription(sub);
       setProfile(prof);
       setAnalysisCount(count || 0);
+      setUsage(await fetchUsage(user.id));
       setLoading(false);
     };
     load();
@@ -141,6 +144,24 @@ const UserDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Independent usage counter */}
+        <div className="card-neon p-5">
+          <h2 className="text-sm font-bold text-foreground mb-4">🔢 عدّاد العمليات</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-secondary rounded-lg p-4 text-center">
+              <FileText className="w-5 h-5 text-primary mx-auto mb-1.5" />
+              <p className="text-[10px] text-muted-foreground mb-1">الصكوك المحللة</p>
+              <p className="text-2xl font-bold text-foreground">{usage.analyze_deed.toLocaleString("ar-SA")}</p>
+            </div>
+            <div className="bg-secondary rounded-lg p-4 text-center">
+              <Sparkles className="w-5 h-5 text-primary mx-auto mb-1.5" />
+              <p className="text-[10px] text-muted-foreground mb-1">النصوص المولّدة</p>
+              <p className="text-2xl font-bold text-foreground">{usage.generate_text.toLocaleString("ar-SA")}</p>
+            </div>
+          </div>
+        </div>
+
 
         {/* Credits */}
         <div className="grid grid-cols-3 gap-3">
