@@ -10,8 +10,10 @@ export async function incrementUsage(action: UsageAction): Promise<void> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
-    // @ts-expect-error - الدالة تُضاف للأنواع بعد التوليد
-    await supabase.rpc("increment_usage", { _action: action });
+    await (supabase.rpc as unknown as (
+      fn: string,
+      args: Record<string, unknown>,
+    ) => Promise<unknown>)("increment_usage", { _action: action });
   } catch {
     // تجاهل أخطاء العدّاد المستقل
   }
