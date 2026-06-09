@@ -4,6 +4,7 @@ import { ArrowRight, Upload, Sparkles, Download, Loader2, Type, Wand2, Image as 
 import logo from "@/assets/logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { incrementUsage } from "@/lib/usage";
 
 interface AdCopy {
   headline: string;
