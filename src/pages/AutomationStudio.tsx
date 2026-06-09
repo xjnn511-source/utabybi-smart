@@ -34,6 +34,7 @@ const AutomationStudio = () => {
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
       setOutput(data?.text || "");
+      incrementUsage(type === "deed_analysis" ? "analyze_deed" : "generate_text");
       toast.success("تم التوليد بنجاح");
     } catch (e: any) {
       toast.error(e?.message || "فشل التوليد");
