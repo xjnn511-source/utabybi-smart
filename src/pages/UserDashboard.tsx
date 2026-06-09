@@ -145,6 +145,24 @@ const UserDashboard = () => {
           </div>
         )}
 
+        {/* Independent usage counter */}
+        <div className="card-neon p-5">
+          <h2 className="text-sm font-bold text-foreground mb-4">🔢 عدّاد العمليات</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-secondary rounded-lg p-4 text-center">
+              <FileText className="w-5 h-5 text-primary mx-auto mb-1.5" />
+              <p className="text-[10px] text-muted-foreground mb-1">الصكوك المحللة</p>
+              <p className="text-2xl font-bold text-foreground">{usage.analyze_deed.toLocaleString("ar-SA")}</p>
+            </div>
+            <div className="bg-secondary rounded-lg p-4 text-center">
+              <Sparkles className="w-5 h-5 text-primary mx-auto mb-1.5" />
+              <p className="text-[10px] text-muted-foreground mb-1">النصوص المولّدة</p>
+              <p className="text-2xl font-bold text-foreground">{usage.generate_text.toLocaleString("ar-SA")}</p>
+            </div>
+          </div>
+        </div>
+
+
         {/* Credits */}
         <div className="grid grid-cols-3 gap-3">
           <div className="card-neon p-3 text-center">
