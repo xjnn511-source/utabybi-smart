@@ -171,7 +171,20 @@ const ContentCard = () => {
         )}
       </div>
 
-      {stage === "prompt" && (
+      {stage === "prompt" && isAuthed === false && (
+        <div className="space-y-3 py-4 text-center">
+          <p className="text-xs text-foreground font-bold">سجّل الدخول لتفعيل مساعد التسويق الذكي</p>
+          <p className="text-[10px] text-muted-foreground">الإنتاج يتطلب حساباً مسجّلاً لحفظ أعمالك وتطبيق الباقة.</p>
+          <button
+            onClick={() => navigate("/auth")}
+            className="w-full h-11 btn-neon text-xs flex items-center justify-center gap-2"
+          >
+            <LogIn className="w-3.5 h-3.5" /> تسجيل الدخول / إنشاء حساب
+          </button>
+        </div>
+      )}
+
+      {stage === "prompt" && isAuthed !== false && (
         <div className="space-y-3">
           <textarea
             value={prompt}
