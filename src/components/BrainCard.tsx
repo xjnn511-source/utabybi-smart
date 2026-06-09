@@ -66,6 +66,7 @@ const BrainCard = () => {
       setIsProcessing(false);
       setResult("تم استخراج ٧ حقول بيانات من المستند بنجاح ✓");
       setAnalysisCount((c) => c + 1);
+      incrementUsage("analyze_deed");
       toast({ title: "تم معالجة المستند بنجاح! 📄" });
     } catch (err) {
       setIsProcessing(false);
