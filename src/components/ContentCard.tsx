@@ -1,5 +1,6 @@
-import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Image as ImageIcon, Clock } from "lucide-react";
+import { Sparkles, Upload, Wand2, CheckCircle, Video, Send, RefreshCw, Image as ImageIcon, Clock, LogIn } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -28,8 +29,18 @@ const ContentCard = () => {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
   const [errMsg, setErrMsg] = useState<string | null>(null);
+  const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
+  const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setIsAuthed(!!data.user));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setIsAuthed(!!session?.user);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const onCmd = (e: Event) => {
@@ -84,6 +95,12 @@ const ContentCard = () => {
 
   const enqueue = async () => {
     if (!prompt.trim() || !file) return;
+    const { data: pre } = await supabase.auth.getUser();
+    if (!pre.user) {
+      toast({ title: "سجّل الدخول أولاً", description: "سنوجّهك لصفحة الدخول." });
+      navigate("/auth");
+      return;
+    }
     setErrMsg(null);
     setStage("uploading");
     try {
@@ -160,7 +177,20 @@ const ContentCard = () => {
         )}
       </div>
 
-      {stage === "prompt" && (
+      {stage === "prompt" && isAuthed === false && (
+        <div className="space-y-3 py-4 text-center">
+          <p className="text-xs text-foreground font-bold">سجّل الدخول لتفعيل مساعد التسويق الذكي</p>
+          <p className="text-[10px] text-muted-foreground">الإنتاج يتطلب حساباً مسجّلاً لحفظ أعمالك وتطبيق الباقة.</p>
+          <button
+            onClick={() => navigate("/auth")}
+            className="w-full h-11 btn-neon text-xs flex items-center justify-center gap-2"
+          >
+            <LogIn className="w-3.5 h-3.5" /> تسجيل الدخول / إنشاء حساب
+          </button>
+        </div>
+      )}
+
+      {stage === "prompt" && isAuthed !== false && (
         <div className="space-y-3">
           <textarea
             value={prompt}
