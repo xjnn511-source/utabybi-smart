@@ -95,6 +95,12 @@ const ContentCard = () => {
 
   const enqueue = async () => {
     if (!prompt.trim() || !file) return;
+    const { data: pre } = await supabase.auth.getUser();
+    if (!pre.user) {
+      toast({ title: "سجّل الدخول أولاً", description: "سنوجّهك لصفحة الدخول." });
+      navigate("/auth");
+      return;
+    }
     setErrMsg(null);
     setStage("uploading");
     try {
