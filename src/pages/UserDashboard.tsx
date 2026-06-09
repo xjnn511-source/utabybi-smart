@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CreditCard, FileText, Video, ArrowRight, Package, Mic } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import type { Tables } from "@/integrations/supabase/types";
+import { fetchUsage, type UsageCounters } from "@/lib/usage";
 
 const planLabels: Record<string, string> = {
   elite: "باقة النخبة",
