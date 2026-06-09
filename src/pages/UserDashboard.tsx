@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { CreditCard, FileText, Video, ArrowRight, Package, Mic } from "lucide-react";
+import { CreditCard, FileText, Video, ArrowRight, Package, Mic, Sparkles } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import type { Tables } from "@/integrations/supabase/types";
 import { fetchUsage, type UsageCounters } from "@/lib/usage";
