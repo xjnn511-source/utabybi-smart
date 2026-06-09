@@ -232,6 +232,7 @@ const MediaStudio = () => {
       setHeadline(json.headline || headline);
       setSubline(json.subline || subline);
       setCta(json.cta || cta);
+      incrementUsage("generate_text");
       toast.success("تم توليد نص الإعلان");
     } catch (e: any) {
       toast.error(e?.message || "فشل توليد النص");
