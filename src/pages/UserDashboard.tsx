@@ -40,6 +40,7 @@ const UserDashboard = () => {
       setSubscription(sub);
       setProfile(prof);
       setAnalysisCount(count || 0);
+      setUsage(await fetchUsage(user.id));
       setLoading(false);
     };
     load();
