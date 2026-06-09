@@ -24,6 +24,7 @@ const UserDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);
   const [analysisCount, setAnalysisCount] = useState(0);
+  const [usage, setUsage] = useState<UsageCounters>({ analyze_deed: 0, generate_text: 0 });
 
   useEffect(() => {
     const load = async () => {
