@@ -51,35 +51,49 @@ const Index = () => {
           </div>
 
           <main className="space-y-8 p-4 mt-4">
-            {/* Quick Access Grid */}
-            <ServiceQuickGrid />
+            {/* بوابة الدفع والتفعيل — لا يتم فك القفل إلا بعد رفع الإيصال */}
+            <section id="activation-section">
+              <PaymentActivation />
+            </section>
 
-            {/* نظام معالجة الوثائق */}
-            <DeedAnalyzer />
+            {/* جميع الأدوات الحالية مقفلة حتى التحقق من الإيصال */}
+            <LockGate label="لوحة الأدوات مقفلة">
+              <div className="space-y-8">
+                {/* Quick Access Grid */}
+                <ServiceQuickGrid />
 
-            {/* بوابة المحركات البرمجية */}
-            <AiEnginePortal />
+                {/* نظام معالجة الوثائق */}
+                <DeedAnalyzer />
 
-            {/* Digital Compliance Section */}
-            <ComplianceSection />
+                {/* بوابة المحركات البرمجية */}
+                <AiEnginePortal />
 
-            {/* عنوان محركات المعالجة */}
-            <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
-              <LayoutGrid className="w-4 h-4 text-primary" />
-              محركات المعالجة والأنظمة البرمجية المؤتمتة
-            </h2>
+                {/* Digital Compliance Section */}
+                <ComplianceSection />
 
-            <SmartRadar />
-            <BrainCard />
-            <AiVideoEditor />
-            <ContentCard />
-            <VideoMontageCard />
-            <VoiceCard />
-            <NewsTicker />
+                {/* عنوان محركات المعالجة */}
+                <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <LayoutGrid className="w-4 h-4 text-primary" />
+                  محركات المعالجة والأنظمة البرمجية المؤتمتة
+                </h2>
+
+                <SmartRadar />
+                <BrainCard />
+                <AiVideoEditor />
+                <ContentCard />
+                <VideoMontageCard />
+                <VoiceCard />
+                <NewsTicker />
+
+                {/* المحرر الذكي للمونتاج وصناعة المحتوى */}
+                <SmartMontageEditor />
+              </div>
+            </LockGate>
 
             {/* Subscription CTA */}
             <SubscriptionCTA />
           </main>
+
 
           <section id="subscription-section" className="mt-8 pb-2">
             <h2 className="text-xs font-bold text-foreground px-4 mb-3">الباقات والحلول البرمجية</h2>
