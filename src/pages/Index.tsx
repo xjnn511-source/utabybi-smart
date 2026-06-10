@@ -18,6 +18,9 @@ import ServiceQuickGrid from "@/components/ServiceQuickGrid";
 import BottomNav from "@/components/BottomNav";
 import DeedAnalyzer from "@/components/DeedAnalyzer";
 import AiEnginePortal from "@/components/AiEnginePortal";
+import PaymentActivation from "@/components/PaymentActivation";
+import LockGate from "@/components/LockGate";
+import SmartMontageEditor from "@/components/SmartMontageEditor";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu, LayoutGrid } from "lucide-react";
 
