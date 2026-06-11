@@ -100,10 +100,35 @@ serve(async (req) => {
 
     const nameMatch = EXPECTED_NAME_KEYWORDS.some((k) => nName.includes(normalize(k)));
     const ibanMatch = nIban === expectedIban;
-    const verified = nameMatch && ibanMatch;
+
+    // Amount / package matching
+    const parseAmount = (v: unknown): number | null => {
+      if (v === null || v === undefined) return null;
+      const digits = String(v).replace(/[^\d.]/g, "");
+      const n = parseFloat(digits);
+      return isNaN(n) ? null : n;
+    };
+    const paidAmount = parseAmount(extracted.amount);
+    const wanted = parseAmount(expectedAmount);
+    // amountMatch is only enforced when an expected amount was provided
+    const amountMatch = wanted === null
+      ? true
+      : paidAmount !== null && Math.abs(paidAmount - wanted) < 0.5;
+
+    const verified = nameMatch && ibanMatch && amountMatch;
 
     return new Response(
-      JSON.stringify({ success: true, verified, nameMatch, ibanMatch, extracted }),
+      JSON.stringify({
+        success: true,
+        verified,
+        nameMatch,
+        ibanMatch,
+        amountMatch,
+        paidAmount,
+        expectedAmount: wanted,
+        planName: planName ?? null,
+        extracted,
+      }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
