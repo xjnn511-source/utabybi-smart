@@ -19,7 +19,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { imageBase64, mimeType } = await req.json();
+    const { imageBase64, mimeType, expectedAmount, planName } = await req.json();
     if (!imageBase64 || !mimeType) {
       return new Response(JSON.stringify({ error: "imageBase64 and mimeType are required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
