@@ -7,11 +7,18 @@ import { useActivation, setActivated } from "@/hooks/useActivation";
 const BENEFICIARY = "Otaibi Tech Solutions";
 const IBAN = "SA3780000322608016224462";
 
+const PLANS = [
+  { name: "الرخصة التقنية الأساسية", price: 99 },
+  { name: "نظام معالجة البيانات المتقدم", price: 299 },
+  { name: "باقة الأنظمة الاحترافية", price: 499 },
+];
+
 type State = "idle" | "verifying" | "ok" | "fail";
 
 const PaymentActivation = () => {
   const unlocked = useActivation();
   const [state, setState] = useState<State>("idle");
+  const [selectedPlan, setSelectedPlan] = useState(PLANS[0]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const fileToBase64 = (f: File): Promise<string> =>
@@ -33,7 +40,12 @@ const PaymentActivation = () => {
     try {
       const base64 = await fileToBase64(f);
       const { data, error } = await supabase.functions.invoke("verify-receipt", {
-        body: { imageBase64: base64, mimeType: f.type },
+        body: {
+          imageBase64: base64,
+          mimeType: f.type,
+          expectedAmount: selectedPlan.price,
+          planName: selectedPlan.name,
+        },
       });
       if (error) throw new Error(error.message);
       if (data?.error) throw new Error(data.error);
@@ -41,12 +53,13 @@ const PaymentActivation = () => {
       if (data?.verified) {
         setActivated(true);
         setState("ok");
-        toast({ title: "تم التفعيل بنجاح ✓", description: "تم تفعيل جميع الخدمات" });
+        toast({ title: "تم التفعيل بنجاح ✓", description: `تم تفعيل ${selectedPlan.name} وجميع الخدمات` });
       } else {
         setState("fail");
+        const amountTxt = data?.amountMatch ? "مطابق" : `غير مطابق (${data?.paidAmount ?? "?"} ر.س)`;
         toast({
           title: "يرجى التأكد من صحة بيانات الإيصال",
-          description: `الاسم: ${data?.nameMatch ? "مطابق" : "غير مطابق"} | الآيبان: ${data?.ibanMatch ? "مطابق" : "غير مطابق"}`,
+          description: `الاسم: ${data?.nameMatch ? "مطابق" : "غير مطابق"} | الآيبان: ${data?.ibanMatch ? "مطابق" : "غير مطابق"} | المبلغ: ${amountTxt}`,
           variant: "destructive",
         });
       }
@@ -73,7 +86,7 @@ const PaymentActivation = () => {
         </div>
         <div className="flex-1">
           <h2 className="text-sm font-bold text-foreground">الدفع والتفعيل</h2>
-          <p className="text-[10px] text-muted-foreground">حوّل المبلغ ثم ارفع الإيصال لتفعيل الخدمات</p>
+          <p className="text-[10px] text-muted-foreground">اختر الباقة، حوّل المبلغ ثم ارفع الإيصال</p>
         </div>
         <div
           className={`flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-bold ${
@@ -82,6 +95,29 @@ const PaymentActivation = () => {
         >
           {unlocked ? <CheckCircle2 className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
           {unlocked ? "مُفعّل" : "مغلق"}
+        </div>
+      </div>
+
+      {/* اختيار الباقة — يحدد المبلغ المطلوب مطابقته في الإيصال */}
+      <div className="mb-4">
+        <p className="text-[9px] text-muted-foreground mb-2">اختر الباقة المراد تفعيلها</p>
+        <div className="grid grid-cols-3 gap-2">
+          {PLANS.map((p) => (
+            <button
+              key={p.name}
+              onClick={() => setSelectedPlan(p)}
+              className={`rounded-lg border p-2 text-center transition-all ${
+                selectedPlan.name === p.name
+                  ? "border-primary bg-primary/10 glow-gold"
+                  : "border-border bg-secondary/50 hover:border-primary/40"
+              }`}
+            >
+              <span className={`block text-base font-bold ${selectedPlan.name === p.name ? "text-primary" : "text-foreground"}`}>
+                {p.price}
+              </span>
+              <span className="block text-[8px] text-muted-foreground leading-tight mt-0.5">{p.name}</span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -102,6 +138,10 @@ const PaymentActivation = () => {
             <Copy className="w-3 h-3" />
             نسخ
           </button>
+        </div>
+        <div className="bg-primary/10 border border-primary/30 rounded-lg p-3 flex items-center justify-between">
+          <p className="text-[9px] text-muted-foreground">المبلغ المطلوب تحويله</p>
+          <p className="text-sm font-bold text-primary" dir="ltr">{selectedPlan.price} SAR</p>
         </div>
       </div>
 
@@ -136,7 +176,7 @@ const PaymentActivation = () => {
       </button>
 
       <p className="text-[9px] text-muted-foreground/70 text-center mt-3 leading-relaxed">
-        يتم التحقق تلقائياً من اسم المستفيد ورقم الآيبان عبر الذكاء الاصطناعي قبل تفعيل الخدمات.
+        يتم التحقق تلقائياً من اسم المستفيد ({BENEFICIARY})، رقم الآيبان، ومطابقة المبلغ مع الباقة المختارة عبر الذكاء الاصطناعي قبل تفعيل الخدمات.
       </p>
     </div>
   );
