@@ -8,38 +8,39 @@ interface LockGateProps {
 }
 
 /**
- * Wraps existing tools without changing their design.
- * When the account is not activated (receipt not verified), it overlays a
- * non-destructive lock layer that blocks interaction. Once activated, the
- * children render and behave exactly as before.
+ * Function Lock (not a visual blur):
+ * - When NOT activated, the wrapped tools remain fully VISIBLE and explorable
+ *   (no blur, no dimming) so the user can browse them clearly.
+ * - Only INTERACTION is disabled (pointer-events / inputs), plus a small
+ *   floating lock badge that points to the activation gate.
+ * - Once activated, everything behaves exactly as before.
  */
-const LockGate = ({ children, label = "هذه الأداة مقفلة" }: LockGateProps) => {
+const LockGate = ({ children, label = "هذه الأداة مقفلة وظيفياً" }: LockGateProps) => {
   const unlocked = useActivation();
 
   if (unlocked) return <>{children}</>;
 
   return (
-    <div className="relative">
-      {/* Original UI, untouched, just visually dimmed and non-interactive */}
-      <div className="pointer-events-none select-none blur-[3px] opacity-60" aria-hidden>
+    <div className="relative group">
+      {/* Tools stay fully visible — we only block interaction */}
+      <div className="pointer-events-none select-none" aria-hidden>
         {children}
       </div>
 
-      {/* Lock overlay */}
-      <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-2 rounded-[var(--radius)] bg-background/70 backdrop-blur-[2px] border border-primary/20">
-        <div className="w-11 h-11 rounded-full bg-primary/10 border border-primary/40 flex items-center justify-center glow-gold">
-          <Lock className="w-5 h-5 text-primary" />
-        </div>
-        <p className="text-[11px] font-bold text-foreground">{label}</p>
-        <p className="text-[9px] text-muted-foreground">ارفع إيصال التحويل البنكي لتفعيل الوصول</p>
-        <button
-          onClick={() =>
-            document.getElementById("activation-section")?.scrollIntoView({ behavior: "smooth", block: "center" })
-          }
-          className="mt-1 h-8 px-4 rounded-lg bg-primary/15 border border-primary/40 text-primary text-[10px] font-bold hover:bg-primary/25"
-        >
-          فتح بوابة التفعيل
-        </button>
+      {/* Transparent interaction shield so visuals stay clear but clicks are blocked */}
+      <button
+        type="button"
+        aria-label={label}
+        onClick={() =>
+          document.getElementById("activation-section")?.scrollIntoView({ behavior: "smooth", block: "center" })
+        }
+        className="absolute inset-0 z-20 cursor-not-allowed bg-transparent"
+      />
+
+      {/* Small floating lock badge — does not hide content */}
+      <div className="absolute top-2 left-2 z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-background/85 backdrop-blur-sm border border-primary/40 shadow-sm pointer-events-none">
+        <Lock className="w-3 h-3 text-primary" />
+        <span className="text-[9px] font-bold text-foreground">{label}</span>
       </div>
     </div>
   );
