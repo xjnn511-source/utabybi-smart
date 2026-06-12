@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
-import { ShieldCheck, Copy, UploadCloud, Loader2, CheckCircle2, XCircle, Lock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ShieldCheck, Copy, UploadCloud, Loader2, CheckCircle2, XCircle, Lock, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { useActivation, setActivated } from "@/hooks/useActivation";
+import { useActivationState, setActivated } from "@/hooks/useActivation";
 
 const BENEFICIARY = "Otaibi Tech Solutions";
 const IBAN = "SA3780000322608016224462";
@@ -29,7 +30,8 @@ const fileToBase64 = (f: File): Promise<string> =>
   });
 
 const PaymentActivation = () => {
-  const unlocked = useActivation();
+  const { unlocked, isLoggedIn, isAdmin, loading } = useActivationState();
+  const navigate = useNavigate();
   const [state, setState] = useState<State>("idle");
   const [selectedPlan, setSelectedPlan] = useState(PLANS[0]);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +42,11 @@ const PaymentActivation = () => {
     if (inputRef.current) inputRef.current.value = "";
 
     if (!f) return;
+    if (!isLoggedIn) {
+      toast({ title: "يلزم تسجيل الدخول أولاً", description: "سجّل الدخول ثم ارفع الإيصال", variant: "destructive" });
+      navigate("/auth");
+      return;
+    }
     if (!f.type.startsWith("image/")) {
       toast({ title: "يرجى رفع صورة الإيصال فقط", variant: "destructive" });
       return;
@@ -112,9 +119,21 @@ const PaymentActivation = () => {
           }`}
         >
           {unlocked ? <CheckCircle2 className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
-          {unlocked ? "مُفعّل" : "مغلق"}
+          {loading ? "..." : unlocked ? (isAdmin ? "مدير" : "مُفعّل") : "مغلق"}
         </div>
       </div>
+
+      {/* تنبيه تسجيل الدخول لغير المسجّلين */}
+      {!loading && !isLoggedIn && (
+        <button
+          type="button"
+          onClick={() => navigate("/auth")}
+          className="w-full mb-4 flex items-center justify-center gap-2 py-2.5 rounded-lg border border-primary/40 bg-primary/10 text-primary text-[11px] font-bold hover:bg-primary/20 transition-all"
+        >
+          <LogIn className="w-3.5 h-3.5" />
+          سجّل الدخول أولاً لتفعيل الأدوات
+        </button>
+      )}
 
       {/* اختيار الباقة — يحدد المبلغ المطلوب مطابقته في الإيصال */}
       <div className="mb-4">
