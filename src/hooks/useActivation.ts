@@ -6,7 +6,11 @@ const EVT = "utaybi:activation-changed";
 const ADMIN_EMAIL = "xjnn511@gmail.com";
 
 export const isActivated = (): boolean => {
-  try { return localStorage.getItem(KEY) === "1"; } catch { return false; }
+  try {
+    return localStorage.getItem(KEY) === "1";
+  } catch {
+    return false;
+  }
 };
 
 export const setActivated = (v: boolean) => {
@@ -14,35 +18,62 @@ export const setActivated = (v: boolean) => {
     if (v) localStorage.setItem(KEY, "1");
     else localStorage.removeItem(KEY);
   } catch {}
-  window.dispatchEvent(new Event(EVT));
+  try {
+    window.dispatchEvent(new Event(EVT));
+  } catch {}
 };
 
-export const useActivation = () => {
+/**
+ * Function-lock activation hook.
+ * - Returns true when the app is unlocked (valid receipt OR admin account).
+ * - All async auth checks are fully guarded so they can never throw an
+ *   UNHANDLED_PROMISE_REJECTION, even if the network/auth call fails.
+ */
+export const useActivation = (): boolean => {
   const [unlocked, setUnlocked] = useState<boolean>(isActivated());
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
-    const h = () => setUnlocked(isActivated());
-    window.addEventListener(EVT, h);
-    window.addEventListener("storage", h);
+    let mounted = true;
 
-    // فتح القفل تلقائياً لحساب المدير فقط
+    const syncUnlocked = () => {
+      if (mounted) setUnlocked(isActivated());
+    };
+
     const checkAdmin = (email?: string | null) => {
+      if (!mounted) return;
       setIsAdmin(!!email && email.toLowerCase() === ADMIN_EMAIL);
     };
 
-    supabase.auth.getUser().then(({ data }) => checkAdmin(data.user?.email));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      checkAdmin(session?.user?.email);
-    });
+    window.addEventListener(EVT, syncUnlocked);
+    window.addEventListener("storage", syncUnlocked);
+
+    // فتح القفل تلقائياً لحساب المدير فقط — مع حماية كاملة ضد الأخطاء
+    supabase.auth
+      .getUser()
+      .then(({ data }) => checkAdmin(data?.user?.email))
+      .catch(() => checkAdmin(null));
+
+    let subscription: { unsubscribe: () => void } | null = null;
+    try {
+      const { data } = supabase.auth.onAuthStateChange((_e, session) => {
+        checkAdmin(session?.user?.email);
+      });
+      subscription = data?.subscription ?? null;
+    } catch {
+      subscription = null;
+    }
 
     return () => {
-      window.removeEventListener(EVT, h);
-      window.removeEventListener("storage", h);
-      sub.subscription.unsubscribe();
+      mounted = false;
+      window.removeEventListener(EVT, syncUnlocked);
+      window.removeEventListener("storage", syncUnlocked);
+      try {
+        subscription?.unsubscribe();
+      } catch {}
     };
   }, []);
 
-  // المدير يتجاوز القفل دائماً للاختبار، وبقية المستخدمين يحتاجون التفعيل بالإيصال
+  // المدير يتجاوز القفل دائماً، وبقية المستخدمين يحتاجون التفعيل بالإيصال
   return unlocked || isAdmin;
 };
