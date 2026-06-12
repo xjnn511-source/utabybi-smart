@@ -30,7 +30,8 @@ const fileToBase64 = (f: File): Promise<string> =>
   });
 
 const PaymentActivation = () => {
-  const unlocked = useActivation();
+  const { unlocked, isLoggedIn, isAdmin, loading } = useActivationState();
+  const navigate = useNavigate();
   const [state, setState] = useState<State>("idle");
   const [selectedPlan, setSelectedPlan] = useState(PLANS[0]);
   const inputRef = useRef<HTMLInputElement>(null);
