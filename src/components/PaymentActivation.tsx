@@ -42,6 +42,11 @@ const PaymentActivation = () => {
     if (inputRef.current) inputRef.current.value = "";
 
     if (!f) return;
+    if (!isLoggedIn) {
+      toast({ title: "يلزم تسجيل الدخول أولاً", description: "سجّل الدخول ثم ارفع الإيصال", variant: "destructive" });
+      navigate("/auth");
+      return;
+    }
     if (!f.type.startsWith("image/")) {
       toast({ title: "يرجى رفع صورة الإيصال فقط", variant: "destructive" });
       return;
