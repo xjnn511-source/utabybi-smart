@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
-import { ShieldCheck, Copy, UploadCloud, Loader2, CheckCircle2, XCircle, Lock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ShieldCheck, Copy, UploadCloud, Loader2, CheckCircle2, XCircle, Lock, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { useActivation, setActivated } from "@/hooks/useActivation";
+import { useActivationState, setActivated } from "@/hooks/useActivation";
 
 const BENEFICIARY = "Otaibi Tech Solutions";
 const IBAN = "SA3780000322608016224462";
