@@ -19,6 +19,8 @@ const SmartMontageEditor = () => {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
   const [errMsg, setErrMsg] = useState<string | null>(null);
+  const [useVoice, setUseVoice] = useState(true);
+  const [voiceText, setVoiceText] = useState("");
   const mediaRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
