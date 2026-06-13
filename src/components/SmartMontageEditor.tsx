@@ -172,6 +172,30 @@ const SmartMontageEditor = () => {
             <Upload className="w-4 h-4 text-primary" />
             <span className="text-[10px] font-bold">{media ? media.name : "ارفع صورة أو فيديو للمونتاج"}</span>
           </button>
+
+          <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 space-y-2">
+            <label className="flex items-center justify-between gap-2 cursor-pointer">
+              <span className="text-[11px] font-bold text-foreground flex items-center gap-1.5">
+                <Mic className="w-3.5 h-3.5 text-primary" /> دمج صوتي الشخصي (مستنسخ)
+              </span>
+              <input
+                type="checkbox"
+                checked={useVoice}
+                onChange={(e) => setUseVoice(e.target.checked)}
+                className="w-4 h-4 accent-[hsl(var(--primary))]"
+              />
+            </label>
+            {useVoice && (
+              <textarea
+                className="w-full h-16 p-3 text-[11px] bg-secondary/60 border border-border rounded-lg text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary resize-none"
+                onChange={(e) => setVoiceText(e.target.value)}
+                value={voiceText}
+                maxLength={600}
+                placeholder="نص التعليق الصوتي (اختياري) — يُستخدم أمر المونتاج تلقائياً إن تُرك فارغاً. حد 600 حرف لتوفير الرصيد."
+              />
+            )}
+          </div>
+
           <button
             onClick={produce}
             disabled={!script.trim() || !media}
