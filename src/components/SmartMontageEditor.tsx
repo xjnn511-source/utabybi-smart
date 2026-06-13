@@ -79,9 +79,22 @@ const SmartMontageEditor = () => {
       const media_url = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
       const is_video = media.type.startsWith("video/");
 
+      // Generate the owner's cloned voiceover (Voice ID locked server-side) when enabled.
+      let voice_url: string | null = null;
+      if (useVoice) {
+        const narration = (voiceText.trim() || script.trim()).slice(0, 600);
+        toast({ title: "توليد التعليق الصوتي بصوتك...", description: "صوت مستنسخ خاص بك" });
+        const { data: tts, error: ttsErr } = await supabase.functions.invoke("tts-voice", {
+          body: { text: narration, upload: true },
+        });
+        if (ttsErr) throw new Error(ttsErr.message);
+        if (!tts?.ok) throw new Error(tts?.error || "فشل توليد الصوت");
+        voice_url = tts.audio_url || null;
+      }
+
       toast({ title: "المخرج الذكي يصمم السيناريو...", description: "خطة مونتاج متعددة المشاهد" });
       const { data: plan, error: planErr } = await supabase.functions.invoke("ai-montage-planner", {
-        body: { prompt: script.trim(), media_url, is_video },
+        body: { prompt: script.trim(), media_url, is_video, voice_url },
       });
       if (planErr) throw new Error(planErr.message);
       if (!plan?.ok) throw new Error(plan?.error || "فشل تخطيط المونتاج");
