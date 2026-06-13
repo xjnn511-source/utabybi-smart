@@ -132,6 +132,7 @@ const SmartMontageEditor = () => {
   const reset = () => {
     setStage("editor");
     setScript("");
+    setVoiceText("");
     setMedia(null);
     setResultUrl(null);
     setJobId(null);
