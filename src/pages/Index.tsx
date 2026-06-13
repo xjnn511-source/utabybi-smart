@@ -21,6 +21,7 @@ import AiEnginePortal from "@/components/AiEnginePortal";
 import PaymentActivation from "@/components/PaymentActivation";
 import LockGate from "@/components/LockGate";
 import SmartMontageEditor from "@/components/SmartMontageEditor";
+import SmartWelcome from "@/components/SmartWelcome";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu, LayoutGrid } from "lucide-react";
 
@@ -51,6 +52,9 @@ const Index = () => {
           </div>
 
           <main className="space-y-8 p-4 mt-4">
+            {/* ترحيب ذكي تلقائي بصوت المالك */}
+            <SmartWelcome />
+
             {/* بوابة الدفع والتفعيل — لا يتم فك القفل إلا بعد رفع الإيصال */}
             <section id="activation-section">
               <PaymentActivation />
