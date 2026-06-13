@@ -54,7 +54,7 @@ async function callGemini(userPrompt: string, mediaUrl: string, isVideo: boolean
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "google/gemini-2.5-flash",
+      model: "google/gemini-3-flash-preview",
       messages: [
         { role: "system", content: SYS },
         { role: "user", content: userMsg },
@@ -134,6 +134,7 @@ serve(async (req) => {
     const prompt = String(body?.prompt || "").trim();
     const mediaUrl = String(body?.media_url || "").trim();
     const isVideo = Boolean(body?.is_video);
+    const voiceUrl = String(body?.voice_url || "").trim();
     if (!prompt) return json({ ok: false, error: "prompt مطلوب" }, 400);
     if (!mediaUrl) return json({ ok: false, error: "media_url مطلوب" }, 400);
 
@@ -150,6 +151,12 @@ serve(async (req) => {
     source.height = 1920;
     source.frame_rate = source.frame_rate || 30;
     source.output_format = "mp4";
+
+    // Inject the owner's cloned voiceover as a dedicated audio track spanning the reel.
+    if (voiceUrl) {
+      source.elements = Array.isArray(source.elements) ? source.elements : [];
+      source.elements.push({ type: "audio", track: 9, source: voiceUrl });
+    }
 
     return json({ ok: true, source });
   } catch (e) {

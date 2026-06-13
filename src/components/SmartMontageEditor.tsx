@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Upload, CheckCircle, Send, Loader2, Clock, Film, RefreshCw } from "lucide-react";
+import { Upload, CheckCircle, Send, Loader2, Clock, Film, RefreshCw, Mic } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -19,6 +19,8 @@ const SmartMontageEditor = () => {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
   const [errMsg, setErrMsg] = useState<string | null>(null);
+  const [useVoice, setUseVoice] = useState(true);
+  const [voiceText, setVoiceText] = useState("");
   const mediaRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -79,9 +81,22 @@ const SmartMontageEditor = () => {
       const media_url = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
       const is_video = media.type.startsWith("video/");
 
+      // Generate the owner's cloned voiceover (Voice ID locked server-side) when enabled.
+      let voice_url: string | null = null;
+      if (useVoice) {
+        const narration = (voiceText.trim() || script.trim()).slice(0, 600);
+        toast({ title: "توليد التعليق الصوتي بصوتك...", description: "صوت مستنسخ خاص بك" });
+        const { data: tts, error: ttsErr } = await supabase.functions.invoke("tts-voice", {
+          body: { text: narration, upload: true },
+        });
+        if (ttsErr) throw new Error(ttsErr.message);
+        if (!tts?.ok) throw new Error(tts?.error || "فشل توليد الصوت");
+        voice_url = tts.audio_url || null;
+      }
+
       toast({ title: "المخرج الذكي يصمم السيناريو...", description: "خطة مونتاج متعددة المشاهد" });
       const { data: plan, error: planErr } = await supabase.functions.invoke("ai-montage-planner", {
-        body: { prompt: script.trim(), media_url, is_video },
+        body: { prompt: script.trim(), media_url, is_video, voice_url },
       });
       if (planErr) throw new Error(planErr.message);
       if (!plan?.ok) throw new Error(plan?.error || "فشل تخطيط المونتاج");
@@ -117,6 +132,7 @@ const SmartMontageEditor = () => {
   const reset = () => {
     setStage("editor");
     setScript("");
+    setVoiceText("");
     setMedia(null);
     setResultUrl(null);
     setJobId(null);
@@ -157,6 +173,30 @@ const SmartMontageEditor = () => {
             <Upload className="w-4 h-4 text-primary" />
             <span className="text-[10px] font-bold">{media ? media.name : "ارفع صورة أو فيديو للمونتاج"}</span>
           </button>
+
+          <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 space-y-2">
+            <label className="flex items-center justify-between gap-2 cursor-pointer">
+              <span className="text-[11px] font-bold text-foreground flex items-center gap-1.5">
+                <Mic className="w-3.5 h-3.5 text-primary" /> دمج صوتي الشخصي (مستنسخ)
+              </span>
+              <input
+                type="checkbox"
+                checked={useVoice}
+                onChange={(e) => setUseVoice(e.target.checked)}
+                className="w-4 h-4 accent-[hsl(var(--primary))]"
+              />
+            </label>
+            {useVoice && (
+              <textarea
+                className="w-full h-16 p-3 text-[11px] bg-secondary/60 border border-border rounded-lg text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary resize-none"
+                onChange={(e) => setVoiceText(e.target.value)}
+                value={voiceText}
+                maxLength={600}
+                placeholder="نص التعليق الصوتي (اختياري) — يُستخدم أمر المونتاج تلقائياً إن تُرك فارغاً. حد 600 حرف لتوفير الرصيد."
+              />
+            )}
+          </div>
+
           <button
             onClick={produce}
             disabled={!script.trim() || !media}
