@@ -9,9 +9,9 @@ const BENEFICIARY = "Otaibi Tech Solutions";
 const IBAN = "SA3780000322608016224462";
 
 const PLANS = [
-  { name: "الرخصة التقنية الأساسية", price: 99 },
-  { name: "نظام معالجة البيانات المتقدم", price: 299 },
-  { name: "باقة الأنظمة الاحترافية", price: 499 },
+  { name: "الرخصة التقنية الأساسية", price: 99, plan: "office" },
+  { name: "نظام معالجة البيانات المتقدم", price: 299, plan: "leadership" },
+  { name: "باقة الأنظمة الاحترافية", price: 499, plan: "elite" },
 ];
 
 type State = "idle" | "verifying" | "ok" | "fail";
