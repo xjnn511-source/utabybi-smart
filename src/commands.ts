@@ -1,6 +1,11 @@
 // src/commands.ts
+import { processWithGemini } from "./lib/gemini";
+
 export const commandCenter = {
-  // هنا سنضع أوامرك البرمجية لاحقاً لتنفيذ التعديلات
-  version: "1.0.0",
-  lastCommand: "initialized",
+  version: "1.1.0",
+  async executeCommand(userPrompt: string) {
+    console.log("Executing:", userPrompt);
+    const response = await processWithGemini(userPrompt);
+    return response;
+  }
 };
