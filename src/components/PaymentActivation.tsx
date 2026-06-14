@@ -63,13 +63,14 @@ const PaymentActivation = () => {
           mimeType: f.type,
           expectedAmount: selectedPlan.price,
           planName: selectedPlan.name,
+          plan: selectedPlan.plan,
         },
       });
 
       if (error) throw new Error(error.message || "فشل الاتصال بخدمة التحقق");
       if (data?.error) throw new Error(String(data.error));
 
-      if (data?.verified) {
+      if (data?.verified && data?.activated) {
         setActivated(true);
         setState("ok");
         toast({ title: "تم التفعيل بنجاح ✓", description: `تم تفعيل ${selectedPlan.name} وجميع الخدمات` });
