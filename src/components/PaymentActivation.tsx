@@ -9,9 +9,9 @@ const BENEFICIARY = "Otaibi Tech Solutions";
 const IBAN = "SA3780000322608016224462";
 
 const PLANS = [
-  { name: "الرخصة التقنية الأساسية", price: 99 },
-  { name: "نظام معالجة البيانات المتقدم", price: 299 },
-  { name: "باقة الأنظمة الاحترافية", price: 499 },
+  { name: "الرخصة التقنية الأساسية", price: 99, plan: "office" },
+  { name: "نظام معالجة البيانات المتقدم", price: 299, plan: "leadership" },
+  { name: "باقة الأنظمة الاحترافية", price: 499, plan: "elite" },
 ];
 
 type State = "idle" | "verifying" | "ok" | "fail";
@@ -63,13 +63,14 @@ const PaymentActivation = () => {
           mimeType: f.type,
           expectedAmount: selectedPlan.price,
           planName: selectedPlan.name,
+          plan: selectedPlan.plan,
         },
       });
 
       if (error) throw new Error(error.message || "فشل الاتصال بخدمة التحقق");
       if (data?.error) throw new Error(String(data.error));
 
-      if (data?.verified) {
+      if (data?.verified && data?.activated) {
         setActivated(true);
         setState("ok");
         toast({ title: "تم التفعيل بنجاح ✓", description: `تم تفعيل ${selectedPlan.name} وجميع الخدمات` });
