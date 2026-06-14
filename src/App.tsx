@@ -3,8 +3,8 @@ import { Toaster } from "sonner";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import AutomationStudio from "./pages/AutomationStudio";
+import MediaStudio from "./pages/MediaStudio";
 import ProfessionalAppCore from "./components/ProfessionalAppCore";
-import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
@@ -31,10 +31,10 @@ const App = () => (
         }
       />
       <Route
-        path="/admin"
+        path="/digital-processor"
         element={
           <ProtectedRoute>
-            <AdminDashboard />
+            <MediaStudio />
           </ProtectedRoute>
         }
       />

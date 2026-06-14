@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, Film, Zap, Shield } from "lucide-react";
+import { Home, Zap, Cpu, Search } from "lucide-react";
 
 const BottomNav = () => {
   const navigate = useNavigate();
@@ -7,9 +7,9 @@ const BottomNav = () => {
 
   const navItems = [
     { icon: Home, label: "الرئيسية", path: "/" },
-    { icon: Film, label: "المحرر الذكي", path: "/editor" },
     { icon: Zap, label: "محرك الأتمتة", path: "/automation" },
-    { icon: Shield, label: "لوحة المدير", path: "/admin" },
+    { icon: Cpu, label: "المعالج الرقمي", path: "/digital-processor" },
+    { icon: Search, label: "نظام الفحص", path: "/" },
   ];
 
   return (
