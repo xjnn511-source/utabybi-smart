@@ -73,10 +73,30 @@ export const useActivationState = (): ActivationState => {
       }
     };
 
+    // التحقق من اشتراك مفعّل وغير منتهٍ في قاعدة البيانات (مصدر الحقيقة)
+    const verifySubscription = async (userId?: string | null) => {
+      if (!userId) return;
+      try {
+        const { data, error } = await supabase
+          .from("subscribers")
+          .select("is_active, expires_at")
+          .eq("user_id", userId)
+          .eq("is_active", true)
+          .order("created_at", { ascending: false })
+          .limit(1);
+        if (error || !data?.length) return;
+        const sub = data[0];
+        const valid = !sub.expires_at || new Date(sub.expires_at) > new Date();
+        if (valid && mounted) setReceiptVerified(true);
+      } catch {
+        /* تجاهل بصمت */
+      }
+    };
+
     const applySession = async (session: { user?: { id?: string } } | null) => {
       const uid = session?.user?.id ?? null;
       if (mounted) setIsLoggedIn(!!uid);
-      await verifyAdmin(uid);
+      await Promise.all([verifyAdmin(uid), verifySubscription(uid)]);
       if (mounted) setLoading(false);
     };
 
