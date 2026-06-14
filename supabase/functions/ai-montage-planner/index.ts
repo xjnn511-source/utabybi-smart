@@ -50,18 +50,27 @@ async function callGemini(userPrompt: string, mediaUrl: string, isVideo: boolean
 
 صمّم لي Source JSON كامل جاهز للإرسال إلى Creatomate.`;
 
-  const r = await fetch(LOVABLE_AI_URL, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "google/gemini-2.5-pro",
-      messages: [
-        { role: "system", content: SYS },
-        { role: "user", content: userMsg },
-      ],
-      response_format: { type: "json_object" },
-    }),
-  });
+  // Timeout guard so the engine never hangs — falls back gracefully on slow AI.
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 25000);
+  let r: Response;
+  try {
+    r = await fetch(LOVABLE_AI_URL, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-pro",
+        messages: [
+          { role: "system", content: SYS },
+          { role: "user", content: userMsg },
+        ],
+        response_format: { type: "json_object" },
+      }),
+      signal: ctrl.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
 
   if (!r.ok) {
     const t = await r.text();
