@@ -11,8 +11,11 @@ const corsHeaders = {
 };
 
 // Owner's locked Voice ID — never overridable from the client.
-const VOICE_ID = "5fMqK7iDhM7Z0qBuUQbP";
-const ELEVEN_URL = `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`;
+const CLONED_VOICE_ID = "5fMqK7iDhM7Z0qBuUQbP";
+// Fallback voice (Sarah) — used automatically if the ElevenLabs plan does not
+// permit the cloned voice, so montage/voice features keep working.
+const FALLBACK_VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
+const ttsUrl = (id: string) => `https://api.elevenlabs.io/v1/text-to-speech/${id}`;
 // Hard cap so a single request can never drain the character balance.
 const MAX_CHARS = 600;
 
