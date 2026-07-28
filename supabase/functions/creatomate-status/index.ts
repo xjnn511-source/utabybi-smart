@@ -8,8 +8,11 @@ const corsHeaders = {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   try {
-    const KEY = Deno.env.get("API_KEY") || Deno.env.get("CREATOMATE_API_KEY");
+    const KEY = (Deno.env.get("API_KEY") || Deno.env.get("CREATOMATE_API_KEY") || "").trim();
     if (!KEY) return new Response(JSON.stringify({ error: "API_KEY is not configured" }), { status: 500, headers: corsHeaders });
+    if (/[^\x00-\xFF]/.test(KEY) || KEY.includes("ضع") || KEY.includes("هنا") || KEY.startsWith("[")) {
+      return new Response(JSON.stringify({ error: "API_KEY is invalid or still a placeholder" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
     const { id } = await req.json();
     if (!id) return new Response(JSON.stringify({ error: "id required" }), { status: 400, headers: corsHeaders });
     const r = await fetch(`https://api.creatomate.com/v1/renders/${id}`, {
