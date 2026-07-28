@@ -11,8 +11,11 @@ const corsHeaders = {
 };
 
 // Owner's locked Voice ID — never overridable from the client.
-const VOICE_ID = "5fMqK7iDhM7Z0qBuUQbP";
-const ELEVEN_URL = `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`;
+const CLONED_VOICE_ID = "5fMqK7iDhM7Z0qBuUQbP";
+// Fallback voice (Sarah) — used automatically if the ElevenLabs plan does not
+// permit the cloned voice, so montage/voice features keep working.
+const FALLBACK_VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
+const ttsUrl = (id: string) => `https://api.elevenlabs.io/v1/text-to-speech/${id}`;
 // Hard cap so a single request can never drain the character balance.
 const MAX_CHARS = 600;
 
@@ -35,19 +38,34 @@ serve(async (req) => {
 
     const text = rawText.slice(0, MAX_CHARS);
 
-    const r = await fetch(ELEVEN_URL, {
-      method: "POST",
-      headers: {
-        "xi-api-key": key,
-        "Content-Type": "application/json",
-        Accept: "audio/mpeg",
-      },
-      body: JSON.stringify({
-        text,
-        model_id: "eleven_multilingual_v2",
-        voice_settings: { stability: 0.5, similarity_boost: 0.85, style: 0.3 },
-      }),
-    });
+    const callEleven = (voiceId: string) =>
+      fetch(ttsUrl(voiceId), {
+        method: "POST",
+        headers: {
+          "xi-api-key": key,
+          "Content-Type": "application/json",
+          Accept: "audio/mpeg",
+        },
+        body: JSON.stringify({
+          text,
+          model_id: "eleven_multilingual_v2",
+          voice_settings: { stability: 0.5, similarity_boost: 0.85, style: 0.3 },
+        }),
+      });
+
+    let voice_used = CLONED_VOICE_ID;
+    let r = await callEleven(CLONED_VOICE_ID);
+    if (r.status === 401) {
+      const errText = await r.text();
+      // Plan does not permit the cloned (IVC) voice — fall back automatically
+      // so features keep working instead of hard-failing.
+      if (errText.includes("ivc_not_permitted") || errText.includes("subscription_required")) {
+        voice_used = FALLBACK_VOICE_ID;
+        r = await callEleven(FALLBACK_VOICE_ID);
+      } else {
+        return json({ ok: false, error: `ElevenLabs 401: ${errText}` }, 502);
+      }
+    }
 
     if (!r.ok) {
       const t = await r.text();
@@ -72,7 +90,7 @@ serve(async (req) => {
       }
     }
 
-    return json({ ok: true, audio: `data:audio/mpeg;base64,${b64}`, audio_url, chars: text.length });
+    return json({ ok: true, audio: `data:audio/mpeg;base64,${b64}`, audio_url, chars: text.length, voice_used, cloned: voice_used === CLONED_VOICE_ID });
   } catch (e) {
     return json({ ok: false, error: e instanceof Error ? e.message : "خطأ غير معروف" }, 500);
   }

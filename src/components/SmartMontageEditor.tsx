@@ -85,13 +85,21 @@ const SmartMontageEditor = () => {
       let voice_url: string | null = null;
       if (useVoice) {
         const narration = (voiceText.trim() || script.trim()).slice(0, 600);
-        toast({ title: "توليد التعليق الصوتي بصوتك...", description: "صوت مستنسخ خاص بك" });
-        const { data: tts, error: ttsErr } = await supabase.functions.invoke("tts-voice", {
-          body: { text: narration, upload: true },
-        });
-        if (ttsErr) throw new Error(ttsErr.message);
-        if (!tts?.ok) throw new Error(tts?.error || "فشل توليد الصوت");
-        voice_url = tts.audio_url || null;
+        toast({ title: "توليد التعليق الصوتي...", description: "جاري تجهيز الصوت" });
+        try {
+          const { data: tts, error: ttsErr } = await supabase.functions.invoke("tts-voice", {
+            body: { text: narration, upload: true },
+          });
+          if (ttsErr) throw new Error(ttsErr.message);
+          if (!tts?.ok) throw new Error(tts?.error || "فشل توليد الصوت");
+          voice_url = tts.audio_url || null;
+          if (tts.cloned === false) {
+            toast({ title: "استُخدم صوت افتراضي", description: "خطة ElevenLabs لا تدعم الصوت المستنسخ حالياً." });
+          }
+        } catch (voiceErr: any) {
+          console.warn("TTS failed, continuing without voice:", voiceErr);
+          toast({ title: "تخطي الصوت", description: "تعذّر توليد الصوت — سيتم إنتاج المونتاج بدون تعليق." });
+        }
       }
 
       toast({ title: "المخرج الذكي يصمم السيناريو...", description: "خطة مونتاج متعددة المشاهد" });
