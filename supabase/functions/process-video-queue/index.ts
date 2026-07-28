@@ -12,18 +12,42 @@ const BRAND_TAG = "Produced by Utaybi Smart";
 const API_KEY = Deno.env.get("API_KEY") || Deno.env.get("CREATOMATE_API_KEY");
 const TEMPLATE_ID = Deno.env.get("TEMPLATE_ID");
 
+const cleanSecret = (value: string | undefined | null) => (value || "").trim();
+
+const assertByteString = (name: string, value: string) => {
+  if (!value) throw new Error(`${name} غير مضبوط في إعدادات الإنتاج`);
+  if (/[^\x00-\xFF]/.test(value)) {
+    throw new Error(`${name} يحتوي على محارف غير صالحة. ضع مفتاح Creatomate الحقيقي فقط بدون أقواس أو نص عربي.`);
+  }
+};
+
+const getCreatomateConfig = () => {
+  const apiKey = cleanSecret(API_KEY);
+  const templateId = cleanSecret(TEMPLATE_ID);
+  assertByteString("API_KEY", apiKey);
+  assertByteString("TEMPLATE_ID", templateId);
+  if (apiKey.includes("ضع") || apiKey.includes("هنا") || apiKey.startsWith("[")) {
+    throw new Error("API_KEY ما زال placeholder وليس مفتاح Creatomate حقيقي.");
+  }
+  if (templateId.includes("ضع") || templateId.includes("هنا") || templateId.startsWith("[")) {
+    throw new Error("TEMPLATE_ID ما زال placeholder وليس معرف قالب Creatomate حقيقي.");
+  }
+  return { apiKey, templateId };
+};
+
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
 
 async function startRender(prompt: string, image: string, source: any | null) {
+  const { apiKey, templateId } = getCreatomateConfig();
   // If the AI planner provided a dynamic Creatomate source, use it (CapCut-style multi-scene).
   // Otherwise fall back to the static template.
   const body: any = source
     ? { source }
     : {
-        template_id: TEMPLATE_ID,
+        template_id: templateId,
         modifications: {
           "Text-1": prompt,
           "Title": prompt,
@@ -43,7 +67,7 @@ async function startRender(prompt: string, image: string, source: any | null) {
   const res = await fetch("https://api.creatomate.com/v1/renders", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
@@ -55,8 +79,9 @@ async function startRender(prompt: string, image: string, source: any | null) {
 }
 
 async function checkRender(id: string) {
+  const { apiKey } = getCreatomateConfig();
   const res = await fetch(`https://api.creatomate.com/v1/renders/${id}`, {
-    headers: { Authorization: `Bearer ${API_KEY}` },
+    headers: { Authorization: `Bearer ${apiKey}` },
   });
   const raw = await res.text();
   if (!res.ok) throw new Error(raw || `Creatomate ${res.status}`);
@@ -135,9 +160,19 @@ async function pollRendering() {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  if (!API_KEY || !TEMPLATE_ID) {
+  try {
+    const url = new URL(req.url);
+    if (url.searchParams.get("dry_run") === "1") {
+      getCreatomateConfig();
+      return new Response(JSON.stringify({ ok: true, mode: "dry_run" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    getCreatomateConfig();
+  } catch (e) {
     return new Response(
-      JSON.stringify({ ok: false, error: "API_KEY or TEMPLATE_ID not configured" }),
+      JSON.stringify({ ok: false, error: e instanceof Error ? e.message : "إعدادات Creatomate غير صالحة" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }

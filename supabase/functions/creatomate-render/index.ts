@@ -13,21 +13,40 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
-async function generateVideo(text: string, image: string) {
-  const API_KEY = Deno.env.get("API_KEY") || Deno.env.get("CREATOMATE_API_KEY");
-  const TEMPLATE_ID = Deno.env.get("TEMPLATE_ID");
+const cleanSecret = (value: string | undefined | null) => (value || "").trim();
 
-  if (!API_KEY) throw new Error("API_KEY is not configured");
-  if (!TEMPLATE_ID) throw new Error("TEMPLATE_ID is not configured");
+const assertByteString = (name: string, value: string) => {
+  if (!value) throw new Error(`${name} is not configured`);
+  if (/[^\x00-\xFF]/.test(value)) {
+    throw new Error(`${name} contains invalid characters. Use the real Creatomate value only, without Arabic placeholder text.`);
+  }
+};
+
+const getCreatomateConfig = () => {
+  const apiKey = cleanSecret(Deno.env.get("API_KEY") || Deno.env.get("CREATOMATE_API_KEY"));
+  const templateId = cleanSecret(Deno.env.get("TEMPLATE_ID"));
+  assertByteString("API_KEY", apiKey);
+  assertByteString("TEMPLATE_ID", templateId);
+  if (apiKey.includes("ضع") || apiKey.includes("هنا") || apiKey.startsWith("[")) {
+    throw new Error("API_KEY is still a placeholder, not a real Creatomate API key.");
+  }
+  if (templateId.includes("ضع") || templateId.includes("هنا") || templateId.startsWith("[")) {
+    throw new Error("TEMPLATE_ID is still a placeholder, not a real Creatomate template ID.");
+  }
+  return { apiKey, templateId };
+};
+
+async function generateVideo(text: string, image: string) {
+  const { apiKey, templateId } = getCreatomateConfig();
 
   const response = await fetch("https://api.creatomate.com/v1/renders", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      template_id: TEMPLATE_ID,
+      template_id: templateId,
       modifications: {
         "Text-1": text,
         "Title": text,
@@ -59,6 +78,12 @@ serve(async (req) => {
   }
 
   try {
+    const url = new URL(req.url);
+    if (url.searchParams.get("dry_run") === "1") {
+      getCreatomateConfig();
+      return json({ ok: true, mode: "dry_run" });
+    }
+
     const body = await req.json();
     const text = typeof body?.text === "string" ? body.text.trim() : "";
     const image = typeof body?.image === "string" ? body.image.trim() : "";
