@@ -90,7 +90,7 @@ serve(async (req) => {
       }
     }
 
-    return json({ ok: true, audio: `data:audio/mpeg;base64,${b64}`, audio_url, chars: text.length });
+    return json({ ok: true, audio: `data:audio/mpeg;base64,${b64}`, audio_url, chars: text.length, voice_used, cloned: voice_used === CLONED_VOICE_ID });
   } catch (e) {
     return json({ ok: false, error: e instanceof Error ? e.message : "خطأ غير معروف" }, 500);
   }
