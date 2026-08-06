@@ -86,21 +86,73 @@ async function makeVoiceover(text: string): Promise<string | null> {
   }
 }
 
+type Plan = { narration: string; captions: string[] };
+
+/** Turn ANY user command into a tailored script + caption layers (no fixed topic). */
+async function planFromPrompt(prompt: string, isVideo: boolean, duration: number): Promise<Plan> {
+  const key = clean(Deno.env.get("LOVABLE_API_KEY"));
+  const fallback = (): Plan => {
+    const caps = prompt
+      .split(/[.،,\n]+/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .slice(0, 4);
+    return { narration: prompt.slice(0, MAX_CHARS), captions: caps.length ? caps : [prompt.slice(0, 40)] };
+  };
+  if (!isValidHeaderValue(key) || !prompt) return fallback();
+
+  try {
+    const r = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "openai/gpt-5.6-sol",
+        input: [
+          {
+            role: "system",
+            content:
+              "أنت مخرج مونتاج. حوّل أمر المستخدم مهما كان موضوعه (عقار، منتج، خدمة، تطبيق، أي شيء) إلى سيناريو فيديو عمودي قصير. " +
+              "لا تفترض أي موضوع ثابت، واستخرج الموضوع من نص المستخدم فقط. " +
+              `المدة ${duration} ثانية والوسائط ${isVideo ? "فيديو" : "صورة"}. ` +
+              'أعد JSON فقط بالشكل: {"narration":"نص تعليق صوتي عربي أقل من 500 حرف","captions":["عبارة قصيرة",...]} ' +
+              "بحد أقصى 5 عبارات، كل عبارة أقل من 7 كلمات، بلغة أمر المستخدم نفسها.",
+          },
+          { role: "user", content: prompt },
+        ],
+      }),
+    });
+    if (!r.ok) return fallback();
+    const data = await r.json();
+    const text: string =
+      data.output_text ??
+      (data.output ?? [])
+        .flatMap((o: any) => o?.content ?? [])
+        .map((c: any) => c?.text ?? "")
+        .join("");
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) return fallback();
+    const parsed = JSON.parse(match[0]);
+    const captions = (Array.isArray(parsed.captions) ? parsed.captions : [])
+      .map((c: unknown) => String(c).trim())
+      .filter(Boolean)
+      .slice(0, 5);
+    const narration = String(parsed.narration || prompt).slice(0, MAX_CHARS);
+    return captions.length ? { narration, captions } : fallback();
+  } catch (_e) {
+    return fallback();
+  }
+}
+
 /** CapCut-style vertical timeline: Ken Burns media + animated captions + brand outro. */
 function buildSource(
   mediaUrl: string,
   isVideo: boolean,
-  narration: string,
+  captions: string[],
   voiceUrl: string | null,
   duration: number,
 ) {
-  const lines = narration
-    .split(/[.،,\n]+/)
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .slice(0, 4);
-  const captions = lines.length ? lines : ["عقار مميز", "فرصة استثمارية"];
-  const sceneCount = captions.length + 1;
+  const list = captions.length ? captions : ["..."];
+  const sceneCount = list.length + 1;
   const per = Math.max(2, Math.round((duration / sceneCount) * 10) / 10);
 
   const scene = (text: string, dur: number, color: string) => ({
@@ -141,7 +193,7 @@ function buildSource(
     ],
   });
 
-  const elements: any[] = captions.map((c, i) =>
+  const elements: any[] = list.map((c, i) =>
     scene(c, per, i % 2 === 0 ? "#ffffff" : "#bf5af2"),
   );
   elements.push(scene(BRAND_TAG, Math.max(2, per - 0.5), "#2563eb"));
@@ -156,6 +208,7 @@ function buildSource(
     elements,
   };
 }
+
 
 async function renderAndWait(source: unknown) {
   const key = getRenderKey();
@@ -207,7 +260,8 @@ serve(async (req) => {
       return json({ ok: false, error: "حجم الملف يتجاوز 50 ميجابايت." }, 400);
     }
 
-    const voiceover = String(form.get("voiceover") || "").trim().slice(0, MAX_CHARS);
+    const prompt = String(form.get("prompt") || "").trim().slice(0, 1200);
+    const voiceoverRaw = String(form.get("voiceover") || "").trim().slice(0, MAX_CHARS);
     const duration = Math.min(60, Math.max(10, Number(form.get("duration")) || 30));
 
     const isVideo = media.type.startsWith("video/");
@@ -227,9 +281,12 @@ serve(async (req) => {
       media.type || (isVideo ? "video/mp4" : "image/jpeg"),
     );
 
-    const voiceUrl = await makeVoiceover(voiceover);
-    const source = buildSource(mediaUrl, isVideo, voiceover, voiceUrl, duration);
+    const plan = await planFromPrompt(prompt || voiceoverRaw, isVideo, duration);
+    const narration = voiceoverRaw || plan.narration;
+    const voiceUrl = narration ? await makeVoiceover(narration) : null;
+    const source = buildSource(mediaUrl, isVideo, plan.captions, voiceUrl, duration);
     const videoUrl = await renderAndWait(source);
+
 
     return json({ ok: true, videoUrl, voiceUsed: Boolean(voiceUrl) });
   } catch (e) {
