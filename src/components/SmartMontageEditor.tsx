@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Upload, CheckCircle, Send, Loader2, Clock, Film, RefreshCw, Mic } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { executeAutomatedMontage } from "@/lib/automateMontage";
+
 
 type Stage = "editor" | "uploading" | "queued" | "rendering" | "done" | "error";
 
