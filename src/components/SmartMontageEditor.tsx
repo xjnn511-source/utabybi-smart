@@ -77,10 +77,11 @@ const SmartMontageEditor = () => {
     setErrMsg(null);
     setStage("uploading");
     try {
-      const narration = useVoice ? (voiceText.trim() || script.trim()).slice(0, 600) : "";
+      const narration = useVoice ? voiceText.trim().slice(0, 600) : "";
       setStage("rendering");
-      toast({ title: "المحرك يصنع المحتوى الآن...", description: "رفع · تعليق صوتي · مونتاج" });
-      const url = await executeAutomatedMontage(media, narration, 30);
+      toast({ title: "المحرك يصنع المحتوى الآن...", description: "تحليل الأمر · سيناريو · مونتاج" });
+      const url = await executeAutomatedMontage(media, narration, 30, script.trim());
+
       setResultUrl(url);
       setStage("done");
       toast({ title: "المحتوى جاهز! 🎬" });
