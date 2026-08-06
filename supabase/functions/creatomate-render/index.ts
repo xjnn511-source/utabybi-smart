@@ -23,7 +23,7 @@ const assertByteString = (name: string, value: string) => {
 };
 
 const getCreatomateConfig = () => {
-  const apiKey = cleanSecret(Deno.env.get("API_KEY") || Deno.env.get("CREATOMATE_API_KEY"));
+  const apiKey = cleanSecret(Deno.env.get("CREATOMATE_API_KEY") || Deno.env.get("API_KEY"));
   const templateId = cleanSecret(Deno.env.get("TEMPLATE_ID"));
   assertByteString("API_KEY", apiKey);
   assertByteString("TEMPLATE_ID", templateId);

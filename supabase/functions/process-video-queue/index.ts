@@ -9,8 +9,9 @@ const corsHeaders = {
 
 const BRAND_TAG = "Produced by Utaybi Smart";
 
-const API_KEY = Deno.env.get("API_KEY") || Deno.env.get("CREATOMATE_API_KEY");
+const API_KEY = Deno.env.get("CREATOMATE_API_KEY") || Deno.env.get("API_KEY");
 const TEMPLATE_ID = Deno.env.get("TEMPLATE_ID");
+
 
 const cleanSecret = (value: string | undefined | null) => (value || "").trim();
 
