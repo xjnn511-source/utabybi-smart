@@ -75,67 +75,20 @@ const SmartMontageEditor = () => {
     setErrMsg(null);
     setStage("uploading");
     try {
-      const path = safePath(media);
-      const { error: upErr } = await supabase.storage.from("media").upload(path, media, { upsert: true });
-      if (upErr) throw upErr;
-      const media_url = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
-      const is_video = media.type.startsWith("video/");
-
-      // Generate the owner's cloned voiceover (Voice ID locked server-side) when enabled.
-      let voice_url: string | null = null;
-      if (useVoice) {
-        const narration = (voiceText.trim() || script.trim()).slice(0, 600);
-        toast({ title: "توليد التعليق الصوتي...", description: "جاري تجهيز الصوت" });
-        try {
-          const { data: tts, error: ttsErr } = await supabase.functions.invoke("tts-voice", {
-            body: { text: narration, upload: true },
-          });
-          if (ttsErr) throw new Error(ttsErr.message);
-          if (!tts?.ok) throw new Error(tts?.error || "فشل توليد الصوت");
-          voice_url = tts.audio_url || null;
-          if (tts.cloned === false) {
-            toast({ title: "استُخدم صوت افتراضي", description: "خطة ElevenLabs لا تدعم الصوت المستنسخ حالياً." });
-          }
-        } catch (voiceErr: any) {
-          console.warn("TTS failed, continuing without voice:", voiceErr);
-          toast({ title: "تخطي الصوت", description: "تعذّر توليد الصوت — سيتم إنتاج المونتاج بدون تعليق." });
-        }
-      }
-
-      toast({ title: "المخرج الذكي يصمم السيناريو...", description: "خطة مونتاج متعددة المشاهد" });
-      const { data: plan, error: planErr } = await supabase.functions.invoke("ai-montage-planner", {
-        body: { prompt: script.trim(), media_url, is_video, voice_url },
-      });
-      if (planErr) throw new Error(planErr.message);
-      if (!plan?.ok) throw new Error(plan?.error || "فشل تخطيط المونتاج");
-
-      const { data, error } = await supabase
-        .from("video_jobs")
-        .insert({
-          user_id: pre.user.id,
-          prompt: `${script.trim()}\n${BRAND_TAG}`,
-          image_url: media_url,
-          source: plan.source,
-        })
-        .select()
-        .single();
-
-      if (error) {
-        if (error.message?.includes("row-level security") || error.code === "42501") {
-          throw new Error("لقد استخدمت إنتاجك اليومي (1/يوم). جرّب غداً.");
-        }
-        throw error;
-      }
-
-      setJobId(data.id);
-      setStage("queued");
-      toast({ title: "في قائمة الانتظار", description: "المحرك يصنع المحتوى الآن." });
+      const narration = useVoice ? (voiceText.trim() || script.trim()).slice(0, 600) : "";
+      setStage("rendering");
+      toast({ title: "المحرك يصنع المحتوى الآن...", description: "رفع · تعليق صوتي · مونتاج" });
+      const url = await executeAutomatedMontage(media, narration, 30);
+      setResultUrl(url);
+      setStage("done");
+      toast({ title: "المحتوى جاهز! 🎬" });
     } catch (e: any) {
       console.error(e);
       setErrMsg(e.message || "خطأ غير معروف");
       setStage("error");
     }
   };
+
 
   const reset = () => {
     setStage("editor");
