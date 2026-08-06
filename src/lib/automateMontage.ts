@@ -8,11 +8,14 @@ export async function executeAutomatedMontage(
   mediaFile: File,
   voiceoverText: string,
   durationSeconds = 30,
+  prompt = "",
 ): Promise<string> {
   const formData = new FormData();
   formData.append("media", mediaFile);
   formData.append("voiceover", voiceoverText);
+  formData.append("prompt", prompt);
   formData.append("duration", String(durationSeconds));
+
 
   const { data, error } = await supabase.functions.invoke("automate-montage", {
     body: formData,
