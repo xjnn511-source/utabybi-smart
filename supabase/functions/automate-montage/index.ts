@@ -260,7 +260,8 @@ serve(async (req) => {
       return json({ ok: false, error: "حجم الملف يتجاوز 50 ميجابايت." }, 400);
     }
 
-    const voiceover = String(form.get("voiceover") || "").trim().slice(0, MAX_CHARS);
+    const prompt = String(form.get("prompt") || "").trim().slice(0, 1200);
+    const voiceoverRaw = String(form.get("voiceover") || "").trim().slice(0, MAX_CHARS);
     const duration = Math.min(60, Math.max(10, Number(form.get("duration")) || 30));
 
     const isVideo = media.type.startsWith("video/");
@@ -280,9 +281,12 @@ serve(async (req) => {
       media.type || (isVideo ? "video/mp4" : "image/jpeg"),
     );
 
-    const voiceUrl = await makeVoiceover(voiceover);
-    const source = buildSource(mediaUrl, isVideo, voiceover, voiceUrl, duration);
+    const plan = await planFromPrompt(prompt || voiceoverRaw, isVideo, duration);
+    const narration = voiceoverRaw || plan.narration;
+    const voiceUrl = narration ? await makeVoiceover(narration) : null;
+    const source = buildSource(mediaUrl, isVideo, plan.captions, voiceUrl, duration);
     const videoUrl = await renderAndWait(source);
+
 
     return json({ ok: true, videoUrl, voiceUsed: Boolean(voiceUrl) });
   } catch (e) {
