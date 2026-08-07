@@ -60,15 +60,26 @@ async function makeVoiceover(text: string): Promise<string | null> {
   if (!isValidHeaderValue(key) || !text) return null;
 
   const call = (voiceId: string) =>
-    fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-      method: "POST",
-      headers: { "xi-api-key": key, "Content-Type": "application/json", Accept: "audio/mpeg" },
-      body: JSON.stringify({
-        text: text.slice(0, MAX_CHARS),
-        model_id: "eleven_multilingual_v2",
-        voice_settings: { stability: 0.5, similarity_boost: 0.85, style: 0.3 },
-      }),
-    });
+    fetch(
+      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
+      {
+        method: "POST",
+        headers: { "xi-api-key": key, "Content-Type": "application/json", Accept: "audio/mpeg" },
+        body: JSON.stringify({
+          text: text.slice(0, MAX_CHARS),
+          // Highest-fidelity natural human voice model (no robotic/turbo artifacts).
+          model_id: "eleven_multilingual_v2",
+          voice_settings: {
+            stability: 0.42,        // expressive yet controlled delivery
+            similarity_boost: 0.9,  // faithful, clean timbre
+            style: 0.45,            // professional narration tone
+            use_speaker_boost: true, // clarity, low noise floor
+            speed: 0.98,
+          },
+        }),
+      },
+    );
+
 
   try {
     let r = await call(CLONED_VOICE_ID);
