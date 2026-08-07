@@ -154,7 +154,14 @@ async function planFromPrompt(prompt: string, isVideo: boolean, duration: number
   }
 }
 
-/** CapCut-style vertical timeline: Ken Burns media + animated captions + brand outro. */
+/**
+ * Cinematic layered timeline (CapCut-grade):
+ *  track 1 → base media only (Ken Burns, audio ducked)
+ *  track 2 → readability gradient scrim (lower third)
+ *  track 3 → captions, strictly sequential with gaps — never stacked/overlapping
+ *  track 4 → fixed brand logo, top corner, low opacity
+ *  track 9 → narration audio, balanced above the media bed
+ */
 function buildSource(
   mediaUrl: string,
   isVideo: boolean,
@@ -162,64 +169,139 @@ function buildSource(
   voiceUrl: string | null,
   duration: number,
 ) {
-  const list = captions.length ? captions : ["..."];
-  const sceneCount = list.length + 1;
-  const per = Math.max(2, Math.round((duration / sceneCount) * 10) / 10);
+  const list = (captions.length ? captions : [BRAND_TAG]).slice(0, 5);
+  const GAP = 0.35;      // precise silence between sentences
+  const LEAD = 0.6;      // breathing room before the first caption
+  const TAIL = 1.2;      // outro space for the brand tag
+  const usable = Math.max(4, duration - LEAD - TAIL);
+  const slot = usable / list.length;
+  const hold = Math.max(1.6, Math.round((slot - GAP) * 10) / 10);
 
-  const scene = (text: string, dur: number, color: string) => ({
-    type: "composition",
-    duration: dur,
-    elements: [
-      {
-        type: isVideo ? "video" : "image",
-        source: mediaUrl,
-        fit: "cover",
-        track: 1,
-        duration: dur,
-        volume: isVideo ? 0 : undefined,
-        animations: [{ type: "scale", start_scale: "100%", end_scale: "112%", easing: "linear" }],
-      },
-      {
-        type: "shape",
-        track: 2,
-        path: "M 0 0 L 100 0 L 100 100 L 0 100 Z",
-        fill_color: "rgba(2,6,23,0.45)",
-      },
-      {
-        type: "text",
-        track: 3,
-        text,
-        font_family: "Cairo",
-        font_weight: "900",
-        font_size: "8 vmin",
-        fill_color: color,
-        x_alignment: "50%",
-        y_alignment: "72%",
-        width: "85%",
-        text_wrap: true,
-        animations: [
-          { type: "text-appear", split: "word", duration: 0.7, easing: "quadratic-out" },
-          { type: "fade", fade_in: true, fade_out: false, duration: 0.4 },
-        ],
-      },
-    ],
+  const elements: any[] = [
+    // ---- Layer 1: base media (isolated, no text baked in) ----
+    {
+      type: isVideo ? "video" : "image",
+      source: mediaUrl,
+      track: 1,
+      time: 0,
+      duration,
+      fit: "cover",
+      ...(isVideo ? { volume: "12%", loop: true } : {}),
+      animations: [
+        { type: "scale", start_scale: "100%", end_scale: "114%", easing: "linear" },
+        { type: "fade", fade_in: true, fade_out: true, duration: 0.6 },
+      ],
+    },
+    // ---- Layer 2: cinematic grade + lower-third readability scrim ----
+    {
+      type: "shape",
+      track: 2,
+      time: 0,
+      duration,
+      path: "M 0 0 L 100 0 L 100 100 L 0 100 Z",
+      fill_color: "rgba(2,6,23,0.28)",
+    },
+    {
+      type: "shape",
+      track: 2,
+      time: 0,
+      duration,
+      y_alignment: "100%",
+      height: "42%",
+      width: "100%",
+      path: "M 0 0 L 100 0 L 100 100 L 0 100 Z",
+      fill_color: [
+        { offset: "0%", color: "rgba(2,6,23,0)" },
+        { offset: "100%", color: "rgba(2,6,23,0.78)" },
+      ],
+    },
+  ];
+
+  // ---- Layer 3: captions — one at a time, lower third, clean motion ----
+  let cursor = LEAD;
+  list.forEach((text, i) => {
+    elements.push({
+      type: "text",
+      track: 3,
+      time: Math.round(cursor * 10) / 10,
+      duration: hold,
+      text,
+      font_family: "Cairo",
+      font_weight: "800",
+      font_size: "6.5 vmin",
+      line_height: "125%",
+      fill_color: i % 2 === 0 ? "#ffffff" : "#e9d5ff",
+      x_alignment: "50%",
+      y_alignment: "76%",
+      width: "82%",
+      text_wrap: true,
+      shadow_color: "rgba(0,0,0,0.65)",
+      shadow_blur: "1.4 vmin",
+      animations: [
+        { type: "text-appear", split: "word", duration: 0.55, easing: "quadratic-out" },
+        { type: "fade", fade_in: true, fade_out: true, duration: 0.35 },
+      ],
+    });
+    cursor += hold + GAP;
   });
 
-  const elements: any[] = list.map((c, i) =>
-    scene(c, per, i % 2 === 0 ? "#ffffff" : "#bf5af2"),
-  );
-  elements.push(scene(BRAND_TAG, Math.max(2, per - 0.5), "#2563eb"));
+  // ---- Outro brand line (own slot, never overlapping a caption) ----
+  elements.push({
+    type: "text",
+    track: 3,
+    time: Math.round(Math.min(cursor, duration - TAIL) * 10) / 10,
+    duration: TAIL,
+    text: BRAND_TAG,
+    font_family: "Cairo",
+    font_weight: "700",
+    font_size: "4.6 vmin",
+    fill_color: "#60a5fa",
+    x_alignment: "50%",
+    y_alignment: "76%",
+    width: "80%",
+    animations: [{ type: "fade", fade_in: true, fade_out: true, duration: 0.4 }],
+  });
 
-  if (voiceUrl) elements.push({ type: "audio", track: 9, source: voiceUrl });
+  // ---- Layer 4: fixed corner logo, subtle and constant ----
+  elements.push({
+    type: "text",
+    track: 4,
+    time: 0,
+    duration,
+    text: "عُتيبي ذكي",
+    font_family: "Cairo",
+    font_weight: "700",
+    font_size: "3.2 vmin",
+    fill_color: "#ffffff",
+    opacity: "55%",
+    x_alignment: "92%",
+    y_alignment: "6%",
+    width: "40%",
+  });
+
+  // ---- Audio bed: narration balanced above the ducked media track ----
+  if (voiceUrl) {
+    elements.push({
+      type: "audio",
+      track: 9,
+      time: 0.2,
+      source: voiceUrl,
+      volume: "100%",
+      audio_fade_in: 0.25,
+      audio_fade_out: 0.6,
+    });
+  }
 
   return {
     output_format: "mp4",
     width: 1080,
     height: 1920,
     frame_rate: 30,
+    duration,
     elements,
   };
 }
+
 
 
 async function renderAndWait(source: unknown) {
