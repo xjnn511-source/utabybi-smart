@@ -187,7 +187,8 @@ function buildSource(
         width: "85%",
         text_wrap: true,
         animations: [
-          { type: "text-slide", direction: "up", split: "word", duration: 0.7, easing: "quadratic-out" },
+          { type: "text-appear", split: "word", duration: 0.7, easing: "quadratic-out" },
+          { type: "fade", fade_in: true, fade_out: false, duration: 0.4 },
         ],
       },
     ],
